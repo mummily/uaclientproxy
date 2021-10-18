@@ -36,6 +36,12 @@
     <ClInclude Include="CInoUAClientProxyMgr.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="sampleclient.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\CommonDef.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CInoUAClient.cpp">
@@ -54,6 +60,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CInoUAClientProxyMgr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sampleclient.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

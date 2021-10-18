@@ -1,6 +1,11 @@
 #pragma once
 #include "export.h"
+#include <map>
+#include <string>
 
+using namespace std;
+
+class SampleClient;
 class INO_EXPORT CInoUAClientProxyMgr
 {
 public:
@@ -8,15 +13,17 @@ public:
     virtual ~CInoUAClientProxyMgr();
 
 public:
-    // 初始化UA环境
-    bool init();
-    // 清除UA环境
-    bool cleanup();
     // 连接客户端
-    bool connect();
+    bool connect(const string& sURL);
 
 protected:
 
 private:
+    // 初始化UA环境
+    bool init();
+    // 清除UA环境
+    bool cleanup();
 
+private:
+    map<string, SampleClient*> m_mapClient;
 };

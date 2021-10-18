@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\CommonDef.h" />
     <ClInclude Include="CInoUAClient.h" />
     <ClInclude Include="CInoUAClientMgr.h" />
     <ClInclude Include="CInoUAClientProxy.h" />
@@ -26,6 +27,7 @@
     <ClInclude Include="export.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="sampleclient.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CInoUAClient.cpp">
@@ -54,6 +56,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="sampleclient.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -127,13 +130,14 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>./include;./include/uabasecpp;./include/uastack;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include;./include/uabasecpp;./include/uastack;./include/uaclientcpp;../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>uabasecppd.lib;uastackd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>uabasecppd.lib;uastackd.lib;uaclientcppd.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir);./lib/$(PlatformTarget)/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
