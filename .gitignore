@@ -3,5 +3,6 @@
 
 # 文件夹
 .vs
-Debug
-
+/ConsoleApplication1/Debug/
+/InoUAClientProxy/Debug
+/Debug
