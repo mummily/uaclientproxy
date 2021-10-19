@@ -8,11 +8,13 @@
 #include <assert.h>
 #include "CInoUAClientProxyMgr.h"
 #include <thread>
+#include "format.h"
 
 using namespace std;
 
 int main()
 {
+    // fmt::print("Hello {}", "World!");
     // UA客户端适配器管理器
     shared_ptr<CInoUAClientProxyMgr> spClientProxyMgr = make_shared<CInoUAClientProxyMgr>();
 
