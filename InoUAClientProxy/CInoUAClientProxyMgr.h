@@ -1,6 +1,6 @@
 #pragma once
 
-#include "InoUAClientProxyExport.h"
+#include "InoExportDef.h"
 #include <map>
 #include <string>
 

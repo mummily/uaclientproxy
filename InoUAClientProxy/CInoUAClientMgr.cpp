@@ -2,10 +2,10 @@
 #include "CInoUAClient.h"
 #include "InoCommonDef.h"
 
-CInoUAClientMgr::CInoUAClientMgr(emFAServerType _emFAServerType)
+CInoUAClientMgr::CInoUAClientMgr()
 {
-    m_pUAClientMaster = new CInoUAClient(_emFAServerType);
-    m_pUAClientSlave = new CInoUAClient(_emFAServerType);
+    m_pUAClientMaster = new CInoUAClient();
+    m_pUAClientSlave = new CInoUAClient();
 }
 
 CInoUAClientMgr::~CInoUAClientMgr()
@@ -14,7 +14,27 @@ CInoUAClientMgr::~CInoUAClientMgr()
     DelAndNil(m_pUAClientSlave);
 }
 
+UaStatus CInoUAClientMgr::connect()
+{
+    UaStatus status;
+    status = m_pUAClientMaster->connect();
+    // m_pUAClientSlave->connect();
+
+    return status;
+}
+
 CInoUAClient* CInoUAClientMgr::getUAClient()
 {
     return m_pUAClientMaster;
+}
+
+void CInoUAClientMgr::setConfiguration(CInoUAClientConfig* pConfiguration)
+{
+    m_pUAClientMaster->setConfiguration(pConfiguration);
+    m_pUAClientSlave->setConfiguration(pConfiguration);
+}
+
+CInoUAClientConfig* CInoUAClientMgr::getConfiguration()
+{
+    return m_pUAClientMaster->getConfiguration();
 }

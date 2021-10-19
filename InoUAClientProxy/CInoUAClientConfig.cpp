@@ -89,7 +89,7 @@ UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFil
     UaSettings* pSettings = nullptr;
     pSettings = new UaSettings(sConfigurationFile.toUtf16());
 
-    pSettings->beginGroup("UaSampleConfig");
+    pSettings->beginGroup("InoClientConfig");
 
     // 证书和信任列表位置
     value = pSettings->value("CertificateTrustListLocation");

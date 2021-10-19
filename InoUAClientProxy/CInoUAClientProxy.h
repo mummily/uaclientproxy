@@ -1,9 +1,11 @@
 #pragma once
 
-#include "InoUAClientProxyExport.h"
+#include "InoExportDef.h"
 
 enum class emFAServerType;
+class UaUniString;
 class CInoUAClientMgr;
+class CInoUAClientConfig;
 class INO_EXPORT CInoUAClientProxy
 {
 public:
@@ -17,10 +19,14 @@ public:
     bool connect();
     // 是否连接客户端
     bool isconnect();
+    // 获取客户端配置
+    UaUniString GetConfigPath();
 
 protected:
 
 private:
-    CInoUAClientMgr* m_pUAClientMgr = nullptr;
+    CInoUAClientMgr* m_pUAClientMgr = nullptr; // 主备客户端管理器
+    CInoUAClientConfig* m_pUAClientConfig = nullptr; //主备客户端配置
+    emFAServerType m_emFAServerType;
 };
 

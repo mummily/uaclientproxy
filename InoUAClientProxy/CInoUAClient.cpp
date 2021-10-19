@@ -8,38 +8,16 @@
 #include "InoCommonDef.h"
 #include "uadir.h"
 
-CInoUAClient::CInoUAClient(emFAServerType _emFAServerType)
+CInoUAClient::CInoUAClient()
 {
     m_pSession = new UaSession();
-
-    wchar_t szFullPath[MAX_PATH];
-    GetModuleFileNameW(NULL, szFullPath, sizeof(szFullPath));
-
-    // 获取配置文件路径
-    UaString sConfigFile(szFullPath);
-    switch (_emFAServerType)
-    {
-    case emFAServerType::RealTime:
-        sConfigFile += "/../rtconfig.ini";
-        break;
-    case emFAServerType::IO:
-        sConfigFile += "/../ioconfig.ini";
-        break;
-    }
-
-    m_pConfiguration = new CInoUAClientConfig();
-
-    UaDir dir(sConfigFile.toUtf8());
-    UaStatus status = m_pConfiguration->loadConfiguration(dir.canonicalPath().toUtf16());
-    assert(status.isGood());
-
-    m_pSampleSubscription = new CInoUAClientSubscription(m_pConfiguration);
+    m_pSubscription = new CInoUAClientSubscription(m_pConfiguration);
 }
 
 CInoUAClient::~CInoUAClient()
 {
     // 删除本地订阅对象
-    DelAndNil(m_pSampleSubscription);
+    DelAndNil(m_pSubscription);
 
     // 断开连接，删除会话
     if (m_pSession)
@@ -52,8 +30,6 @@ CInoUAClient::~CInoUAClient()
 
         DelAndNil(m_pSession);
     }
-
-    DelAndNil(m_pConfiguration);
 }
 
 void CInoUAClient::connectionStatusChanged(
@@ -96,12 +72,16 @@ void CInoUAClient::connectionStatusChanged(
     m_serverStatus = serverStatus;
 }
 
+// 描述：设置客户端连接配置
+// 备注：无
 void CInoUAClient::setConfiguration(CInoUAClientConfig* pConfiguration)
 {
-    if (m_pSampleSubscription)
-    {
-        m_pSampleSubscription->setConfiguration(pConfiguration);
-    }
+    assert(nullptr != pConfiguration);
+
+    if (m_pConfiguration == pConfiguration)
+        return;
+
+    m_pSubscription->setConfiguration(pConfiguration);
 
     DelAndNil(m_pConfiguration);
     m_pConfiguration = pConfiguration;
@@ -611,17 +591,17 @@ UaStatus CInoUAClient::subscribe()
 {
     UaStatus result;
 
-    result = m_pSampleSubscription->createSubscription(m_pSession);
+    result = m_pSubscription->createSubscription(m_pSession);
     if (result.isGood())
     {
-        result = m_pSampleSubscription->createMonitoredItems();
+        result = m_pSubscription->createMonitoredItems();
     }
     return result;
 }
 
 UaStatus CInoUAClient::unsubscribe()
 {
-    return m_pSampleSubscription->deleteSubscription();
+    return m_pSubscription->deleteSubscription();
 }
 
 UaStatus CInoUAClient::registerNodes()

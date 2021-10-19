@@ -1,13 +1,12 @@
 #pragma once
 
-#include "InoUAClientProxyExport.h"
+#include "InoExportDef.h"
 #include "uabase.h"
 #include "uaclientsdk.h"
 
 class CInoUAClientSubscription;
 class CInoUAClientConfig;
 class CInoUAClientMgr;
-enum class emFAServerType;
 
 using namespace UaClientSdk;
 
@@ -16,15 +15,16 @@ class INO_EXPORT CInoUAClient : public UaSessionCallback
     UA_DISABLE_COPY(CInoUAClient);
 
 public:
-    CInoUAClient(emFAServerType _emFAServerType);
+    CInoUAClient();
     virtual ~CInoUAClient();
 
     friend class CInoUAClientMgr;
 
     virtual void connectionStatusChanged(OpcUa_UInt32 clientConnectionId, UaClient::ServerStatus serverStatus);
-
-    // 设置一个我们用来获取连接参数和 NodeIds 的配置对象
+    // 设置配置信息
     void setConfiguration(CInoUAClientConfig* pConfiguration);
+    // 获取配置信息
+    CInoUAClientConfig* getConfiguration() { return m_pConfiguration; }
 
     OpcUa_Boolean isConnected() const;
     // OPC UA 服务调用
@@ -42,6 +42,7 @@ public:
     UaStatus registerNodes();
     UaStatus unregisterNodes();
     UaStatus callMethods();
+
 private:
     UaStatus browseInternal(const UaNodeId& nodeToBrowse, OpcUa_UInt32 maxReferencesToReturn);
     UaStatus connectInternal(const UaString& serverUrl, SessionSecurityInfo& sessionSecurityInfo);
@@ -54,10 +55,10 @@ private:
     int userAcceptCertificate();
 
 private:
-    UaSession* m_pSession;
-    CInoUAClientSubscription* m_pSampleSubscription;
-    CInoUAClientConfig* m_pConfiguration;
-    UaClient::ServerStatus  m_serverStatus;
-    UaNodeIdArray           m_registeredNodes;
+    UaSession* m_pSession = nullptr;
+    CInoUAClientSubscription* m_pSubscription = nullptr;
+    CInoUAClientConfig* m_pConfiguration = nullptr;
+    UaClient::ServerStatus m_serverStatus;
+    UaNodeIdArray m_registeredNodes;
 };
 

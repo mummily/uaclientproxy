@@ -21,7 +21,7 @@
     <ClInclude Include="CInoUAClientProxy.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="InoUAClientProxyExport.h">
+    <ClInclude Include="InoExportDef.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CInoUAClientProxyMgr.h">

@@ -24,7 +24,7 @@
     <ClInclude Include="CInoUAClientProxy.h" />
     <ClInclude Include="CInoUAClientProxyMgr.h" />
     <ClInclude Include="CInoUAClientConfig.h" />
-    <ClInclude Include="InoUAClientProxyExport.h" />
+    <ClInclude Include="InoExportDef.h" />
     <ClInclude Include="CInoUAClient.h" />
     <ClInclude Include="CInoUAClientSubscription.h" />
   </ItemGroup>

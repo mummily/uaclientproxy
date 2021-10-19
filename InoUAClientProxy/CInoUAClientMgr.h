@@ -1,18 +1,25 @@
 #pragma once
 
-#include "InoUAClientProxyExport.h"
+#include "InoExportDef.h"
 
-enum class emFAServerType;
+class UaStatus;
 class CInoUAClient;
+class CInoUAClientConfig;
 class INO_EXPORT CInoUAClientMgr
 {
 public:
-    CInoUAClientMgr(emFAServerType _emFAServerType);
+    CInoUAClientMgr();
     virtual ~CInoUAClientMgr();
 
 public:
+    // 连接服务器
+    UaStatus connect();
     // 获取主UA客户端
     CInoUAClient* getUAClient();
+    // 设置配置信息
+    void setConfiguration(CInoUAClientConfig* pConfiguration);
+    // 获取配置信息
+    CInoUAClientConfig* getConfiguration();
 
 protected:
 
