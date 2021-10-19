@@ -54,9 +54,9 @@ private:
     int userAcceptCertificate();
 
 private:
-    UaSession*              m_pSession;
-    CInoUAClientSubscription*     m_pSampleSubscription;
-    CInoUAClientConfig*          m_pConfiguration;
+    UaSession* m_pSession;
+    CInoUAClientSubscription* m_pSampleSubscription;
+    CInoUAClientConfig* m_pConfiguration;
     UaClient::ServerStatus  m_serverStatus;
     UaNodeIdArray           m_registeredNodes;
 };

@@ -4,15 +4,15 @@
 #include "CInoUAClientConfig.h"
 
 CInoUAClientSubscription::CInoUAClientSubscription(CInoUAClientConfig* pConfiguration)
-: m_pSession(nullptr),
-  m_pSubscription(nullptr),
-  m_pConfiguration(pConfiguration)
+    : m_pSession(nullptr),
+    m_pSubscription(nullptr),
+    m_pConfiguration(pConfiguration)
 {
 }
 
 CInoUAClientSubscription::~CInoUAClientSubscription()
 {
-    if ( m_pSubscription )
+    if (m_pSubscription)
     {
         deleteSubscription();
     }
@@ -43,9 +43,9 @@ void CInoUAClientSubscription::dataChange(
     OpcUa_UInt32 i = 0;
 
     printf("-- DataChange Notification ---------------------------------\n");
-    for ( i=0; i<dataNotifications.length(); i++ )
+    for (i = 0; i < dataNotifications.length(); i++)
     {
-        if ( OpcUa_IsGood(dataNotifications[i].Value.StatusCode) )
+        if (OpcUa_IsGood(dataNotifications[i].Value.StatusCode))
         {
             UaVariant tempValue = dataNotifications[i].Value.Value;
             printf("  Variable = %d value = %s\n", dataNotifications[i].ClientHandle, tempValue.toString().toUtf8());
@@ -66,11 +66,11 @@ void CInoUAClientSubscription::newEvents(
     OpcUa_UInt32 i = 0;
     printf("-- Event newEvents -----------------------------------------\n");
     printf("clientSubscriptionHandle %d \n", clientSubscriptionHandle);
-    for ( i=0; i<eventFieldList.length(); i++ )
+    for (i = 0; i < eventFieldList.length(); i++)
     {
-        UaVariant message    = eventFieldList[i].EventFields[0];
+        UaVariant message = eventFieldList[i].EventFields[0];
         UaVariant sourceName = eventFieldList[i].EventFields[1];
-        UaVariant severity   = eventFieldList[i].EventFields[2];
+        UaVariant severity = eventFieldList[i].EventFields[2];
         printf("Event[%d] Message = %s SourceName = %s Severity = %s\n",
             i,
             message.toString().toUtf8(),
@@ -82,7 +82,7 @@ void CInoUAClientSubscription::newEvents(
 
 UaStatus CInoUAClientSubscription::createSubscription(UaSession* pSession)
 {
-    if ( m_pSubscription )
+    if (m_pSubscription)
     {
         printf("\nError: Subscription already created\n");
         return OpcUa_BadInvalidState;
@@ -120,7 +120,7 @@ UaStatus CInoUAClientSubscription::createSubscription(UaSession* pSession)
 
 UaStatus CInoUAClientSubscription::deleteSubscription()
 {
-    if ( m_pSubscription == nullptr )
+    if (m_pSubscription == nullptr)
     {
         printf("\nError: No Subscription created\n");
         return OpcUa_BadInvalidState;
@@ -151,7 +151,7 @@ UaStatus CInoUAClientSubscription::deleteSubscription()
 
 UaStatus CInoUAClientSubscription::createMonitoredItems()
 {
-    if ( m_pSubscription == nullptr )
+    if (m_pSubscription == nullptr)
     {
         printf("\nError: No Subscription created\n");
         return OpcUa_BadInvalidState;
@@ -168,9 +168,9 @@ UaStatus CInoUAClientSubscription::createMonitoredItems()
 
     UaEventFilter            eventFilter;
     UaSimpleAttributeOperand selectElement;
-    UaContentFilter*         pContentFilter        = nullptr;
-    UaContentFilterElement*  pContentFilterElement = nullptr;
-    UaFilterOperand*         pOperand              = nullptr;
+    UaContentFilter* pContentFilter = nullptr;
+    UaContentFilterElement* pContentFilterElement = nullptr;
+    UaFilterOperand* pOperand = nullptr;
 
     itemsToCreate[0].ItemToMonitor.AttributeId = OpcUa_Attributes_EventNotifier;
     itemsToCreate[0].ItemToMonitor.NodeId.Identifier.Numeric = OpcUaId_Server;

@@ -17,3 +17,7 @@
     for (auto pointer : ptrlist) { \
         DelAndNil(pointer) \
     }
+
+#ifdef INO_PRINTF
+#define printf(fmt,...) printf(__FUNCTION__ "(" STR(__LINE__) "): " fmt, __VA_ARGS__)
+#endif

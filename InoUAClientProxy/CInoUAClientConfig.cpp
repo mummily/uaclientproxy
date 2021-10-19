@@ -2,6 +2,7 @@
 #include "uasettings.h"
 #include "uadir.h"
 #include "uapkicertificate.h"
+#include "InoCommonDef.h"
 
 CInoUAClientConfig::CInoUAClientConfig()
 {
@@ -120,7 +121,7 @@ UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFil
     value = pSettings->value("size", (OpcUa_UInt32)0);
     value.toUInt32(size);
     m_namespaceArray.resize(size);
-    for (i=0; i<size;i++)
+    for (i = 0; i < size; i++)
     {
         sTempKey = UaString("NameSpaceUri0%1").arg((int)i);
         value = pSettings->value(sTempKey.toUtf16(), UaString(""));
@@ -134,7 +135,7 @@ UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFil
     value = pSettings->value("size", (OpcUa_UInt32)0);
     value.toUInt32(size);
     m_nodesToRead.resize(size);
-    for (i=0; i<size;i++)
+    for (i = 0; i < size; i++)
     {
         sTempKey = UaString("Variable0%1").arg((int)i);
         value = pSettings->value(sTempKey.toUtf16(), UaString(""));
@@ -149,7 +150,7 @@ UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFil
     value.toUInt32(size);
     // NodeIds
     m_nodesToWrite.resize(size);
-    for (i=0; i<size;i++)
+    for (i = 0; i < size; i++)
     {
         sTempKey = UaString("Variable0%1").arg((int)i);
         value = pSettings->value(sTempKey.toUtf16(), UaString(""));
@@ -158,7 +159,7 @@ UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFil
     // DataTypes
     UaByteArray writeDataTypes;
     writeDataTypes.resize(size);
-    for (i=0; i<size;i++)
+    for (i = 0; i < size; i++)
     {
         sTempKey = UaString("DataType0%1").arg((int)i);
         value = pSettings->value(sTempKey.toUtf16(), UaString(""));
@@ -167,7 +168,7 @@ UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFil
     }
     // Values
     m_writeValues.resize(size);
-    for (i=0; i<size;i++)
+    for (i = 0; i < size; i++)
     {
         sTempKey = UaString("Value0%1").arg((int)i);
         value = pSettings->value(sTempKey.toUtf16());
@@ -190,7 +191,7 @@ UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFil
     value = pSettings->value("size", (OpcUa_UInt32)0);
     value.toUInt32(size);
     m_nodesToMonitor.resize(size);
-    for (i=0; i<size;i++)
+    for (i = 0; i < size; i++)
     {
         sTempKey = UaString("Variable0%1").arg((int)i);
         value = pSettings->value(sTempKey.toUtf16(), UaString(""));
@@ -210,7 +211,7 @@ UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFil
     value.toUInt32(size);
     m_methodsToCall.resize(size);
     m_objectToCall.resize(size);
-    for (i=0; i<size;i++)
+    for (i = 0; i < size; i++)
     {
         sTempKey = UaString("Method0%1").arg((int)i);
         value = pSettings->value(sTempKey.toUtf16(), UaString(""));
@@ -224,8 +225,7 @@ UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFil
 
     pSettings->endGroup(); // UaClientConfig
 
-    delete pSettings;
-    pSettings = nullptr;
+    DelAndNil(pSettings);
 
     return result;
 }
@@ -252,38 +252,38 @@ UaStatus CInoUAClientConfig::setupSecurity(SessionSecurityInfo& sessionSecurityI
     if (clientCertificate.isNull())
     {
         // 创建证书
-        UaPkiRsaKeyPair keyPair ( 1024 );
+        UaPkiRsaKeyPair keyPair(1024);
         UaPkiIdentity   identity;
 
         UaString sNodeName;
         char szHostName[256];
-        if ( 0 == UA_GetHostname(szHostName, 256) )
+        if (0 == UA_GetHostname(szHostName, 256))
         {
             sNodeName = szHostName;
         }
 
-        identity.commonName       = UaString("Client_Cpp_SDK@%1").arg(sNodeName);
-        identity.organization     = "Organization";
+        identity.commonName = UaString("Client_Cpp_SDK@%1").arg(sNodeName);
+        identity.organization = "Organization";
         identity.organizationUnit = "Unit";
-        identity.locality         = "LocationName";
-        identity.state            = "State";
-        identity.country          = "DE";
-        identity.domainComponent  = sNodeName;
+        identity.locality = "LocationName";
+        identity.state = "State";
+        identity.country = "DE";
+        identity.domainComponent = sNodeName;
 
         UaPkiCertificateInfo info;
         info.URI = UaString("urn:%1:%2:%3").arg(sNodeName).arg(COMPANY_NAME).arg(PRODUCT_NAME);
         info.DNSNames.create(1);
         sNodeName.copyTo(&info.DNSNames[0]);
-        info.validTime = 3600*24*365*5; // 5 years in seconds
+        info.validTime = 3600 * 24 * 365 * 5; // 5 years in seconds
 
         // 创建自签名证书
-        UaPkiCertificate cert ( info, identity, keyPair );
+        UaPkiCertificate cert(info, identity, keyPair);
 
         // 将公钥保存到文件
-        cert.toDERFile ( m_clientCertificateFile.toUtf8() );
+        cert.toDERFile(m_clientCertificateFile.toUtf8());
 
         // 将私钥保存到文件
-        keyPair.toPEMFile ( m_clientPrivateKeyFile.toUtf8(), 0 );
+        keyPair.toPEMFile(m_clientPrivateKeyFile.toUtf8(), 0);
     }
 
     // 初始化 PKI 提供程序以使用 OpenSSL

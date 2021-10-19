@@ -5,6 +5,7 @@
 #include "uadiscovery.h"
 #include "uapkicertificate.h"
 #include "uaplatformdefs.h"
+#include "InoCommonDef.h"
 
 CInoUAClient::CInoUAClient()
 {
@@ -15,30 +16,22 @@ CInoUAClient::CInoUAClient()
 
 CInoUAClient::~CInoUAClient()
 {
-    if (m_pSampleSubscription)
-    {
-        // 删除本地订阅对象
-        delete m_pSampleSubscription;
-        m_pSampleSubscription = nullptr;
-    }
+    // 删除本地订阅对象
+    DelAndNil(m_pSampleSubscription);
 
+    // 断开连接，删除会话
     if (m_pSession)
     {
-        // 如果会话仍然连接，则断开连接
         if (m_pSession->isConnected() != OpcUa_False)
         {
             ServiceSettings serviceSettings;
             m_pSession->disconnect(serviceSettings, OpcUa_True);
         }
-        delete m_pSession;
-        m_pSession = nullptr;
+
+        DelAndNil(m_pSession);
     }
 
-    if (m_pConfiguration)
-    {
-        delete m_pConfiguration;
-        m_pConfiguration = nullptr;
-    }
+    DelAndNil(m_pConfiguration);
 }
 
 void CInoUAClient::connectionStatusChanged(
@@ -87,10 +80,8 @@ void CInoUAClient::setConfiguration(CInoUAClientConfig* pConfiguration)
     {
         m_pSampleSubscription->setConfiguration(pConfiguration);
     }
-    if (m_pConfiguration)
-    {
-        delete m_pConfiguration;
-    }
+
+    DelAndNil(m_pConfiguration);
     m_pConfiguration = pConfiguration;
 }
 
@@ -147,15 +138,15 @@ UaStatus CInoUAClient::discover()
                         sTemp = &endpointDescriptions[j].SecurityPolicyUri;
                         printf(" Security Policy  %s\n", sTemp.toUtf8());
                         sTemp = "Invalid";
-                        if ( endpointDescriptions[j].SecurityMode == OpcUa_MessageSecurityMode_None )
+                        if (endpointDescriptions[j].SecurityMode == OpcUa_MessageSecurityMode_None)
                         {
                             sTemp = "None";
                         }
-                        if ( endpointDescriptions[j].SecurityMode == OpcUa_MessageSecurityMode_Sign )
+                        if (endpointDescriptions[j].SecurityMode == OpcUa_MessageSecurityMode_Sign)
                         {
                             sTemp = "Sign";
                         }
-                        if ( endpointDescriptions[j].SecurityMode == OpcUa_MessageSecurityMode_SignAndEncrypt )
+                        if (endpointDescriptions[j].SecurityMode == OpcUa_MessageSecurityMode_SignAndEncrypt)
                         {
                             sTemp = "SignAndEncrypt";
                         }
@@ -199,9 +190,9 @@ UaStatus CInoUAClient::connect(const UaString& sURL)
     }
     sessionConnectInfo.sApplicationName = "Unified Automation Getting Started Client";
     // 使用主机名生成唯一的应用程序 URI
-    sessionConnectInfo.sApplicationUri  = UaString("urn:%1:UnifiedAutomation:GettingStartedClient").arg(sNodeName);
-    sessionConnectInfo.sProductUri      = "urn:UnifiedAutomation:GettingStartedClient";
-    sessionConnectInfo.sSessionName     = sessionConnectInfo.sApplicationUri;
+    sessionConnectInfo.sApplicationUri = UaString("urn:%1:UnifiedAutomation:GettingStartedClient").arg(sNodeName);
+    sessionConnectInfo.sProductUri = "urn:UnifiedAutomation:GettingStartedClient";
+    sessionConnectInfo.sSessionName = sessionConnectInfo.sApplicationUri;
 
     // 安全设置未初始化 - 暂时没有安全连接
     SessionSecurityInfo sessionSecurityInfo;
@@ -425,15 +416,15 @@ UaStatus CInoUAClient::findSecureEndpoint(SessionSecurityInfo& sessionSecurityIn
             sTemp = &endpointDescriptions[bestSecurityIndex].SecurityPolicyUri;
             printf(" Security Policy  %s\n", sTemp.toUtf8());
             sTemp = "Invalid";
-            if ( endpointDescriptions[bestSecurityIndex].SecurityMode == OpcUa_MessageSecurityMode_None )
+            if (endpointDescriptions[bestSecurityIndex].SecurityMode == OpcUa_MessageSecurityMode_None)
             {
                 sTemp = "None";
             }
-            if ( endpointDescriptions[bestSecurityIndex].SecurityMode == OpcUa_MessageSecurityMode_Sign )
+            if (endpointDescriptions[bestSecurityIndex].SecurityMode == OpcUa_MessageSecurityMode_Sign)
             {
                 sTemp = "Sign";
             }
-            if ( endpointDescriptions[bestSecurityIndex].SecurityMode == OpcUa_MessageSecurityMode_SignAndEncrypt )
+            if (endpointDescriptions[bestSecurityIndex].SecurityMode == OpcUa_MessageSecurityMode_SignAndEncrypt)
             {
                 sTemp = "SignAndEncrypt";
             }
@@ -639,7 +630,7 @@ UaStatus CInoUAClient::subscribe()
     UaStatus result;
 
     result = m_pSampleSubscription->createSubscription(m_pSession);
-    if ( result.isGood() )
+    if (result.isGood())
     {
         result = m_pSampleSubscription->createMonitoredItems();
     }
@@ -832,13 +823,13 @@ UaStatus CInoUAClient::callMethodInternal(const UaNodeId& objectNodeId, const Ua
 void CInoUAClient::printBrowseResults(const UaReferenceDescriptions& referenceDescriptions)
 {
     OpcUa_UInt32 i;
-    for (i=0; i<referenceDescriptions.length(); i++)
+    for (i = 0; i < referenceDescriptions.length(); i++)
     {
         printf("node: ");
         UaNodeId referenceTypeId(referenceDescriptions[i].ReferenceTypeId);
-        printf("[Ref=%s] ", referenceTypeId.toString().toUtf8() );
+        printf("[Ref=%s] ", referenceTypeId.toString().toUtf8());
         UaQualifiedName browseName(referenceDescriptions[i].BrowseName);
-        printf("%s ( ", browseName.toString().toUtf8() );
+        printf("%s ( ", browseName.toString().toUtf8());
         if (referenceDescriptions[i].NodeClass & OpcUa_NodeClass_Object) printf("Object ");
         if (referenceDescriptions[i].NodeClass & OpcUa_NodeClass_Variable) printf("Variable ");
         if (referenceDescriptions[i].NodeClass & OpcUa_NodeClass_Method) printf("Method ");
@@ -848,7 +839,7 @@ void CInoUAClient::printBrowseResults(const UaReferenceDescriptions& referenceDe
         if (referenceDescriptions[i].NodeClass & OpcUa_NodeClass_DataType) printf("DataType ");
         if (referenceDescriptions[i].NodeClass & OpcUa_NodeClass_View) printf("View ");
         UaNodeId nodeId(referenceDescriptions[i].NodeId.NodeId);
-        printf("[NodeId=%s] ", nodeId.toFullString().toUtf8() );
+        printf("[NodeId=%s] ", nodeId.toFullString().toUtf8());
         printf(")\n");
     }
 }
@@ -858,14 +849,14 @@ void CInoUAClient::printCertificateData(const UaByteString& serverCertificate)
     // 将证书字节字符串分配给 UaPkiCertificate 类
     UaPkiCertificate cert = UaPkiCertificate::fromDER(serverCertificate);
 
-    printf("- CommonName              %s\n", cert.commonName().toUtf8() );
-    printf("- Issuer.commonName       %s\n", cert.issuer().commonName.toUtf8() );
-    printf("- Issuer.organization     %s\n", cert.issuer().organization.toUtf8() );
-    printf("- Issuer.organizationUnit %s\n", cert.issuer().organizationUnit.toUtf8() );
-    printf("- Issuer.state            %s\n", cert.issuer().state.toUtf8() );
-    printf("- Issuer.country          %s\n", cert.issuer().country.toUtf8() );
-    printf("- ValidFrom               %s\n", cert.validFrom().toString().toUtf8() );
-    printf("- ValidTo                 %s\n", cert.validTo().toString().toUtf8() );
+    printf("- CommonName              %s\n", cert.commonName().toUtf8());
+    printf("- Issuer.commonName       %s\n", cert.issuer().commonName.toUtf8());
+    printf("- Issuer.organization     %s\n", cert.issuer().organization.toUtf8());
+    printf("- Issuer.organizationUnit %s\n", cert.issuer().organizationUnit.toUtf8());
+    printf("- Issuer.state            %s\n", cert.issuer().state.toUtf8());
+    printf("- Issuer.country          %s\n", cert.issuer().country.toUtf8());
+    printf("- ValidFrom               %s\n", cert.validFrom().toString().toUtf8());
+    printf("- ValidTo                 %s\n", cert.validTo().toString().toUtf8());
 }
 
 int CInoUAClient::userAcceptCertificate()
