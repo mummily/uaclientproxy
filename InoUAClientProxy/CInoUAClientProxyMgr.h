@@ -1,11 +1,12 @@
 #pragma once
-#include "export.h"
+
+#include "InoUAClientProxyExport.h"
 #include <map>
 #include <string>
 
 using namespace std;
 
-class SampleClient;
+class CInoUAClient;
 class INO_EXPORT CInoUAClientProxyMgr
 {
 public:
@@ -25,5 +26,5 @@ private:
     bool cleanup();
 
 private:
-    map<string, SampleClient*> m_mapClient;
+    map<string, CInoUAClient*> m_mapClient;
 };

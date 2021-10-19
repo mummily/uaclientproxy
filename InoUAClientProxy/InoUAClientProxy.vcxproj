@@ -19,24 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\CommonDef.h" />
-    <ClInclude Include="CInoUAClient.h" />
+    <ClInclude Include="..\include\InoCommonDef.h" />
     <ClInclude Include="CInoUAClientMgr.h" />
     <ClInclude Include="CInoUAClientProxy.h" />
     <ClInclude Include="CInoUAClientProxyMgr.h" />
-    <ClInclude Include="configuration.h" />
-    <ClInclude Include="export.h" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="sampleclient.h" />
-    <ClInclude Include="samplesubscription.h" />
+    <ClInclude Include="CInoUAClientConfig.h" />
+    <ClInclude Include="InoUAClientProxyExport.h" />
+    <ClInclude Include="CInoUAClient.h" />
+    <ClInclude Include="CInoUAClientSubscription.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CInoUAClient.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeaderFile>
-    </ClCompile>
     <ClCompile Include="CInoUAClientMgr.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -48,19 +40,9 @@
       </PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="CInoUAClientProxyMgr.cpp" />
-    <ClCompile Include="configuration.cpp" />
-    <ClCompile Include="dllmain.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeaderFile>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeaderFile>
-    </ClCompile>
-    <ClCompile Include="sampleclient.cpp" />
-    <ClCompile Include="samplesubscription.cpp" />
+    <ClCompile Include="CInoUAClientConfig.cpp" />
+    <ClCompile Include="CInoUAClient.cpp" />
+    <ClCompile Include="CInoUAClientSubscription.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -135,7 +117,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>./include;./include/uabasecpp;./include/uastack;./include/uaclientcpp;./include/uapkicpp;../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4819;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4819;4251;4275;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

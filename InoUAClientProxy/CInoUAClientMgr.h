@@ -1,5 +1,6 @@
 #pragma once
-#include "export.h"
+
+#include "InoUAClientProxyExport.h"
 
 class INO_EXPORT CInoUAClientMgr
 {

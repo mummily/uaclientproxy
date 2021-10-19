@@ -15,66 +15,48 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CInoUAClient.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="CInoUAClientMgr.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CInoUAClientProxy.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="framework.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="export.h">
+    <ClInclude Include="InoUAClientProxyExport.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CInoUAClientProxyMgr.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="sampleclient.h">
+    <ClInclude Include="CInoUAClient.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\CommonDef.h">
+    <ClInclude Include="..\include\InoCommonDef.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="configuration.h">
+    <ClInclude Include="CInoUAClientConfig.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="samplesubscription.h">
+    <ClInclude Include="CInoUAClientSubscription.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CInoUAClient.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="CInoUAClientMgr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CInoUAClientProxy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="dllmain.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="CInoUAClientProxyMgr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="sampleclient.cpp">
+    <ClCompile Include="CInoUAClient.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="configuration.cpp">
+    <ClCompile Include="CInoUAClientConfig.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="samplesubscription.cpp">
+    <ClCompile Include="CInoUAClientSubscription.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

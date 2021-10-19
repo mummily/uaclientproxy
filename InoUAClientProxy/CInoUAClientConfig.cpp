@@ -1,77 +1,77 @@
-#include "configuration.h"
+#include "CInoUAClientConfig.h"
 #include "uasettings.h"
 #include "uadir.h"
 #include "uapkicertificate.h"
 
-Configuration::Configuration()
+CInoUAClientConfig::CInoUAClientConfig()
 {
 }
 
-Configuration::~Configuration()
+CInoUAClientConfig::~CInoUAClientConfig()
 {
 }
 
-UaString Configuration::getServerUrl() const
+UaString CInoUAClientConfig::getServerUrl() const
 {
     return m_serverUrl;
 }
 
-UaString Configuration::getDiscoveryUrl() const
+UaString CInoUAClientConfig::getDiscoveryUrl() const
 {
     return m_discoveryUrl;
 }
 
-UaString Configuration::getApplicationName() const
+UaString CInoUAClientConfig::getApplicationName() const
 {
     return m_applicationName;
 }
 
-OpcUa_Boolean Configuration::getAutomaticReconnect() const
+OpcUa_Boolean CInoUAClientConfig::getAutomaticReconnect() const
 {
     return m_bAutomaticReconnect;
 }
 
-OpcUa_Boolean Configuration::getRetryInitialConnect() const
+OpcUa_Boolean CInoUAClientConfig::getRetryInitialConnect() const
 {
     return m_bRetryInitialConnect;
 }
 
-UaNodeIdArray Configuration::getNodesToRead() const
+UaNodeIdArray CInoUAClientConfig::getNodesToRead() const
 {
     return m_nodesToRead;
 }
 
-UaNodeIdArray Configuration::getNodesToWrite() const
+UaNodeIdArray CInoUAClientConfig::getNodesToWrite() const
 {
     return m_nodesToWrite;
 }
 
-UaNodeIdArray Configuration::getNodesToMonitor() const
+UaNodeIdArray CInoUAClientConfig::getNodesToMonitor() const
 {
     return m_nodesToMonitor;
 }
 
-UaVariantArray Configuration::getWriteValues() const
+UaVariantArray CInoUAClientConfig::getWriteValues() const
 {
     return m_writeValues;
 }
 
-UaNodeId Configuration::getEventTypeToFilter() const
+UaNodeId CInoUAClientConfig::getEventTypeToFilter() const
 {
     return m_eventTypeToFilter;
 }
 
-UaNodeIdArray Configuration::getMethodsToCall() const
+UaNodeIdArray CInoUAClientConfig::getMethodsToCall() const
 {
     return m_methodsToCall;
 }
 
-UaNodeIdArray Configuration::getObjectsToCall() const
+UaNodeIdArray CInoUAClientConfig::getObjectsToCall() const
 {
     return m_objectToCall;
 }
 
-UaStatus Configuration::loadConfiguration(const UaString& sConfigurationFile)
+UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFile)
 {
     UaStatus result;
     UaVariant value;
@@ -230,7 +230,7 @@ UaStatus Configuration::loadConfiguration(const UaString& sConfigurationFile)
     return result;
 }
 
-UaStatus Configuration::setupSecurity(SessionSecurityInfo& sessionSecurityInfo)
+UaStatus CInoUAClientConfig::setupSecurity(SessionSecurityInfo& sessionSecurityInfo)
 {
     UaStatus result;
 
@@ -318,7 +318,7 @@ UaStatus Configuration::setupSecurity(SessionSecurityInfo& sessionSecurityInfo)
     return result;
 }
 
-UaStatus Configuration::updateNamespaceIndexes(const UaStringArray& namespaceArray)
+UaStatus CInoUAClientConfig::updateNamespaceIndexes(const UaStringArray& namespaceArray)
 {
     UaStatus result;
     OpcUa_UInt32 i, j;

@@ -2,8 +2,8 @@
 
 #include "uaplatformlayer.h"
 #include "statuscode.h"
-#include "sampleclient.h"
-#include "CommonDef.h"
+#include "CInoUAClient.h"
+#include "InoCommonDef.h"
 
 CInoUAClientProxyMgr::CInoUAClientProxyMgr()
 {
@@ -26,7 +26,7 @@ bool CInoUAClientProxyMgr::init()
 bool CInoUAClientProxyMgr::cleanup()
 {
     // 清除客户端调用
-    for (pair<string, SampleClient*> pi : m_mapClient)
+    for (pair<string, CInoUAClient*> pi : m_mapClient)
     {
         DelAndNil(pi.second);
     }
@@ -38,7 +38,7 @@ bool CInoUAClientProxyMgr::cleanup()
 
 bool CInoUAClientProxyMgr::connect(const string& sURL)
 {
-    SampleClient* pMyClient = new SampleClient();
+    CInoUAClient* pMyClient = new CInoUAClient();
 
     // 连接到 OPC UA 服务器
     UaStatus status = pMyClient->connect(sURL.c_str());

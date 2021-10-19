@@ -5,15 +5,15 @@
 
 using namespace UaClientSdk;
 
-class Configuration;
+class CInoUAClientConfig;
 
-class SampleSubscription :
+class CInoUAClientSubscription :
     public UaSubscriptionCallback
 {
-    UA_DISABLE_COPY(SampleSubscription);
+    UA_DISABLE_COPY(CInoUAClientSubscription);
 public:
-    SampleSubscription(Configuration* pConfiguration);
-    virtual ~SampleSubscription();
+    CInoUAClientSubscription(CInoUAClientConfig* pConfiguration);
+    virtual ~CInoUAClientSubscription();
 
     // 回调
     virtual void subscriptionStatusChanged(
@@ -35,7 +35,7 @@ public:
     UaStatus createMonitoredItems();
 
     // 设置要监控的 NodeId 列表的配置
-    void setConfiguration(Configuration* pConfiguration);
+    void setConfiguration(CInoUAClientConfig* pConfiguration);
 
 private:
     UaStatus recoverSubscription();
@@ -43,5 +43,5 @@ private:
 private:
     UaSession* m_pSession;
     UaSubscription* m_pSubscription;
-    Configuration* m_pConfiguration;
+    CInoUAClientConfig* m_pConfiguration;
 };

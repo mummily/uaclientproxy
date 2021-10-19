@@ -1,16 +1,16 @@
-#include "samplesubscription.h"
+#include "CInoUAClientSubscription.h"
 #include "uasubscription.h"
 #include "uasession.h"
-#include "configuration.h"
+#include "CInoUAClientConfig.h"
 
-SampleSubscription::SampleSubscription(Configuration* pConfiguration)
+CInoUAClientSubscription::CInoUAClientSubscription(CInoUAClientConfig* pConfiguration)
 : m_pSession(nullptr),
   m_pSubscription(nullptr),
   m_pConfiguration(pConfiguration)
 {
 }
 
-SampleSubscription::~SampleSubscription()
+CInoUAClientSubscription::~CInoUAClientSubscription()
 {
     if ( m_pSubscription )
     {
@@ -18,7 +18,7 @@ SampleSubscription::~SampleSubscription()
     }
 }
 
-void SampleSubscription::subscriptionStatusChanged(
+void CInoUAClientSubscription::subscriptionStatusChanged(
     OpcUa_UInt32      clientSubscriptionHandle,
     const UaStatus& status)
 {
@@ -33,7 +33,7 @@ void SampleSubscription::subscriptionStatusChanged(
     }
 }
 
-void SampleSubscription::dataChange(
+void CInoUAClientSubscription::dataChange(
     OpcUa_UInt32               clientSubscriptionHandle,
     const UaDataNotifications& dataNotifications,
     const UaDiagnosticInfos& diagnosticInfos)
@@ -59,7 +59,7 @@ void SampleSubscription::dataChange(
     printf("------------------------------------------------------------\n");
 }
 
-void SampleSubscription::newEvents(
+void CInoUAClientSubscription::newEvents(
     OpcUa_UInt32                clientSubscriptionHandle,
     UaEventFieldLists& eventFieldList)
 {
@@ -80,7 +80,7 @@ void SampleSubscription::newEvents(
     printf("------------------------------------------------------------\n");
 }
 
-UaStatus SampleSubscription::createSubscription(UaSession* pSession)
+UaStatus CInoUAClientSubscription::createSubscription(UaSession* pSession)
 {
     if ( m_pSubscription )
     {
@@ -118,7 +118,7 @@ UaStatus SampleSubscription::createSubscription(UaSession* pSession)
     return result;
 }
 
-UaStatus SampleSubscription::deleteSubscription()
+UaStatus CInoUAClientSubscription::deleteSubscription()
 {
     if ( m_pSubscription == nullptr )
     {
@@ -149,7 +149,7 @@ UaStatus SampleSubscription::deleteSubscription()
     return result;
 }
 
-UaStatus SampleSubscription::createMonitoredItems()
+UaStatus CInoUAClientSubscription::createMonitoredItems()
 {
     if ( m_pSubscription == nullptr )
     {
@@ -239,12 +239,12 @@ UaStatus SampleSubscription::createMonitoredItems()
     return result;
 }
 
-void SampleSubscription::setConfiguration(Configuration* pConfiguration)
+void CInoUAClientSubscription::setConfiguration(CInoUAClientConfig* pConfiguration)
 {
     m_pConfiguration = pConfiguration;
 }
 
-UaStatus SampleSubscription::recoverSubscription()
+UaStatus CInoUAClientSubscription::recoverSubscription()
 {
     UaStatus result;
 
