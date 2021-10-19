@@ -7,6 +7,7 @@
 using namespace std;
 
 class CInoUAClientProxy;
+enum class emFAServerType;
 class INO_EXPORT CInoUAClientProxyMgr
 {
 public:
@@ -14,6 +15,7 @@ public:
     virtual ~CInoUAClientProxyMgr();
 
 public:
+    CInoUAClientProxy* GetClientProxy(emFAServerType serverType);
     CInoUAClientProxy* GetRtClientProxy();
 
 protected:

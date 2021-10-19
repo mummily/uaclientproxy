@@ -23,8 +23,6 @@ public:
     virtual void connectionStatusChanged(OpcUa_UInt32 clientConnectionId, UaClient::ServerStatus serverStatus);
     // 设置配置信息
     void setConfiguration(CInoUAClientConfig* pConfiguration);
-    // 获取配置信息
-    CInoUAClientConfig* getConfiguration() { return m_pConfiguration; }
 
     OpcUa_Boolean isConnected() const;
     // OPC UA 服务调用

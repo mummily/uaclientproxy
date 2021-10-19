@@ -9,7 +9,7 @@ class CInoUAClientConfig;
 class INO_EXPORT CInoUAClientProxy
 {
 public:
-    CInoUAClientProxy(emFAServerType _emFAServerType);
+    CInoUAClientProxy(emFAServerType serverType);
     virtual ~CInoUAClientProxy();
 
     friend class CInoUAClientProxyMgr;

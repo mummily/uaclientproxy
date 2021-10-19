@@ -23,26 +23,51 @@ CInoUAClientProxyMgr::~CInoUAClientProxyMgr()
     cleanup();
 }
 
+// 描述：获取客户端代理
+// 备注：无
+CInoUAClientProxy* CInoUAClientProxyMgr::GetClientProxy(emFAServerType serverType)
+{
+    CInoUAClientProxy* pClientProxy = nullptr;
+    switch (serverType)
+    {
+    case emFAServerType::RealTime:
+        pClientProxy = m_pRtClientProxy;
+        break;
+    case emFAServerType::IO:
+        pClientProxy = m_pIOClientProxy;
+        break;
+    }
+
+    if (nullptr == pClientProxy)
+        return nullptr;
+
+    if (!pClientProxy->isconnect())
+    {
+        pClientProxy->connect();
+    }
+
+    return pClientProxy;
+}
+
+// 描述：初始化 UA Stack 平台层
+// 备注：无
 bool CInoUAClientProxyMgr::init()
 {
-    // 初始化 UA Stack 平台层
     int iOk = UaPlatformLayer::init();
     assert(iOk != -1);
     return true;
 }
 
+// 描述：清理 UA Stack 平台层
+// 备注：无
 void CInoUAClientProxyMgr::cleanup()
 {
-    // 清理 UA Stack 平台层
     UaPlatformLayer::cleanup();
 }
 
+// 描述：获取实时服务客户端代理
+// 备注：无
 CInoUAClientProxy* CInoUAClientProxyMgr::GetRtClientProxy()
 {
-    if (!m_pRtClientProxy->isconnect())
-    {
-        m_pRtClientProxy->connect();
-    }
-
-    return m_pRtClientProxy;
+    return GetClientProxy(emFAServerType::RealTime);
 }

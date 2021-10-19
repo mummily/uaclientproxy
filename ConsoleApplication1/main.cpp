@@ -7,6 +7,7 @@
 #include <memory>
 #include <assert.h>
 #include "CInoUAClientProxyMgr.h"
+#include <thread>
 
 using namespace std;
 
@@ -17,6 +18,12 @@ int main()
 
     // UA客户端连接
     spClientProxyMgr->GetRtClientProxy();
+
+    // UA客户端等待
+    while (getchar() != 'q')
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    }
 
     return 0;
 }

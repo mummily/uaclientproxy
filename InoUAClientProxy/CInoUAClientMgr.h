@@ -18,8 +18,6 @@ public:
     CInoUAClient* getUAClient();
     // 设置配置信息
     void setConfiguration(CInoUAClientConfig* pConfiguration);
-    // 获取配置信息
-    CInoUAClientConfig* getConfiguration();
 
 protected:
 

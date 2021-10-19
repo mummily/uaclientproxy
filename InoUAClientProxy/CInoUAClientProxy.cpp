@@ -7,8 +7,8 @@
 #include "uaunistring.h"
 #include "uadir.h"
 
-CInoUAClientProxy::CInoUAClientProxy(emFAServerType _emFAServerType)
-    : m_emFAServerType(_emFAServerType)
+CInoUAClientProxy::CInoUAClientProxy(emFAServerType serverType)
+    : m_emFAServerType(serverType)
 {
     m_pUAClientMgr = new CInoUAClientMgr();
 }

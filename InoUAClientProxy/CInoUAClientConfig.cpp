@@ -12,66 +12,92 @@ CInoUAClientConfig::~CInoUAClientConfig()
 {
 }
 
+// 描述：TODO
+// 备注：无
 UaString CInoUAClientConfig::getServerUrl() const
 {
     return m_serverUrl;
 }
 
+// 描述：TODO
+// 备注：无
 UaString CInoUAClientConfig::getDiscoveryUrl() const
 {
     return m_discoveryUrl;
 }
 
+// 描述：TODO
+// 备注：无
 UaString CInoUAClientConfig::getApplicationName() const
 {
     return m_applicationName;
 }
 
+// 描述：TODO
+// 备注：无
 OpcUa_Boolean CInoUAClientConfig::getAutomaticReconnect() const
 {
     return m_bAutomaticReconnect;
 }
 
+// 描述：TODO
+// 备注：无
 OpcUa_Boolean CInoUAClientConfig::getRetryInitialConnect() const
 {
     return m_bRetryInitialConnect;
 }
 
+// 描述：TODO
+// 备注：无
 UaNodeIdArray CInoUAClientConfig::getNodesToRead() const
 {
     return m_nodesToRead;
 }
 
+// 描述：TODO
+// 备注：无
 UaNodeIdArray CInoUAClientConfig::getNodesToWrite() const
 {
     return m_nodesToWrite;
 }
 
+// 描述：TODO
+// 备注：无
 UaNodeIdArray CInoUAClientConfig::getNodesToMonitor() const
 {
     return m_nodesToMonitor;
 }
 
+// 描述：TODO
+// 备注：无
 UaVariantArray CInoUAClientConfig::getWriteValues() const
 {
     return m_writeValues;
 }
 
+// 描述：TODO
+// 备注：无
 UaNodeId CInoUAClientConfig::getEventTypeToFilter() const
 {
     return m_eventTypeToFilter;
 }
 
+// 描述：TODO
+// 备注：无
 UaNodeIdArray CInoUAClientConfig::getMethodsToCall() const
 {
     return m_methodsToCall;
 }
 
+// 描述：TODO
+// 备注：无
 UaNodeIdArray CInoUAClientConfig::getObjectsToCall() const
 {
     return m_objectToCall;
 }
 
+// 描述：加载客户端连接配置
+// 备注：无
 UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFile)
 {
     if (!UaDir("").exists(sConfigurationFile.toUtf8()))
@@ -236,6 +262,8 @@ UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFil
     return result;
 }
 
+// 描述：安装安全证书
+// 备注：无
 UaStatus CInoUAClientConfig::setupSecurity(SessionSecurityInfo& sessionSecurityInfo)
 {
     UaStatus result;
@@ -324,6 +352,8 @@ UaStatus CInoUAClientConfig::setupSecurity(SessionSecurityInfo& sessionSecurityI
     return result;
 }
 
+// 描述：更新命令空间索引
+// 备注：无
 UaStatus CInoUAClientConfig::updateNamespaceIndexes(const UaStringArray& namespaceArray)
 {
     UaStatus result;
