@@ -16,8 +16,7 @@ int main()
     shared_ptr<CInoUAClientProxyMgr> spClientProxyMgr = make_shared<CInoUAClientProxyMgr>();
 
     // UA客户端连接
-    string sURL("opc.tcp://localhost:48010");
-    spClientProxyMgr->connect(sURL);
+    spClientProxyMgr->GetRtClientProxy();
 
     return 0;
 }

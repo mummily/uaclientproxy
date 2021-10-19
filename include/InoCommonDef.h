@@ -21,3 +21,10 @@
 #ifdef INO_PRINTF
 #define printf(fmt,...) printf(__FUNCTION__ "(" STR(__LINE__) "): " fmt, __VA_ARGS__)
 #endif
+
+// 服务类型
+enum class emFAServerType
+{
+    RealTime = 0, // 实时服务
+    IO // IO服务
+};

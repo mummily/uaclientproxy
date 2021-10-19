@@ -7,6 +7,8 @@
 class CInoUAClientSubscription;
 class CInoUAClientConfig;
 class CInoUAClientMgr;
+enum class emFAServerType;
+
 using namespace UaClientSdk;
 
 class INO_EXPORT CInoUAClient : public UaSessionCallback
@@ -14,7 +16,7 @@ class INO_EXPORT CInoUAClient : public UaSessionCallback
     UA_DISABLE_COPY(CInoUAClient);
 
 public:
-    CInoUAClient();
+    CInoUAClient(emFAServerType _emFAServerType);
     virtual ~CInoUAClient();
 
     friend class CInoUAClientMgr;
@@ -25,7 +27,6 @@ public:
     void setConfiguration(CInoUAClientConfig* pConfiguration);
 
     OpcUa_Boolean isConnected() const;
-    UaStatus connect(const UaString& sURL);
     // OPC UA 服务调用
     UaStatus discover();
     UaStatus connect();
@@ -41,7 +42,6 @@ public:
     UaStatus registerNodes();
     UaStatus unregisterNodes();
     UaStatus callMethods();
-
 private:
     UaStatus browseInternal(const UaNodeId& nodeToBrowse, OpcUa_UInt32 maxReferencesToReturn);
     UaStatus connectInternal(const UaString& serverUrl, SessionSecurityInfo& sessionSecurityInfo);

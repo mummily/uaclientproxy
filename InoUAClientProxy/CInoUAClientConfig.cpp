@@ -74,6 +74,12 @@ UaNodeIdArray CInoUAClientConfig::getObjectsToCall() const
 
 UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFile)
 {
+    if (!UaDir("").exists(sConfigurationFile.toUtf8()))
+    {
+        printf("未发现配置文件：%s", sConfigurationFile.toUtf8());
+        return OpcUa_BadInvalidArgument;
+    }
+
     UaStatus result;
     UaVariant value;
     UaString sTempKey;

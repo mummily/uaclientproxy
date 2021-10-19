@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class CInoUAClient;
+class CInoUAClientProxy;
 class INO_EXPORT CInoUAClientProxyMgr
 {
 public:
@@ -14,8 +14,7 @@ public:
     virtual ~CInoUAClientProxyMgr();
 
 public:
-    // 连接客户端
-    bool connect(const string& sURL);
+    CInoUAClientProxy* GetRtClientProxy();
 
 protected:
 
@@ -23,8 +22,9 @@ private:
     // 初始化UA环境
     bool init();
     // 清除UA环境
-    bool cleanup();
+    void cleanup();
 
 private:
-    map<string, CInoUAClient*> m_mapClient;
+    CInoUAClientProxy* m_pRtClientProxy = nullptr; // 实时服务客户端代理
+    CInoUAClientProxy* m_pIOClientProxy = nullptr; // IO服务客户端代理
 };

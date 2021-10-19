@@ -6,11 +6,33 @@
 #include "uapkicertificate.h"
 #include "uaplatformdefs.h"
 #include "InoCommonDef.h"
+#include "uadir.h"
 
-CInoUAClient::CInoUAClient()
+CInoUAClient::CInoUAClient(emFAServerType _emFAServerType)
 {
     m_pSession = new UaSession();
+
+    wchar_t szFullPath[MAX_PATH];
+    GetModuleFileNameW(NULL, szFullPath, sizeof(szFullPath));
+
+    // 获取配置文件路径
+    UaString sConfigFile(szFullPath);
+    switch (_emFAServerType)
+    {
+    case emFAServerType::RealTime:
+        sConfigFile += "/../rtconfig.ini";
+        break;
+    case emFAServerType::IO:
+        sConfigFile += "/../ioconfig.ini";
+        break;
+    }
+
     m_pConfiguration = new CInoUAClientConfig();
+
+    UaDir dir(sConfigFile.toUtf8());
+    UaStatus status = m_pConfiguration->loadConfiguration(dir.canonicalPath().toUtf16());
+    assert(status.isGood());
+
     m_pSampleSubscription = new CInoUAClientSubscription(m_pConfiguration);
 }
 
@@ -174,46 +196,6 @@ UaStatus CInoUAClient::discover()
 OpcUa_Boolean CInoUAClient::isConnected() const
 {
     return m_pSession->isConnected();
-}
-
-UaStatus CInoUAClient::connect(const UaString& sURL)
-{
-    UaStatus result;
-
-    // 提供有关客户端的信息
-    SessionConnectInfo sessionConnectInfo;
-    UaString sNodeName("unknown_host");
-    char szHostName[256];
-    if (0 == UA_GetHostname(szHostName, 256))
-    {
-        sNodeName = szHostName;
-    }
-    sessionConnectInfo.sApplicationName = "Unified Automation Getting Started Client";
-    // 使用主机名生成唯一的应用程序 URI
-    sessionConnectInfo.sApplicationUri = UaString("urn:%1:UnifiedAutomation:GettingStartedClient").arg(sNodeName);
-    sessionConnectInfo.sProductUri = "urn:UnifiedAutomation:GettingStartedClient";
-    sessionConnectInfo.sSessionName = sessionConnectInfo.sApplicationUri;
-
-    // 安全设置未初始化 - 暂时没有安全连接
-    SessionSecurityInfo sessionSecurityInfo;
-
-    printf("\nConnecting to %s\n", sURL.toUtf8());
-    result = m_pSession->connect(
-        sURL,
-        sessionConnectInfo,
-        sessionSecurityInfo,
-        this);
-
-    if (result.isGood())
-    {
-        printf("Connect succeeded\n");
-    }
-    else
-    {
-        printf("Connect failed with status %s\n", result.toString().toUtf8());
-    }
-
-    return result;
 }
 
 UaStatus CInoUAClient::connect()

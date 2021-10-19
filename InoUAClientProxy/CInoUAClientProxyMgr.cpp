@@ -2,16 +2,24 @@
 
 #include "uaplatformlayer.h"
 #include "statuscode.h"
-#include "CInoUAClient.h"
 #include "InoCommonDef.h"
+#include "CInoUAClientProxy.h"
 
 CInoUAClientProxyMgr::CInoUAClientProxyMgr()
 {
     init();
+
+    // 创建客户端代理
+    m_pRtClientProxy = new CInoUAClientProxy(emFAServerType::RealTime);
+    m_pIOClientProxy = new CInoUAClientProxy(emFAServerType::IO);
 }
 
 CInoUAClientProxyMgr::~CInoUAClientProxyMgr()
 {
+    // 清除客户端代理调用
+    DelAndNil(m_pRtClientProxy);
+    DelAndNil(m_pIOClientProxy);
+
     cleanup();
 }
 
@@ -23,29 +31,18 @@ bool CInoUAClientProxyMgr::init()
     return true;
 }
 
-bool CInoUAClientProxyMgr::cleanup()
+void CInoUAClientProxyMgr::cleanup()
 {
-    // 清除客户端调用
-    for (pair<string, CInoUAClient*> pi : m_mapClient)
-    {
-        DelAndNil(pi.second);
-    }
-
     // 清理 UA Stack 平台层
     UaPlatformLayer::cleanup();
-    return true;
 }
 
-bool CInoUAClientProxyMgr::connect(const string& sURL)
+CInoUAClientProxy* CInoUAClientProxyMgr::GetRtClientProxy()
 {
-    CInoUAClient* pMyClient = new CInoUAClient();
+    if (!m_pRtClientProxy->isconnect())
+    {
+        m_pRtClientProxy->connect();
+    }
 
-    // 连接到 OPC UA 服务器
-    UaStatus status = pMyClient->connect(sURL.c_str());
-    if (!status.isGood())
-        return false;
-
-    m_mapClient[sURL] = pMyClient;
-
-    return true;
+    return m_pRtClientProxy;
 }
