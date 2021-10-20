@@ -27,6 +27,6 @@ protected:
 private:
     CInoUAClientMgr* m_pUAClientMgr = nullptr; // 主备客户端管理器
     CInoUAClientConfig* m_pUAClientConfig = nullptr; //主备客户端配置
-    emFAServerType m_emFAServerType;
+    emFAServerType m_emFAServerType; // FA服务器类型
 };
 

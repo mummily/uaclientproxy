@@ -28,10 +28,9 @@ bool CInoUAClientProxy::connect()
         m_pUAClientConfig = new CInoUAClientConfig();
         UaStatus status = m_pUAClientConfig->loadConfiguration(GetConfigPath().toUtf16());
         assert(status.isGood());
-
-        m_pUAClientMgr->setConfiguration(m_pUAClientConfig);
     }
 
+    m_pUAClientMgr->setConfiguration(m_pUAClientConfig);
     UaStatus status = m_pUAClientMgr->connect();
     return status.isGood();
 }
@@ -40,7 +39,8 @@ bool CInoUAClientProxy::connect()
 // 备注：无
 bool CInoUAClientProxy::isconnect()
 {
-    return m_pUAClientMgr->getUAClient()->isConnected() != OpcUa_False;
+    CInoUAClient* pUAClient = m_pUAClientMgr->getUAClient();
+    return pUAClient->isConnected() != OpcUa_False;
 }
 
 // 描述：获取客户端配置

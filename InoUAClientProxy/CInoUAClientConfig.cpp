@@ -3,6 +3,7 @@
 #include "uadir.h"
 #include "uapkicertificate.h"
 #include "InoCommonDef.h"
+#include "ScopeExit.h"
 
 CInoUAClientConfig::CInoUAClientConfig()
 {
@@ -12,84 +13,96 @@ CInoUAClientConfig::~CInoUAClientConfig()
 {
 }
 
-// 描述：TODO
+// 描述：getServerUrl
+// 时间：2021-10-20
 // 备注：无
 UaString CInoUAClientConfig::getServerUrl() const
 {
     return m_serverUrl;
 }
 
-// 描述：TODO
+// 描述：getDiscoveryUrl
+// 时间：2021-10-20
 // 备注：无
 UaString CInoUAClientConfig::getDiscoveryUrl() const
 {
     return m_discoveryUrl;
 }
 
-// 描述：TODO
+// 描述：getApplicationName
+// 时间：2021-10-20
 // 备注：无
 UaString CInoUAClientConfig::getApplicationName() const
 {
     return m_applicationName;
 }
 
-// 描述：TODO
+// 描述：getAutomaticReconnect
+// 时间：2021-10-20
 // 备注：无
 OpcUa_Boolean CInoUAClientConfig::getAutomaticReconnect() const
 {
     return m_bAutomaticReconnect;
 }
 
-// 描述：TODO
+// 描述：getRetryInitialConnect
+// 时间：2021-10-20
 // 备注：无
 OpcUa_Boolean CInoUAClientConfig::getRetryInitialConnect() const
 {
     return m_bRetryInitialConnect;
 }
 
-// 描述：TODO
+// 描述：返回读取节点
+// 时间：2021-10-20
 // 备注：无
 UaNodeIdArray CInoUAClientConfig::getNodesToRead() const
 {
     return m_nodesToRead;
 }
 
-// 描述：TODO
+// 描述：返回写入节点
+// 时间：2021-10-20
 // 备注：无
 UaNodeIdArray CInoUAClientConfig::getNodesToWrite() const
 {
     return m_nodesToWrite;
 }
 
-// 描述：TODO
+// 描述：返回监视节点
+// 时间：2021-10-20
 // 备注：无
 UaNodeIdArray CInoUAClientConfig::getNodesToMonitor() const
 {
     return m_nodesToMonitor;
 }
 
-// 描述：TODO
+// 描述：返回写值
+// 时间：2021-10-20
 // 备注：无
 UaVariantArray CInoUAClientConfig::getWriteValues() const
 {
     return m_writeValues;
 }
 
-// 描述：TODO
+// 描述：返回事件类型过滤
+// 时间：2021-10-20
 // 备注：无
 UaNodeId CInoUAClientConfig::getEventTypeToFilter() const
 {
     return m_eventTypeToFilter;
 }
 
-// 描述：TODO
+// 描述：返回回调方法
+// 时间：2021-10-20
 // 备注：无
 UaNodeIdArray CInoUAClientConfig::getMethodsToCall() const
 {
     return m_methodsToCall;
 }
 
-// 描述：TODO
+// 描述：返回回调对象
+// 时间：2021-10-20
 // 备注：无
 UaNodeIdArray CInoUAClientConfig::getObjectsToCall() const
 {
@@ -97,6 +110,7 @@ UaNodeIdArray CInoUAClientConfig::getObjectsToCall() const
 }
 
 // 描述：加载客户端连接配置
+// 时间：2021-10-20
 // 备注：无
 UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFile)
 {
@@ -106,163 +120,159 @@ UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFil
         return OpcUa_BadInvalidArgument;
     }
 
-    UaStatus result;
-    UaVariant value;
-    UaString sTempKey;
-    OpcUa_UInt32 i = 0;
-    OpcUa_UInt32 size = 0;
-    OpcUa_Byte byteVal;
-    UaSettings* pSettings = nullptr;
-    pSettings = new UaSettings(sConfigurationFile.toUtf16());
+    UaSettings* pSettings = new UaSettings(sConfigurationFile.toUtf16());
+    SCOPE_EXIT(DelAndNil(pSettings););
 
     pSettings->beginGroup("InoClientConfig");
+    SCOPE_EXIT(pSettings->endGroup(););
+
+    // 获取值
+    auto getValueAsString = [&](const UaUniString& sKey, const UaVariant& defaultValue = UaVariant())
+        ->UaString
+    {
+        UaVariant value = pSettings->value("CertificateTrustListLocation", defaultValue);
+        return value.toString();
+    };
+    auto getValueAsBool = [&](const UaUniString& sKey, const UaVariant& defaultValue = UaVariant())
+        ->OpcUa_Boolean
+    {
+        UaVariant value = pSettings->value("CertificateTrustListLocation", defaultValue);
+        OpcUa_Boolean bVal;
+        OpcUa_StatusCode status = value.toBool(bVal);
+        assert(OpcUa_IsGood(status));
+        return bVal;
+    };
+    auto getValueAsU32 = [&](const UaUniString& sKey, const UaVariant& defaultValue = UaVariant())
+        ->OpcUa_UInt32
+    {
+        UaVariant value = pSettings->value("CertificateTrustListLocation", defaultValue);
+        OpcUa_UInt32 u32Val;
+        OpcUa_StatusCode status = value.toUInt32(u32Val);
+        assert(OpcUa_IsGood(status));
+        return u32Val;
+    };
+    auto getValueAsByte = [&](const UaUniString& sKey, const UaVariant& defaultValue = UaVariant())
+        ->OpcUa_Byte
+    {
+        UaVariant value = pSettings->value("CertificateTrustListLocation", defaultValue);
+        OpcUa_Byte byteVal;
+        OpcUa_StatusCode status = value.toByte(byteVal);
+        assert(OpcUa_IsGood(status));
+        return byteVal;
+    };
+    auto readNodeGroup = [&](UaNodeIdArray& nodeArray, const UaUniString& sGroup, const UaString& sNode)
+    {
+        nodeArray.clear();
+
+        pSettings->beginGroup(sGroup);
+        SCOPE_EXIT(pSettings->endGroup(););
+
+        OpcUa_UInt32 size = getValueAsU32("size", (OpcUa_UInt32)0);
+        nodeArray.resize(size);
+        for (OpcUa_UInt32 i = 0; i < size; i++)
+        {
+            UaString sTempKey = UaString("%0%1").arg(sNode).arg((int)i);
+            UaString value = getValueAsString(sTempKey.toUtf16(), UaString(""));
+            UaNodeId::fromXmlString(value).copyTo(&nodeArray[i]);
+        }
+    };
+    auto readStringGroup = [&](UaStringArray& nodeArray, const UaUniString& sGroup, const UaString& sNode)
+    {
+        nodeArray.clear();
+
+        pSettings->beginGroup(sGroup);
+        SCOPE_EXIT(pSettings->endGroup(););
+
+        OpcUa_UInt32 size = getValueAsU32("size", (OpcUa_UInt32)0);
+        nodeArray.resize(size);
+        for (OpcUa_UInt32 i = 0; i < size; i++)
+        {
+            UaString sTempKey = UaString("%0%1").arg(sNode).arg((int)i);
+            UaString value = getValueAsString(sTempKey.toUtf16(), UaString(""));
+            value.copyTo(&nodeArray[i]);
+        }
+    };
 
     // 证书和信任列表位置
-    value = pSettings->value("CertificateTrustListLocation");
-    m_certificateTrustListLocation = value.toString();
-    value = pSettings->value("CertificateRevocationListLocation");
-    m_certificateRevocationListLocation = value.toString();
-    value = pSettings->value("IssuersCertificatesLocation");
-    m_issuersCertificatesLocation = value.toString();
-    value = pSettings->value("IssuersRevocationListLocation");
-    m_issuersRevocationListLocation = value.toString();
-    value = pSettings->value("ClientCertificate");
-    m_clientCertificateFile = value.toString();
-    value = pSettings->value("ClientPrivateKey");
-    m_clientPrivateKeyFile = value.toString();
+    m_certificateTrustListLocation = getValueAsString("CertificateTrustListLocation");
+    m_certificateRevocationListLocation = getValueAsString("CertificateRevocationListLocation");
+    m_issuersCertificatesLocation = getValueAsString("IssuersCertificatesLocation");
+    m_issuersRevocationListLocation = getValueAsString("IssuersRevocationListLocation");
+    m_clientCertificate = getValueAsString("ClientCertificate");
+    m_clientPrivateKey = getValueAsString("ClientPrivateKey");
 
     // 应用名称
-    value = pSettings->value("ApplicationName", UaString());
-    m_applicationName = value.toString();
+    m_applicationName = getValueAsString("ApplicationName", UaString());
 
     // 服务器 URL
-    value = pSettings->value("DiscoveryURL", UaString("opc.tcp://localhost:48010"));
-    m_discoveryUrl = value.toString();
-    value = pSettings->value("ServerUrl", UaString("opc.tcp://localhost:48010"));
-    m_serverUrl = value.toString();
+    m_discoveryUrl = getValueAsString("DiscoveryURL", UaString("opc.tcp://localhost:48010"));
+    m_serverUrl = getValueAsString("ServerUrl", UaString("opc.tcp://localhost:48010"));
 
-    // Reconnection settings
-    value = pSettings->value("AutomaticReconnect", UaVariant((OpcUa_Boolean)OpcUa_True));
-    value.toBool(m_bAutomaticReconnect);
-    value = pSettings->value("RetryInitialConnect", UaVariant((OpcUa_Boolean)OpcUa_False));
-    value.toBool(m_bRetryInitialConnect);
+    // 重连设置
+    m_bAutomaticReconnect = getValueAsBool("AutomaticReconnect", UaVariant((OpcUa_Boolean)OpcUa_True));
+    m_bRetryInitialConnect = getValueAsBool("RetryInitialConnect", UaVariant((OpcUa_Boolean)OpcUa_False));
 
-    // 读取命名空间数组
-    m_namespaceArray.clear();
-    pSettings->beginGroup("NSArray");
-    value = pSettings->value("size", (OpcUa_UInt32)0);
-    value.toUInt32(size);
-    m_namespaceArray.resize(size);
-    for (i = 0; i < size; i++)
-    {
-        sTempKey = UaString("NameSpaceUri0%1").arg((int)i);
-        value = pSettings->value(sTempKey.toUtf16(), UaString(""));
-        value.toString().copyTo(&m_namespaceArray[i]);
-    }
-    pSettings->endGroup();  // NSArray
+    // 读取 EventTypeToFilter --> 事件过滤：m_eventTypeToFilter
+    m_eventTypeToFilter = UaNodeId::fromXmlString(getValueAsString("EventTypeToFilter", UaString("")));
 
-    // 读取 NodeIds 以用于读取
-    m_nodesToRead.clear();
-    pSettings->beginGroup("NodesToRead");
-    value = pSettings->value("size", (OpcUa_UInt32)0);
-    value.toUInt32(size);
-    m_nodesToRead.resize(size);
-    for (i = 0; i < size; i++)
-    {
-        sTempKey = UaString("Variable0%1").arg((int)i);
-        value = pSettings->value(sTempKey.toUtf16(), UaString(""));
-        UaNodeId::fromXmlString(value.toString()).copyTo(&m_nodesToRead[i]);
-    }
-    pSettings->endGroup();  // NodesToRead
+    // 读取 NSArray 命名空间数组 --> m_namespaceArray
+    readStringGroup(m_namespaceArray, "NSArray", "NameSpaceUri0");
 
-    // 读取 NodeIds、数据类型和值以用于写入
-    m_nodesToWrite.clear();
-    pSettings->beginGroup("NodesToWrite");
-    value = pSettings->value("size", (OpcUa_UInt32)0);
-    value.toUInt32(size);
-    // NodeIds
-    m_nodesToWrite.resize(size);
-    for (i = 0; i < size; i++)
+    // 读取 NodesToRead --> 读取的变量：m_nodesToRead
+    readNodeGroup(m_nodesToRead, "NodesToRead", "Variable0");
+
+    // 读取 NodesToWrite --> 写入的变量：m_nodesToWrite 写入的变量的值：m_writeValues
     {
-        sTempKey = UaString("Variable0%1").arg((int)i);
-        value = pSettings->value(sTempKey.toUtf16(), UaString(""));
-        UaNodeId::fromXmlString(value.toString()).copyTo(&m_nodesToWrite[i]);
-    }
-    // DataTypes
-    UaByteArray writeDataTypes;
-    writeDataTypes.resize(size);
-    for (i = 0; i < size; i++)
-    {
-        sTempKey = UaString("DataType0%1").arg((int)i);
-        value = pSettings->value(sTempKey.toUtf16(), UaString(""));
-        value.toByte(byteVal);
-        writeDataTypes[(int)i] = byteVal;
-    }
-    // Values
-    m_writeValues.resize(size);
-    for (i = 0; i < size; i++)
-    {
-        sTempKey = UaString("Value0%1").arg((int)i);
-        value = pSettings->value(sTempKey.toUtf16());
-        // 将值转换为正确的类型
-        OpcUa_BuiltInType type = (OpcUa_BuiltInType)(char)writeDataTypes[(int)i];
-        if (OpcUa_IsGood(value.changeType(type, OpcUa_False)))
+        readNodeGroup(m_nodesToWrite, "NodesToWrite", "Variable0");
+
+        pSettings->beginGroup("NodesToWrite");
+        SCOPE_EXIT(pSettings->endGroup(););
+
+        OpcUa_UInt32 size = getValueAsU32("size", (OpcUa_UInt32)0);
+
+        // DataTypes
+        UaByteArray writeDataTypes;
+        writeDataTypes.resize(size);
+        for (OpcUa_UInt32 i = 0; i < size; i++)
         {
-            value.copyTo(&m_writeValues[i]);
+            UaString sTempKey = UaString("DataType0%1").arg((int)i);
+            writeDataTypes[(int)i] = getValueAsByte(sTempKey.toUtf16(), UaString(""));
         }
-        else
+
+        // Values
+        m_writeValues.clear();
+        m_writeValues.resize(size);
+        for (OpcUa_UInt32 i = 0; i < size; i++)
         {
-            printf("Cannot convert variant value: %s\n", value.toString().toUtf8());
+            UaString sTempKey = UaString("Value0%1").arg((int)i);
+            UaVariant value = pSettings->value(sTempKey.toUtf16());
+            // 将值转换为正确的类型
+            OpcUa_BuiltInType type = (OpcUa_BuiltInType)(char)writeDataTypes[(int)i];
+            if (OpcUa_IsGood(value.changeType(type, OpcUa_False)))
+            {
+                value.copyTo(&m_writeValues[i]);
+            }
+            else
+            {
+                printf("Cannot convert variant value: %s\n", value.toString().toUtf8());
+            }
         }
     }
-    pSettings->endGroup();  // NodesToWrite
 
-    // 读取 NodeIds 以用于监控
-    m_nodesToMonitor.clear();
-    pSettings->beginGroup("NodesToMonitor");
-    value = pSettings->value("size", (OpcUa_UInt32)0);
-    value.toUInt32(size);
-    m_nodesToMonitor.resize(size);
-    for (i = 0; i < size; i++)
-    {
-        sTempKey = UaString("Variable0%1").arg((int)i);
-        value = pSettings->value(sTempKey.toUtf16(), UaString(""));
-        UaNodeId::fromXmlString(value.toString()).copyTo(&m_nodesToMonitor[i]);
-    }
-    pSettings->endGroup();  // NodesToMonitor
+    // 读取 NodesToMonitor --> 监视的变量：m_nodesToMonitor
+    readNodeGroup(m_nodesToMonitor, "NodesToMonitor", "Variable0");
 
-    // 读取我们用于过滤的 EventType 的 NodeIds
-    value = pSettings->value("EventTypeToFilter", UaString(""));
-    m_eventTypeToFilter = UaNodeId::fromXmlString(value.toString());
+    // 读取 MethodsToCall --> 方法：m_methodsToCall
+    readNodeGroup(m_methodsToCall, "MethodsToCall", "Method0");
+    // 读取 MethodsToCall --> 对象：m_objectToCall
+    readNodeGroup(m_objectToCall, "MethodsToCall", "Object0");
 
-    // 读取 NodeIds 以调用方法
-    m_methodsToCall.clear();
-    m_objectToCall.clear();
-    pSettings->beginGroup("MethodsToCall");
-    value = pSettings->value("size", (OpcUa_UInt32)0);
-    value.toUInt32(size);
-    m_methodsToCall.resize(size);
-    m_objectToCall.resize(size);
-    for (i = 0; i < size; i++)
-    {
-        sTempKey = UaString("Method0%1").arg((int)i);
-        value = pSettings->value(sTempKey.toUtf16(), UaString(""));
-        UaNodeId::fromXmlString(value.toString()).copyTo(&m_methodsToCall[i]);
-
-        sTempKey = UaString("Object0%1").arg((int)i);
-        value = pSettings->value(sTempKey.toUtf16(), UaString(""));
-        UaNodeId::fromXmlString(value.toString()).copyTo(&m_objectToCall[i]);
-    }
-    pSettings->endGroup();  // MethodsToCall
-
-    pSettings->endGroup(); // UaClientConfig
-
-    DelAndNil(pSettings);
-
+    UaStatus result;
     return result;
 }
 
 // 描述：安装安全证书
+// 时间：2021-10-20
 // 备注：无
 UaStatus CInoUAClientConfig::setupSecurity(SessionSecurityInfo& sessionSecurityInfo)
 {
@@ -270,17 +280,17 @@ UaStatus CInoUAClientConfig::setupSecurity(SessionSecurityInfo& sessionSecurityI
 
     // 创建目录
     UaDir dirHelper("");
-    UaUniString usClientCertificatePath(dirHelper.filePath(UaDir::fromNativeSeparators(m_clientCertificateFile.toUtf16())));
-    dirHelper.mkpath(usClientCertificatePath);
-    UaUniString usPrivateKeyPath(dirHelper.filePath(UaDir::fromNativeSeparators(m_clientPrivateKeyFile.toUtf16())));
-    dirHelper.mkpath(usPrivateKeyPath);
-    UaUniString usTrustListLocationPath(dirHelper.filePath(UaDir::fromNativeSeparators(m_certificateTrustListLocation.toUtf16())));
-    dirHelper.mkpath(usTrustListLocationPath);
-    UaUniString usRevocationListPath(dirHelper.filePath(UaDir::fromNativeSeparators(m_certificateRevocationListLocation.toUtf16())));
-    dirHelper.mkpath(usRevocationListPath);
+    UaUniString usClientCertificate(dirHelper.filePath(UaDir::fromNativeSeparators(m_clientCertificate.toUtf16())));
+    dirHelper.mkpath(usClientCertificate);
+    UaUniString usClientPrivateKey(dirHelper.filePath(UaDir::fromNativeSeparators(m_clientPrivateKey.toUtf16())));
+    dirHelper.mkpath(usClientPrivateKey);
+    UaUniString usCertificateTrustListLocation(dirHelper.filePath(UaDir::fromNativeSeparators(m_certificateTrustListLocation.toUtf16())));
+    dirHelper.mkpath(usCertificateTrustListLocation);
+    UaUniString usCertificateRevocationListLocation(dirHelper.filePath(UaDir::fromNativeSeparators(m_certificateRevocationListLocation.toUtf16())));
+    dirHelper.mkpath(usCertificateRevocationListLocation);
 
     // 尝试加载客户端证书
-    UaPkiCertificate clientCertificate = UaPkiCertificate::fromDERFile(m_clientCertificateFile);
+    UaPkiCertificate clientCertificate = UaPkiCertificate::fromDERFile(m_clientCertificate);
 
     // 证书不存在 - 我们创建一个新的
     if (clientCertificate.isNull())
@@ -314,10 +324,10 @@ UaStatus CInoUAClientConfig::setupSecurity(SessionSecurityInfo& sessionSecurityI
         UaPkiCertificate cert(info, identity, keyPair);
 
         // 将公钥保存到文件
-        cert.toDERFile(m_clientCertificateFile.toUtf8());
+        cert.toDERFile(m_clientCertificate.toUtf8());
 
         // 将私钥保存到文件
-        keyPair.toPEMFile(m_clientPrivateKeyFile.toUtf8(), 0);
+        keyPair.toPEMFile(m_clientPrivateKey.toUtf8(), 0);
     }
 
     // 初始化 PKI 提供程序以使用 OpenSSL
@@ -337,8 +347,8 @@ UaStatus CInoUAClientConfig::setupSecurity(SessionSecurityInfo& sessionSecurityI
 
     // 加载客户端证书和私钥
     result = sessionSecurityInfo.loadClientCertificateOpenSSL(
-        m_clientCertificateFile,
-        m_clientPrivateKeyFile);
+        m_clientCertificate,
+        m_clientPrivateKey);
     if (result.isBad())
     {
         printf("*******************************************************\n");
@@ -353,24 +363,20 @@ UaStatus CInoUAClientConfig::setupSecurity(SessionSecurityInfo& sessionSecurityI
 }
 
 // 描述：更新命令空间索引
+// 时间：2021-10-20
 // 备注：无
 UaStatus CInoUAClientConfig::updateNamespaceIndexes(const UaStringArray& namespaceArray)
 {
-    UaStatus result;
-    OpcUa_UInt32 i, j;
-    OpcUa_UInt32 size;
-
     // 创建映射表
-    size = m_namespaceArray.length();
     UaInt16Array mappingTable;
-    mappingTable.resize(size);
+    mappingTable.resize(m_namespaceArray.length());
 
-    // 填充映射表
-    for (i = 0; i < m_namespaceArray.length(); i++)
+    // 填充映射表，找到新ns下的index值
+    for (OpcUa_UInt32 i = 0; i < m_namespaceArray.length(); i++)
     {
         mappingTable[i] = (OpcUa_UInt16)i;
         // 查找命名空间uri
-        for (j = 0; j < namespaceArray.length(); j++)
+        for (OpcUa_UInt32 j = 0; j < namespaceArray.length(); j++)
         {
             UaString string1(m_namespaceArray[i]);
             UaString string2(namespaceArray[j]);
@@ -382,37 +388,37 @@ UaStatus CInoUAClientConfig::updateNamespaceIndexes(const UaStringArray& namespa
         }
     }
 
-    // 替换 NodeIds 中的命名空间索引
-    // NodesToRead
-    for (i = 0; i < m_nodesToRead.length(); i++)
+    // 替换 NodesToRead 中的命名空间索引
+    for (OpcUa_UInt32 i = 0; i < m_nodesToRead.length(); i++)
     {
         m_nodesToRead[i].NamespaceIndex = mappingTable[m_nodesToRead[i].NamespaceIndex];
     }
-    // NodeToWrite
-    for (i = 0; i < m_nodesToWrite.length(); i++)
+    // 替换 NodeToWrite 中的命名空间索引
+    for (OpcUa_UInt32 i = 0; i < m_nodesToWrite.length(); i++)
     {
         m_nodesToWrite[i].NamespaceIndex = mappingTable[m_nodesToWrite[i].NamespaceIndex];
     }
-    // NodesToMonitor
-    for (i = 0; i < m_nodesToMonitor.length(); i++)
+    // 替换 NodesToMonitor 中的命名空间索引
+    for (OpcUa_UInt32 i = 0; i < m_nodesToMonitor.length(); i++)
     {
         m_nodesToMonitor[i].NamespaceIndex = mappingTable[m_nodesToMonitor[i].NamespaceIndex];
     }
 
-    // 要过滤的事件类型
+    // 替换 要过滤的事件类型 中的命名空间索引
     m_eventTypeToFilter.setNamespaceIndex(mappingTable[m_eventTypeToFilter.namespaceIndex()]);
 
-    // 方法和对象
-    for (i = 0; i < m_methodsToCall.length(); i++)
+    // 替换 方法和对象 中的命名空间索引
+    for (OpcUa_UInt32 i = 0; i < m_methodsToCall.length(); i++)
     {
         m_methodsToCall[i].NamespaceIndex = mappingTable[m_methodsToCall[i].NamespaceIndex];
     }
-    for (i = 0; i < m_objectToCall.length(); i++)
+    for (OpcUa_UInt32 i = 0; i < m_objectToCall.length(); i++)
     {
         m_objectToCall[i].NamespaceIndex = mappingTable[m_objectToCall[i].NamespaceIndex];
     }
 
-    // 更新 namespace array
+    // 更新命名空间
     m_namespaceArray = namespaceArray;
-    return result;
+
+    return OpcUa_Good;
 }

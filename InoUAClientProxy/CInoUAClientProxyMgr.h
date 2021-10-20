@@ -15,7 +15,9 @@ public:
     virtual ~CInoUAClientProxyMgr();
 
 public:
+    // 获取客户端代理
     CInoUAClientProxy* GetClientProxy(emFAServerType serverType);
+    // 获取实时服务客户端代理
     CInoUAClientProxy* GetRtClientProxy();
 
 protected:

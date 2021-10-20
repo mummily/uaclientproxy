@@ -2,9 +2,10 @@
 #include "uasubscription.h"
 #include "uasession.h"
 #include "CInoUAClientConfig.h"
+#include "InoCommonDef.h"
 
-CInoUAClientSubscription::CInoUAClientSubscription(CInoUAClientConfig* pConfiguration)
-    : m_pSession(nullptr),
+CInoUAClientSubscription::CInoUAClientSubscription(UaSession* pSession, CInoUAClientConfig* pConfiguration)
+    : m_pSession(pSession),
     m_pSubscription(nullptr),
     m_pConfiguration(pConfiguration)
 {
@@ -12,14 +13,17 @@ CInoUAClientSubscription::CInoUAClientSubscription(CInoUAClientConfig* pConfigur
 
 CInoUAClientSubscription::~CInoUAClientSubscription()
 {
-    if (m_pSubscription)
+    if (nullptr != m_pSubscription)
     {
         deleteSubscription();
     }
 }
 
+// 描述：订阅的状态发生变化，客户端回调函数
+// 时间：2021-10-20
+// 备注：无
 void CInoUAClientSubscription::subscriptionStatusChanged(
-    OpcUa_UInt32      clientSubscriptionHandle,
+    OpcUa_UInt32 clientSubscriptionHandle,
     const UaStatus& status)
 {
     OpcUa_ReferenceParameter(clientSubscriptionHandle);
@@ -29,21 +33,33 @@ void CInoUAClientSubscription::subscriptionStatusChanged(
         printf("Subscription not longer valid - failed with status %s\n", status.toString().toUtf8());
 
         // 在服务器上恢复订阅
-        recoverSubscription();
+        UaStatus result = createSubscriptionMonitors(true);
+        printf("-------------------------------------------------------------\n");
+        if (result.isGood())
+        {
+            printf("RecoverSubscription succeeded.\n");
+        }
+        else
+        {
+            printf("RecoverSubscription failed with status %s\n", result.toString().toUtf8());
+        }
+        printf("-------------------------------------------------------------\n");
     }
 }
 
+// 描述：监视项数据更改，另：删除监控项、关闭采样或禁用发布后，数据更改也可能到达
+// 时间：2021-10-20
+// 备注：无
 void CInoUAClientSubscription::dataChange(
-    OpcUa_UInt32               clientSubscriptionHandle,
+    OpcUa_UInt32 clientSubscriptionHandle,
     const UaDataNotifications& dataNotifications,
     const UaDiagnosticInfos& diagnosticInfos)
 {
     OpcUa_ReferenceParameter(clientSubscriptionHandle);
     OpcUa_ReferenceParameter(diagnosticInfos);
-    OpcUa_UInt32 i = 0;
 
     printf("-- DataChange Notification ---------------------------------\n");
-    for (i = 0; i < dataNotifications.length(); i++)
+    for (OpcUa_UInt32 i = 0; i < dataNotifications.length(); i++)
     {
         if (OpcUa_IsGood(dataNotifications[i].Value.StatusCode))
         {
@@ -59,8 +75,11 @@ void CInoUAClientSubscription::dataChange(
     printf("------------------------------------------------------------\n");
 }
 
+// 描述：订阅事件通知
+// 时间：2021-10-20
+// 备注：无
 void CInoUAClientSubscription::newEvents(
-    OpcUa_UInt32                clientSubscriptionHandle,
+    OpcUa_UInt32 clientSubscriptionHandle,
     UaEventFieldLists& eventFieldList)
 {
     OpcUa_UInt32 i = 0;
@@ -80,24 +99,24 @@ void CInoUAClientSubscription::newEvents(
     printf("------------------------------------------------------------\n");
 }
 
-UaStatus CInoUAClientSubscription::createSubscription(UaSession* pSession)
+// 描述：在服务器上创建订阅
+// 时间：2021-10-20
+// 备注：无
+UaStatus CInoUAClientSubscription::createSubscription()
 {
-    if (m_pSubscription)
+    if (nullptr != m_pSubscription)
     {
         printf("\nError: Subscription already created\n");
         return OpcUa_BadInvalidState;
     }
 
-    m_pSession = pSession;
-
-    UaStatus result;
-
     ServiceSettings serviceSettings;
+
     SubscriptionSettings subscriptionSettings;
     subscriptionSettings.publishingInterval = 100;
 
     printf("\nCreating subscription ...\n");
-    result = pSession->createSubscription(
+    UaStatus result = m_pSession->createSubscription(
         serviceSettings,
         this,
         1,
@@ -118,6 +137,9 @@ UaStatus CInoUAClientSubscription::createSubscription(UaSession* pSession)
     return result;
 }
 
+// 描述：在服务器上删除订阅
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClientSubscription::deleteSubscription()
 {
     if (m_pSubscription == nullptr)
@@ -149,29 +171,22 @@ UaStatus CInoUAClientSubscription::deleteSubscription()
     return result;
 }
 
+// 描述：在订阅中创建受监控的项目
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClientSubscription::createMonitoredItems()
 {
+#pragma TODO("CInoUAClientSubscription::createMonitoredItems 再看")
     if (m_pSubscription == nullptr)
     {
         printf("\nError: No Subscription created\n");
         return OpcUa_BadInvalidState;
     }
 
-    UaStatus result;
-    OpcUa_UInt32 i;
-    ServiceSettings serviceSettings;
     UaMonitoredItemCreateRequests itemsToCreate;
-    UaMonitoredItemCreateResults createResults;
 
     // 配置一个事件监控项——这里我们使用服务器对象
     itemsToCreate.create(1);
-
-    UaEventFilter            eventFilter;
-    UaSimpleAttributeOperand selectElement;
-    UaContentFilter* pContentFilter = nullptr;
-    UaContentFilterElement* pContentFilterElement = nullptr;
-    UaFilterOperand* pOperand = nullptr;
-
     itemsToCreate[0].ItemToMonitor.AttributeId = OpcUa_Attributes_EventNotifier;
     itemsToCreate[0].ItemToMonitor.NodeId.Identifier.Numeric = OpcUaId_Server;
     itemsToCreate[0].RequestedParameters.ClientHandle = 0;
@@ -181,6 +196,8 @@ UaStatus CInoUAClientSubscription::createMonitoredItems()
     itemsToCreate[0].MonitoringMode = OpcUa_MonitoringMode_Reporting;
 
     // 定义与每个事件一起发送的事件字段
+    UaEventFilter eventFilter;
+    UaSimpleAttributeOperand selectElement;
     selectElement.setBrowsePathElement(0, UaQualifiedName("Message", 0), 1);
     eventFilter.setSelectClauseElement(0, selectElement, 3);
     selectElement.setBrowsePathElement(0, UaQualifiedName("SourceName", 0), 1);
@@ -189,90 +206,87 @@ UaStatus CInoUAClientSubscription::createMonitoredItems()
     eventFilter.setSelectClauseElement(2, selectElement, 3);
 
     // 接收 ControllerEventType 类型的事件
-    pContentFilter = new UaContentFilter;
-    pContentFilterElement = new UaContentFilterElement;
+    UaContentFilterElement* pContentFilterElement = new UaContentFilterElement;
 
     // OfType操作符
     pContentFilterElement->setFilterOperator(OpcUa_FilterOperator_OfType);
 
     // 1 (Literal)操作符
-    pOperand = new UaLiteralOperand;
+    UaFilterOperand* pOperand = new UaLiteralOperand;
     ((UaLiteralOperand*)pOperand)->setLiteralValue(m_pConfiguration->getEventTypeToFilter());
     pContentFilterElement->setFilterOperand(0, pOperand, 1);
+
+    UaContentFilter* pContentFilter = new UaContentFilter;
     pContentFilter->setContentFilterElement(0, pContentFilterElement, 1);
     eventFilter.setWhereClause(pContentFilter);
 
     // 为监控项目设置过滤器
     eventFilter.detachFilter(itemsToCreate[0].RequestedParameters.Filter);
 
+    ServiceSettings serviceSettings;
+    UaMonitoredItemCreateResults createResults;
     printf("\nAdding monitored items to subscription ...\n");
-    result = m_pSubscription->createMonitoredItems(
+    UaStatus result = m_pSubscription->createMonitoredItems(
         serviceSettings,
         OpcUa_TimestampsToReturn_Both,
         itemsToCreate,
         createResults);
 
-    if (result.isGood())
-    {
-        // 检查结果
-        for (i = 0; i < createResults.length(); i++)
-        {
-            if (OpcUa_IsGood(createResults[i].StatusCode))
-            {
-                printf("CreateMonitoredItems succeeded for item: %s\n",
-                    UaNodeId(itemsToCreate[i].ItemToMonitor.NodeId).toXmlString().toUtf8());
-            }
-            else
-            {
-                printf("CreateMonitoredItems failed for item: %s - Status %s\n",
-                    UaNodeId(itemsToCreate[i].ItemToMonitor.NodeId).toXmlString().toUtf8(),
-                    UaStatus(createResults[i].StatusCode).toString().toUtf8());
-            }
-        }
-    }
-    // 服务调用失败
-    else
+    // 调用失败
+    if (result.isNotGood())
     {
         printf("CreateMonitoredItems failed with status %s\n", result.toString().toUtf8());
+        return result;
+    }
+
+    // 调用成功，检查结果
+    for (OpcUa_UInt32 i = 0; i < createResults.length(); i++)
+    {
+        if (OpcUa_IsGood(createResults[i].StatusCode))
+        {
+            printf("CreateMonitoredItems succeeded for item: %s\n",
+                UaNodeId(itemsToCreate[i].ItemToMonitor.NodeId).toXmlString().toUtf8());
+        }
+        else
+        {
+            printf("CreateMonitoredItems failed for item: %s - Status %s\n",
+                UaNodeId(itemsToCreate[i].ItemToMonitor.NodeId).toXmlString().toUtf8(),
+                UaStatus(createResults[i].StatusCode).toString().toUtf8());
+        }
     }
 
     return result;
 }
 
+// 描述：设置客户端代理配置
+// 时间：2021-10-20
+// 备注：无
 void CInoUAClientSubscription::setConfiguration(CInoUAClientConfig* pConfiguration)
 {
     m_pConfiguration = pConfiguration;
 }
 
-UaStatus CInoUAClientSubscription::recoverSubscription()
+// 描述：在服务器上创建订阅、监视项
+// 时间：2021-10-20
+// 备注：无
+UaStatus CInoUAClientSubscription::createSubscriptionMonitors(bool bDeleteSubscription/* = false*/)
 {
     UaStatus result;
 
     // 删除现有订阅
-    if (m_pSubscription)
+    if (bDeleteSubscription && nullptr != m_pSubscription)
     {
         deleteSubscription();
     }
 
     // 创建新订阅
-    result = createSubscription(m_pSession);
+    result = createSubscription();
 
     // 创建监控项
     if (result.isGood())
     {
         result = createMonitoredItems();
     }
-
-    printf("-------------------------------------------------------------\n");
-    if (result.isGood())
-    {
-        printf("RecoverSubscription succeeded.\n");
-    }
-    else
-    {
-        printf("RecoverSubscription failed with status %s\n", result.toString().toUtf8());
-    }
-    printf("-------------------------------------------------------------\n");
 
     return result;
 }

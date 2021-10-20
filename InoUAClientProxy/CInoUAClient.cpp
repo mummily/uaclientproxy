@@ -7,11 +7,12 @@
 #include "uaplatformdefs.h"
 #include "InoCommonDef.h"
 #include "uadir.h"
+#include "ScopeExit.h"
 
 CInoUAClient::CInoUAClient()
 {
     m_pSession = new UaSession();
-    m_pSubscription = new CInoUAClientSubscription(m_pConfiguration);
+    m_pSubscription = new CInoUAClientSubscription(m_pSession, m_pConfiguration);
 }
 
 CInoUAClient::~CInoUAClient()
@@ -32,6 +33,9 @@ CInoUAClient::~CInoUAClient()
     }
 }
 
+// 描述：连接状态变更回调函数
+// 时间：2021-10-20
+// 备注：无
 void CInoUAClient::connectionStatusChanged(
     OpcUa_UInt32             clientConnectionId,
     UaClient::ServerStatus   serverStatus)
@@ -72,7 +76,8 @@ void CInoUAClient::connectionStatusChanged(
     m_serverStatus = serverStatus;
 }
 
-// 描述：设置客户端连接配置
+// 描述：设置客户端配置信息
+// 时间：2021-10-20
 // 备注：无
 void CInoUAClient::setConfiguration(CInoUAClientConfig* pConfiguration)
 {
@@ -87,105 +92,122 @@ void CInoUAClient::setConfiguration(CInoUAClientConfig* pConfiguration)
     m_pConfiguration = pConfiguration;
 }
 
+// 描述：查找服务器并输出服务器信息
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::discover()
 {
-    UaStatus result;
+    // 获取可用服务器列表
+    printf("\nCall FindServers on Url %s\n", m_pConfiguration->getDiscoveryUrl().toUtf8());
+
     UaDiscovery discovery;
     ServiceSettings serviceSettings;
     ClientSecurityInfo clientSecurityInfo;
     UaApplicationDescriptions applicationDescriptions;
-    UaEndpointDescriptions endpointDescriptions;
-    OpcUa_UInt32 i, j;
-    OpcUa_Int32 k;
-    UaString sTemp;
-
-    // 获取可用服务器列表
-    printf("\nCall FindServers on Url %s\n", m_pConfiguration->getDiscoveryUrl().toUtf8());
-    result = discovery.findServers(
+    UaStatus result = discovery.findServers(
         serviceSettings,
         m_pConfiguration->getDiscoveryUrl(),
         clientSecurityInfo,
         applicationDescriptions);
 
-    if (result.isGood())
-    {
-        // 打印服务器列表
-        printf("\nFindServers succeeded\n");
-        for (i = 0; i < applicationDescriptions.length(); i++)
-        {
-            printf("** Application [%d] **********************************************************\n", i);
-            sTemp = &applicationDescriptions[i].ApplicationUri;
-            printf(" ApplicationUri       %s\n", sTemp.toUtf8());
-            sTemp = &applicationDescriptions[i].ApplicationName.Text;
-            printf(" ApplicationName      %s\n", sTemp.toUtf8());
-            for (k = 0; k < applicationDescriptions[i].NoOfDiscoveryUrls; k++)
-            {
-                UaString sDiscoveryUrl(applicationDescriptions[i].DiscoveryUrls[k]);
-                printf("** DiscoveryUrl [%s] ***********************\n", sDiscoveryUrl.toUtf8());
-                // 对于每个服务器获取可用端点的列表
-                result = discovery.getEndpoints(
-                    serviceSettings,
-                    sDiscoveryUrl,
-                    clientSecurityInfo,
-                    endpointDescriptions);
-
-                if (result.isGood())
-                {
-                    // 打印端点列表
-                    for (j = 0; j < endpointDescriptions.length(); j++)
-                    {
-                        printf("** Endpoint[%d] ***********************************************\n", j);
-                        sTemp = &endpointDescriptions[j].EndpointUrl;
-                        printf(" Endpoint URL     %s\n", sTemp.toUtf8());
-                        sTemp = &endpointDescriptions[j].SecurityPolicyUri;
-                        printf(" Security Policy  %s\n", sTemp.toUtf8());
-                        sTemp = "Invalid";
-                        if (endpointDescriptions[j].SecurityMode == OpcUa_MessageSecurityMode_None)
-                        {
-                            sTemp = "None";
-                        }
-                        if (endpointDescriptions[j].SecurityMode == OpcUa_MessageSecurityMode_Sign)
-                        {
-                            sTemp = "Sign";
-                        }
-                        if (endpointDescriptions[j].SecurityMode == OpcUa_MessageSecurityMode_SignAndEncrypt)
-                        {
-                            sTemp = "SignAndEncrypt";
-                        }
-                        printf(" Security Mode    %s\n", sTemp.toUtf8());
-                        printf("**************************************************************\n");
-                    }
-                }
-                else
-                {
-                    printf("GetEndpoints failed with status %s\n", result.toString().toUtf8());
-                }
-                printf("************************************************************************\n");
-            }
-            printf("******************************************************************************\n");
-        }
-    }
-    else
+    if (result.isNotGood())
     {
         printf("FindServers failed with status %s\n", result.toString().toUtf8());
+        return result;
+    }
+
+    printf("\nFindServers succeeded\n");
+
+    // 打印服务器列表
+    for (OpcUa_UInt32 i = 0; i < applicationDescriptions.length(); i++)
+    {
+        printf("** Application [%d] **********************************************************\n", i);
+        SCOPE_EXIT(
+            printf("******************************************************************************\n");
+        );
+
+        UaString sTemp = &applicationDescriptions[i].ApplicationUri;
+        printf(" ApplicationUri       %s\n", sTemp.toUtf8());
+        sTemp = &applicationDescriptions[i].ApplicationName.Text;
+        printf(" ApplicationName      %s\n", sTemp.toUtf8());
+
+        for (OpcUa_Int32 k = 0; k < applicationDescriptions[i].NoOfDiscoveryUrls; k++)
+        {
+            UaString sDiscoveryUrl(applicationDescriptions[i].DiscoveryUrls[k]);
+            printf("** DiscoveryUrl [%s] ***********************\n", sDiscoveryUrl.toUtf8());
+            SCOPE_EXIT(
+                printf("************************************************************************\n");
+            );
+
+            // 对于每个服务器获取可用端点的列表
+            UaEndpointDescriptions endpointDescriptions;
+            result = discovery.getEndpoints(
+                serviceSettings,
+                sDiscoveryUrl,
+                clientSecurityInfo,
+                endpointDescriptions);
+
+            if (result.isGood())
+            {
+                // 打印端点列表
+                for (OpcUa_UInt32 j = 0; j < endpointDescriptions.length(); j++)
+                {
+                    printf("** Endpoint[%d] ***********************************************\n", j);
+                    SCOPE_EXIT(
+                        printf("**************************************************************\n");
+                    );
+
+                    sTemp = &endpointDescriptions[j].EndpointUrl;
+                    printf(" Endpoint URL     %s\n", sTemp.toUtf8());
+                    sTemp = &endpointDescriptions[j].SecurityPolicyUri;
+                    printf(" Security Policy  %s\n", sTemp.toUtf8());
+                    sTemp = "Invalid";
+                    if (endpointDescriptions[j].SecurityMode == OpcUa_MessageSecurityMode_None)
+                    {
+                        sTemp = "None";
+                    }
+                    if (endpointDescriptions[j].SecurityMode == OpcUa_MessageSecurityMode_Sign)
+                    {
+                        sTemp = "Sign";
+                    }
+                    if (endpointDescriptions[j].SecurityMode == OpcUa_MessageSecurityMode_SignAndEncrypt)
+                    {
+                        sTemp = "SignAndEncrypt";
+                    }
+                    printf(" Security Mode    %s\n", sTemp.toUtf8());
+                }
+            }
+            else
+            {
+                printf("GetEndpoints failed with status %s\n", result.toString().toUtf8());
+            }
+        }
     }
 
     return result;
 }
 
+// 描述：客户端是否处于连接状态
+// 时间：2021-10-20
+// 备注：无
 OpcUa_Boolean CInoUAClient::isConnected() const
 {
     return m_pSession->isConnected();
 }
 
+// 描述：非安连接服务器
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::connect()
 {
     // 安全设置未初始化 - 没有安全连接
     SessionSecurityInfo sessionSecurityInfo;
-
     return connectInternal(m_pConfiguration->getServerUrl(), sessionSecurityInfo);
 }
 
+// 描述：安全连接服务器
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::connectSecure()
 {
     UaStatus result;
@@ -233,6 +255,9 @@ UaStatus CInoUAClient::connectSecure()
     return result;
 }
 
+// 描述：连接服务器，sessionConnectInfo读自配置
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::connectInternal(const UaString& serverUrl, SessionSecurityInfo& sessionSecurityInfo)
 {
     UaStatus result;
@@ -275,21 +300,21 @@ UaStatus CInoUAClient::connectInternal(const UaString& serverUrl, SessionSecurit
     return result;
 }
 
+// 描述：节点nodesToWrite中写入valuesToWrite值
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::writeInternal(const UaNodeIdArray& nodesToWrite, const UaVariantArray& valuesToWrite)
 {
-    UaStatus            result;
-    ServiceSettings     serviceSettings;
-    UaWriteValues       writeValues;
-    UaStatusCodeArray   results;
-    UaDiagnosticInfos   diagnosticInfos;
 
     // 检入参数
-    if (nodesToWrite.length() != valuesToWrite.length())
+    if (nodesToWrite.length() < 1
+        || valuesToWrite.length() < 1)
     {
         return OpcUa_BadInvalidArgument;
     }
 
     // 从配置中写入所有节点
+    UaWriteValues writeValues;
     writeValues.create(nodesToWrite.length());
 
     for (OpcUa_UInt32 i = 0; i < writeValues.length(); i++)
@@ -301,6 +326,10 @@ UaStatus CInoUAClient::writeInternal(const UaNodeIdArray& nodesToWrite, const Ua
     }
 
     printf("\nWriting...\n");
+    UaStatus            result;
+    ServiceSettings     serviceSettings;
+    UaStatusCodeArray   results;
+    UaDiagnosticInfos   diagnosticInfos;
     result = m_pSession->write(
         serviceSettings,
         writeValues,
@@ -331,6 +360,9 @@ UaStatus CInoUAClient::writeInternal(const UaNodeIdArray& nodesToWrite, const Ua
     return result;
 }
 
+// 描述：在服务器上查找安全端点
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::findSecureEndpoint(SessionSecurityInfo& sessionSecurityInfo)
 {
     UaStatus result;
@@ -407,6 +439,9 @@ UaStatus CInoUAClient::findSecureEndpoint(SessionSecurityInfo& sessionSecurityIn
     return result;
 }
 
+// 描述：验证服务器证书
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::checkServerCertificateTrust(SessionSecurityInfo& sessionSecurityInfo)
 {
     UaStatus result;
@@ -465,14 +500,15 @@ UaStatus CInoUAClient::checkServerCertificateTrust(SessionSecurityInfo& sessionS
     return result;
 }
 
+// 描述：断开连接
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::disconnect()
 {
-    UaStatus result;
-
     ServiceSettings serviceSettings;
 
     printf("\nDisconnecting ...\n");
-    result = m_pSession->disconnect(
+    UaStatus result = m_pSession->disconnect(
         serviceSettings,
         OpcUa_True);
 
@@ -488,40 +524,36 @@ UaStatus CInoUAClient::disconnect()
     return result;
 }
 
+// 描述：从根节点浏览节点
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::browseSimple()
 {
-    UaStatus result;
-    UaNodeId nodeToBrowse;
-
     // 从根文件夹浏览，没有引用限制返回
-    nodeToBrowse = UaNodeId(OpcUaId_RootFolder);
-    result = browseInternal(nodeToBrowse, 0);
+    UaNodeId nodeToBrowse = UaNodeId(OpcUaId_RootFolder);
+    UaStatus result = browseInternal(nodeToBrowse, 0);
 
     return result;
 }
 
+// 描述：继续浏览
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::browseContinuationPoint()
 {
-    UaStatus result;
-    UaNodeId nodeToBrowse;
-
-    // 从 Massfolder 浏览，最大引用返回设置为 5
-    nodeToBrowse = UaNodeId("Demo", 2);
-    result = browseInternal(nodeToBrowse, 5);
-
+    UaNodeId nodeToBrowse = UaNodeId("Demo", 2);
+    UaStatus result = browseInternal(nodeToBrowse, 5);
     return result;
 }
 
+// 描述：根据配置文件，节点进行读值
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::read()
 {
-    UaStatus          result;
-    ServiceSettings   serviceSettings;
-    UaReadValueIds    nodesToRead;
-    UaDataValues      values;
-    UaDiagnosticInfos diagnosticInfos;
-
-    // 从配置中读取所有节点
     UaNodeIdArray nodes = m_pConfiguration->getNodesToRead();
+
+    UaReadValueIds nodesToRead;
     nodesToRead.create(nodes.length());
 
     for (OpcUa_UInt32 i = 0; i < nodes.length(); i++)
@@ -531,7 +563,10 @@ UaStatus CInoUAClient::read()
     }
 
     printf("\nReading ...\n");
-    result = m_pSession->read(
+    ServiceSettings serviceSettings;
+    UaDataValues values;
+    UaDiagnosticInfos diagnosticInfos;
+    UaStatus result = m_pSession->read(
         serviceSettings,
         0,
         OpcUa_TimestampsToReturn_Both,
@@ -539,35 +574,36 @@ UaStatus CInoUAClient::read()
         values,
         diagnosticInfos);
 
-    if (result.isGood())
-    {
-        // Read service succeded - check individual status codes
-        for (OpcUa_UInt32 i = 0; i < nodes.length(); i++)
-        {
-            if (OpcUa_IsGood(values[i].StatusCode))
-            {
-                printf("Value[%d]: %s\n", i, UaVariant(values[i].Value).toString().toUtf8());
-            }
-            else
-            {
-                printf("Read failed for item[%d] with status %s\n", i, UaStatus(values[i].StatusCode).toString().toUtf8());
-            }
-        }
-    }
-    else
+    if (result.isNotGood())
     {
         // 服务调用失败
         printf("Read failed with status %s\n", result.toString().toUtf8());
+        return result;
+    }
+
+    // 读取服务成功 - 检查各个状态代码
+    for (OpcUa_UInt32 i = 0; i < nodes.length(); i++)
+    {
+        if (OpcUa_IsGood(values[i].StatusCode))
+        {
+            printf("Value[%d]: %s\n", i, UaVariant(values[i].Value).toString().toUtf8());
+        }
+        else
+        {
+            printf("Read failed for item[%d] with status %s\n", i, UaStatus(values[i].StatusCode).toString().toUtf8());
+        }
     }
 
     return result;
 }
 
+// 描述：根据配置文件，节点进行写值
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::write()
 {
     UaStatus result;
 
-    // 从配置中写入所有节点
     result = writeInternal(
         m_pConfiguration->getNodesToWrite(),
         m_pConfiguration->getWriteValues());
@@ -575,11 +611,13 @@ UaStatus CInoUAClient::write()
     return result;
 }
 
+// 描述：给注册的节点写入值
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::writeRegistered()
 {
     UaStatus result;
 
-    // 写入所有注册节点
     result = writeInternal(
         m_registeredNodes,
         m_pConfiguration->getWriteValues());
@@ -587,64 +625,66 @@ UaStatus CInoUAClient::writeRegistered()
     return result;
 }
 
+// 描述：在服务器上创建订阅和监视项
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::subscribe()
 {
     UaStatus result;
-
-    result = m_pSubscription->createSubscription(m_pSession);
-    if (result.isGood())
-    {
-        result = m_pSubscription->createMonitoredItems();
-    }
+    result = m_pSubscription->createSubscriptionMonitors();
     return result;
 }
 
+// 描述：在服务器上退订
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::unsubscribe()
 {
     return m_pSubscription->deleteSubscription();
 }
 
+// 描述：注册节点，默认注册所有要写入的节点
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::registerNodes()
 {
-    UaStatus            result;
-    ServiceSettings     serviceSettings;
-    UaNodeIdArray       nodesToRegister;
+    // 注册所有要写入的节点
+    UaNodeIdArray nodesToRegister = m_pConfiguration->getNodesToWrite();
 
-    // 注册所有节点以从配置中写入
-    nodesToRegister = m_pConfiguration->getNodesToWrite();
     printf("\nRegisterNodes...\n");
-    result = m_pSession->registerNodes(
+    ServiceSettings serviceSettings;
+    UaStatus result = m_pSession->registerNodes(
         serviceSettings,
         nodesToRegister,
         m_registeredNodes);
 
-    if (result.isGood())
-    {
-        // 注册节点服务成功
-        printf("RegisterNodes succeeded\n");
-
-        for (OpcUa_UInt32 i = 0; i < nodesToRegister.length(); i++)
-        {
-            printf("Original NodeId[%d]: %s\tRegistered NodeId[%d]: %s\n", i, UaNodeId(nodesToRegister[i]).toXmlString().toUtf8(), i, UaNodeId(m_registeredNodes[i]).toXmlString().toUtf8());
-        }
-    }
-    else
+    if (result.isNotGood())
     {
         // 服务调用失败
         printf("RegisterNodes failed with status %s\n", result.toString().toUtf8());
+        return result;
+    }
+
+    // 注册节点服务成功
+    printf("RegisterNodes succeeded\n");
+    for (OpcUa_UInt32 i = 0; i < nodesToRegister.length(); i++)
+    {
+        printf("Original NodeId[%d]: %s\tRegistered NodeId[%d]: %s\n", i, UaNodeId(nodesToRegister[i]).toXmlString().toUtf8(), i, UaNodeId(m_registeredNodes[i]).toXmlString().toUtf8());
     }
 
     return result;
 }
 
+// 描述：注销节点
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::unregisterNodes()
 {
-    UaStatus            result;
-    ServiceSettings     serviceSettings;
+    ServiceSettings serviceSettings;
 
     // 注销我们之前注册的所有节点
     printf("\nUnregisterNodes...\n");
-    result = m_pSession->unregisterNodes(
+    UaStatus result = m_pSession->unregisterNodes(
         serviceSettings,
         m_registeredNodes);
 
@@ -662,6 +702,9 @@ UaStatus CInoUAClient::unregisterNodes()
     return result;
 }
 
+// 描述：回调对象的方法，方法无参数
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::callMethods()
 {
     UaStatus result;
@@ -682,66 +725,68 @@ UaStatus CInoUAClient::callMethods()
     return result;
 }
 
+// 描述：从节点nodeToBrowse浏览地址空间
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::browseInternal(const UaNodeId& nodeToBrowse, OpcUa_UInt32 maxReferencesToReturn)
 {
-    UaStatus result;
-
-    ServiceSettings serviceSettings;
-    BrowseContext browseContext;
-    UaByteString continuationPoint;
-    UaReferenceDescriptions referenceDescriptions;
-
     // 配置browseContext
+    BrowseContext browseContext;
     browseContext.browseDirection = OpcUa_BrowseDirection_Forward;
     browseContext.referenceTypeId = OpcUaId_HierarchicalReferences;
     browseContext.includeSubtype = OpcUa_True;
     browseContext.maxReferencesToReturn = maxReferencesToReturn;
 
     printf("\nBrowsing from Node %s...\n", nodeToBrowse.toXmlString().toUtf8());
-    result = m_pSession->browse(
+    ServiceSettings serviceSettings;
+    UaByteString continuationPoint;
+    UaReferenceDescriptions referenceDescriptions;
+    UaStatus result = m_pSession->browse(
         serviceSettings,
         nodeToBrowse,
         browseContext,
         continuationPoint,
         referenceDescriptions);
 
-    if (result.isGood())
-    {
-        // 打印结果
-        printBrowseResults(referenceDescriptions);
-
-        // 继续浏览
-        while (continuationPoint.length() > 0)
-        {
-            printf("\nContinuationPoint is set. BrowseNext...\n");
-            // 浏览下一个
-            result = m_pSession->browseNext(
-                serviceSettings,
-                OpcUa_False,
-                continuationPoint,
-                referenceDescriptions);
-
-            if (result.isGood())
-            {
-                // 打印结果
-                printBrowseResults(referenceDescriptions);
-            }
-            else
-            {
-                // 服务调用失败
-                printf("BrowseNext failed with status %s\n", result.toString().toUtf8());
-            }
-        }
-    }
-    else
+    if (result.isNotGood())
     {
         // 服务调用失败
         printf("Browse failed with status %s\n", result.toString().toUtf8());
+        return result;
+    }
+
+    // 打印结果
+    printBrowseResults(referenceDescriptions);
+
+    // 继续浏览
+    while (continuationPoint.length() > 0)
+    {
+        printf("\nContinuationPoint is set. BrowseNext...\n");
+        // 浏览下一个
+        result = m_pSession->browseNext(
+            serviceSettings,
+            OpcUa_False,
+            continuationPoint,
+            referenceDescriptions);
+
+        if (result.isGood())
+        {
+            // 打印结果
+            printBrowseResults(referenceDescriptions);
+        }
+        else
+        {
+            // 服务调用失败
+            printf("BrowseNext failed with status %s\n", result.toString().toUtf8());
+        }
     }
 
     return result;
 }
 
+// 描述：回调对象objectNodeId的methodNodeId方法，方法无参数
+// 时间：2021-10-20
+// 备注：无
 UaStatus CInoUAClient::callMethodInternal(const UaNodeId& objectNodeId, const UaNodeId& methodNodeId)
 {
     UaStatus        result;
@@ -782,6 +827,9 @@ UaStatus CInoUAClient::callMethodInternal(const UaNodeId& objectNodeId, const Ua
     return result;
 }
 
+// 描述：输出浏览结果referenceDescriptions
+// 时间：2021-10-20
+// 备注：无
 void CInoUAClient::printBrowseResults(const UaReferenceDescriptions& referenceDescriptions)
 {
     OpcUa_UInt32 i;
@@ -806,6 +854,9 @@ void CInoUAClient::printBrowseResults(const UaReferenceDescriptions& referenceDe
     }
 }
 
+// 描述：输出证书信息
+// 时间：2021-10-20
+// 备注：无
 void CInoUAClient::printCertificateData(const UaByteString& serverCertificate)
 {
     // 将证书字节字符串分配给 UaPkiCertificate 类
@@ -821,6 +872,9 @@ void CInoUAClient::printCertificateData(const UaByteString& serverCertificate)
     printf("- ValidTo                 %s\n", cert.validTo().toString().toUtf8());
 }
 
+// 描述：判断用户接受证书状态
+// 时间：2021-10-20
+// 备注：无
 int CInoUAClient::userAcceptCertificate()
 {
     int result = 0;
