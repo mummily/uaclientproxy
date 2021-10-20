@@ -7,13 +7,13 @@ using namespace UaClientSdk;
 
 class CInoUAClientConfig;
 
-class CInoUAClientSubscription :
+class CInoUASubscriptionCallback :
     public UaSubscriptionCallback
 {
-    UA_DISABLE_COPY(CInoUAClientSubscription);
+    UA_DISABLE_COPY(CInoUASubscriptionCallback);
 public:
-    CInoUAClientSubscription(UaSession* pSession, CInoUAClientConfig* pConfiguration);
-    virtual ~CInoUAClientSubscription();
+    CInoUASubscriptionCallback(UaSession* pSession, CInoUAClientConfig* pConfiguration);
+    virtual ~CInoUASubscriptionCallback();
 
     // 订阅的状态发生变化，客户端回调函数
     virtual void subscriptionStatusChanged(

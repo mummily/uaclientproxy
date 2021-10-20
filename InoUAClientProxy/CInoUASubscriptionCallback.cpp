@@ -1,17 +1,17 @@
-#include "CInoUAClientSubscription.h"
+#include "CInoUASubscriptionCallback.h"
 #include "uasubscription.h"
 #include "uasession.h"
 #include "CInoUAClientConfig.h"
 #include "InoCommonDef.h"
 
-CInoUAClientSubscription::CInoUAClientSubscription(UaSession* pSession, CInoUAClientConfig* pConfiguration)
+CInoUASubscriptionCallback::CInoUASubscriptionCallback(UaSession* pSession, CInoUAClientConfig* pConfiguration)
     : m_pSession(pSession),
     m_pSubscription(nullptr),
     m_pConfiguration(pConfiguration)
 {
 }
 
-CInoUAClientSubscription::~CInoUAClientSubscription()
+CInoUASubscriptionCallback::~CInoUASubscriptionCallback()
 {
     if (nullptr != m_pSubscription)
     {
@@ -22,7 +22,7 @@ CInoUAClientSubscription::~CInoUAClientSubscription()
 // 描述：订阅的状态发生变化，客户端回调函数
 // 时间：2021-10-20
 // 备注：无
-void CInoUAClientSubscription::subscriptionStatusChanged(
+void CInoUASubscriptionCallback::subscriptionStatusChanged(
     OpcUa_UInt32 clientSubscriptionHandle,
     const UaStatus& status)
 {
@@ -50,7 +50,7 @@ void CInoUAClientSubscription::subscriptionStatusChanged(
 // 描述：监视项数据更改，另：删除监控项、关闭采样或禁用发布后，数据更改也可能到达
 // 时间：2021-10-20
 // 备注：无
-void CInoUAClientSubscription::dataChange(
+void CInoUASubscriptionCallback::dataChange(
     OpcUa_UInt32 clientSubscriptionHandle,
     const UaDataNotifications& dataNotifications,
     const UaDiagnosticInfos& diagnosticInfos)
@@ -78,7 +78,7 @@ void CInoUAClientSubscription::dataChange(
 // 描述：订阅事件通知
 // 时间：2021-10-20
 // 备注：无
-void CInoUAClientSubscription::newEvents(
+void CInoUASubscriptionCallback::newEvents(
     OpcUa_UInt32 clientSubscriptionHandle,
     UaEventFieldLists& eventFieldList)
 {
@@ -102,7 +102,7 @@ void CInoUAClientSubscription::newEvents(
 // 描述：在服务器上创建订阅
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClientSubscription::createSubscription()
+UaStatus CInoUASubscriptionCallback::createSubscription()
 {
     if (nullptr != m_pSubscription)
     {
@@ -140,7 +140,7 @@ UaStatus CInoUAClientSubscription::createSubscription()
 // 描述：在服务器上删除订阅
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClientSubscription::deleteSubscription()
+UaStatus CInoUASubscriptionCallback::deleteSubscription()
 {
     if (m_pSubscription == nullptr)
     {
@@ -174,7 +174,7 @@ UaStatus CInoUAClientSubscription::deleteSubscription()
 // 描述：在订阅中创建受监控的项目
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClientSubscription::createMonitoredItems()
+UaStatus CInoUASubscriptionCallback::createMonitoredItems()
 {
 #pragma TODO("CInoUAClientSubscription::createMonitoredItems 再看")
     if (m_pSubscription == nullptr)
@@ -261,7 +261,7 @@ UaStatus CInoUAClientSubscription::createMonitoredItems()
 // 描述：设置客户端代理配置
 // 时间：2021-10-20
 // 备注：无
-void CInoUAClientSubscription::setConfiguration(CInoUAClientConfig* pConfiguration)
+void CInoUASubscriptionCallback::setConfiguration(CInoUAClientConfig* pConfiguration)
 {
     m_pConfiguration = pConfiguration;
 }
@@ -269,7 +269,7 @@ void CInoUAClientSubscription::setConfiguration(CInoUAClientConfig* pConfigurati
 // 描述：在服务器上创建订阅、监视项
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClientSubscription::createSubscriptionMonitors(bool bDeleteSubscription/* = false*/)
+UaStatus CInoUASubscriptionCallback::createSubscriptionMonitors(bool bDeleteSubscription/* = false*/)
 {
     UaStatus result;
 

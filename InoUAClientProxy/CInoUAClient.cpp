@@ -1,6 +1,6 @@
 #include "CInoUAClient.h"
 #include "uasession.h"
-#include "CInoUAClientSubscription.h"
+#include "CInoUASubscriptionCallback.h"
 #include "CInoUAClientConfig.h"
 #include "uadiscovery.h"
 #include "uapkicertificate.h"
@@ -12,13 +12,13 @@
 CInoUAClient::CInoUAClient()
 {
     m_pSession = new UaSession();
-    m_pSubscription = new CInoUAClientSubscription(m_pSession, m_pConfiguration);
+    m_pSubscriptionCallback = new CInoUASubscriptionCallback(m_pSession, m_pConfiguration);
 }
 
 CInoUAClient::~CInoUAClient()
 {
     // 删除本地订阅对象
-    DelAndNil(m_pSubscription);
+    DelAndNil(m_pSubscriptionCallback);
 
     // 断开连接，删除会话
     if (m_pSession)
@@ -86,7 +86,7 @@ void CInoUAClient::setConfiguration(CInoUAClientConfig* pConfiguration)
     if (m_pConfiguration == pConfiguration)
         return;
 
-    m_pSubscription->setConfiguration(pConfiguration);
+    m_pSubscriptionCallback->setConfiguration(pConfiguration);
 
     DelAndNil(m_pConfiguration);
     m_pConfiguration = pConfiguration;
@@ -631,7 +631,7 @@ UaStatus CInoUAClient::writeRegistered()
 UaStatus CInoUAClient::subscribe()
 {
     UaStatus result;
-    result = m_pSubscription->createSubscriptionMonitors();
+    result = m_pSubscriptionCallback->createSubscriptionMonitors();
     return result;
 }
 
@@ -640,7 +640,7 @@ UaStatus CInoUAClient::subscribe()
 // 备注：无
 UaStatus CInoUAClient::unsubscribe()
 {
-    return m_pSubscription->deleteSubscription();
+    return m_pSubscriptionCallback->deleteSubscription();
 }
 
 // 描述：注册节点，默认注册所有要写入的节点

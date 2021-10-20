@@ -4,7 +4,7 @@
 #include "uabase.h"
 #include "uaclientsdk.h"
 
-class CInoUAClientSubscription;
+class CInoUASubscriptionCallback;
 class CInoUAClientConfig;
 class CInoUAClientMgr;
 
@@ -77,7 +77,7 @@ private:
 
 private:
     UaSession* m_pSession = nullptr;                        // 会话
-    CInoUAClientSubscription* m_pSubscription = nullptr;    // 订阅
+    CInoUASubscriptionCallback* m_pSubscriptionCallback = nullptr;    // 订阅
     CInoUAClientConfig* m_pConfiguration = nullptr;         // 客户端配置
     UaClient::ServerStatus m_serverStatus;                  // 客户端连接服务器状态：连接或重连
     UaNodeIdArray m_registeredNodes;                        // 注册的节点：默认是所有要写入的节点
