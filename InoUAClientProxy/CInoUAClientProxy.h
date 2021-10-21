@@ -19,10 +19,15 @@ public:
     bool connect();
     // 是否连接客户端
     bool isconnect();
-    // 获取客户端配置
-    UaUniString GetConfigPath();
+
+    // Get/Set
+    CInoUAClientMgr* GetUAClientMgr() const { return m_pUAClientMgr; }
+    void SetUAClientMgr(CInoUAClientMgr* pUAClientMgr) { m_pUAClientMgr = pUAClientMgr; }
 
 protected:
+private:
+    // 获取客户端配置
+    UaUniString GetConfigPath();
 
 private:
     CInoUAClientMgr* m_pUAClientMgr = nullptr; // 主备客户端管理器

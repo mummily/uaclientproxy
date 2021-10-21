@@ -3,6 +3,7 @@
 #include "uasession.h"
 #include "CInoUAClientConfig.h"
 #include "InoCommonDef.h"
+#include "ScopeExit.h"
 
 CInoUASubscriptionCallback::CInoUASubscriptionCallback(UaSession* pSession, CInoUAClientConfig* pConfiguration)
     : m_pSession(pSession),
@@ -35,6 +36,10 @@ void CInoUASubscriptionCallback::subscriptionStatusChanged(
         // 在服务器上恢复订阅
         UaStatus result = createSubscriptionMonitors(true);
         printf("-------------------------------------------------------------\n");
+        SCOPE_EXIT(
+            printf("-------------------------------------------------------------\n");
+        );
+
         if (result.isGood())
         {
             printf("RecoverSubscription succeeded.\n");
@@ -43,7 +48,6 @@ void CInoUASubscriptionCallback::subscriptionStatusChanged(
         {
             printf("RecoverSubscription failed with status %s\n", result.toString().toUtf8());
         }
-        printf("-------------------------------------------------------------\n");
     }
 }
 
@@ -59,6 +63,10 @@ void CInoUASubscriptionCallback::dataChange(
     OpcUa_ReferenceParameter(diagnosticInfos);
 
     printf("-- DataChange Notification ---------------------------------\n");
+    SCOPE_EXIT(
+        printf("------------------------------------------------------------\n");
+    );
+
     for (OpcUa_UInt32 i = 0; i < dataNotifications.length(); i++)
     {
         if (OpcUa_IsGood(dataNotifications[i].Value.StatusCode))
@@ -72,7 +80,6 @@ void CInoUASubscriptionCallback::dataChange(
             printf("  Variable = %d failed with status %s\n", dataNotifications[i].ClientHandle, itemError.toString().toUtf8());
         }
     }
-    printf("------------------------------------------------------------\n");
 }
 
 // 描述：订阅事件通知
@@ -82,10 +89,13 @@ void CInoUASubscriptionCallback::newEvents(
     OpcUa_UInt32 clientSubscriptionHandle,
     UaEventFieldLists& eventFieldList)
 {
-    OpcUa_UInt32 i = 0;
     printf("-- Event newEvents -----------------------------------------\n");
+    SCOPE_EXIT(
+        printf("------------------------------------------------------------\n");
+    );
+
     printf("clientSubscriptionHandle %d \n", clientSubscriptionHandle);
-    for (i = 0; i < eventFieldList.length(); i++)
+    for (OpcUa_UInt32 i = 0; i < eventFieldList.length(); i++)
     {
         UaVariant message = eventFieldList[i].EventFields[0];
         UaVariant sourceName = eventFieldList[i].EventFields[1];
@@ -96,7 +106,6 @@ void CInoUASubscriptionCallback::newEvents(
             sourceName.toString().toUtf8(),
             severity.toString().toUtf8());
     }
-    printf("------------------------------------------------------------\n");
 }
 
 // 描述：在服务器上创建订阅

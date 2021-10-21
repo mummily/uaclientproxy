@@ -43,6 +43,10 @@ void CInoUAClient::connectionStatusChanged(
     OpcUa_ReferenceParameter(clientConnectionId);
 
     printf("-------------------------------------------------------------\n");
+    SCOPE_EXIT(
+        printf("-------------------------------------------------------------\n");
+    );
+
     switch (serverStatus)
     {
     case UaClient::Disconnected:
@@ -71,7 +75,6 @@ void CInoUAClient::connectionStatusChanged(
         registerNodes();
         break;
     }
-    printf("-------------------------------------------------------------\n");
 
     m_serverStatus = serverStatus;
 }

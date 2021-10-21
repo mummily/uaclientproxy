@@ -19,7 +19,7 @@ CInoUAClientProxy::~CInoUAClientProxy()
     DelAndNil(m_pUAClientConfig);
 }
 
-// 描述：连接到 OPC UA 服务器
+// 描述：连接到 OPC UA 服务器；这里设置为连接时加载配置
 // 备注：无
 bool CInoUAClientProxy::connect()
 {

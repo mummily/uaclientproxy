@@ -130,13 +130,13 @@ UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFil
     auto getValueAsString = [&](const UaUniString& sKey, const UaVariant& defaultValue = UaVariant())
         ->UaString
     {
-        UaVariant value = pSettings->value("CertificateTrustListLocation", defaultValue);
+        UaVariant value = pSettings->value(sKey, defaultValue);
         return value.toString();
     };
     auto getValueAsBool = [&](const UaUniString& sKey, const UaVariant& defaultValue = UaVariant())
         ->OpcUa_Boolean
     {
-        UaVariant value = pSettings->value("CertificateTrustListLocation", defaultValue);
+        UaVariant value = pSettings->value(sKey, defaultValue);
         OpcUa_Boolean bVal;
         OpcUa_StatusCode status = value.toBool(bVal);
         assert(OpcUa_IsGood(status));
@@ -145,7 +145,7 @@ UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFil
     auto getValueAsU32 = [&](const UaUniString& sKey, const UaVariant& defaultValue = UaVariant())
         ->OpcUa_UInt32
     {
-        UaVariant value = pSettings->value("CertificateTrustListLocation", defaultValue);
+        UaVariant value = pSettings->value(sKey, defaultValue);
         OpcUa_UInt32 u32Val;
         OpcUa_StatusCode status = value.toUInt32(u32Val);
         assert(OpcUa_IsGood(status));
@@ -154,12 +154,13 @@ UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFil
     auto getValueAsByte = [&](const UaUniString& sKey, const UaVariant& defaultValue = UaVariant())
         ->OpcUa_Byte
     {
-        UaVariant value = pSettings->value("CertificateTrustListLocation", defaultValue);
+        UaVariant value = pSettings->value(sKey, defaultValue);
         OpcUa_Byte byteVal;
         OpcUa_StatusCode status = value.toByte(byteVal);
         assert(OpcUa_IsGood(status));
         return byteVal;
     };
+    // 读节点组
     auto readNodeGroup = [&](UaNodeIdArray& nodeArray, const UaUniString& sGroup, const UaString& sNode)
     {
         nodeArray.clear();
@@ -176,6 +177,7 @@ UaStatus CInoUAClientConfig::loadConfiguration(const UaString& sConfigurationFil
             UaNodeId::fromXmlString(value).copyTo(&nodeArray[i]);
         }
     };
+    // 读字符串组
     auto readStringGroup = [&](UaStringArray& nodeArray, const UaUniString& sGroup, const UaString& sNode)
     {
         nodeArray.clear();

@@ -3,8 +3,8 @@
 #include "uabase.h"
 #include "uaclientsdk.h"
 
-#define COMPANY_NAME "UnifiedAutomation"
-#define PRODUCT_NAME "GettingStartedClient"
+#define COMPANY_NAME "Inovance"
+#define PRODUCT_NAME "FAMonitor"
 
 using namespace UaClientSdk;
 

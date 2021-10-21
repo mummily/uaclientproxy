@@ -6,9 +6,13 @@
 #include <iostream>
 #include <memory>
 #include <assert.h>
-#include "CInoUAClientProxyMgr.h"
 #include <thread>
 #include "format.h"
+#include <conio.h>
+
+#include "CInoUAClientMgr.h"
+#include "CInoUAClientProxy.h"
+#include "CInoUAClientProxyMgr.h"
 
 using namespace std;
 
@@ -19,10 +23,16 @@ int main()
     shared_ptr<CInoUAClientProxyMgr> spClientProxyMgr = make_shared<CInoUAClientProxyMgr>();
 
     // UA客户端连接
-    spClientProxyMgr->GetRtClientProxy();
-
+    CInoUAClientProxy* pRtClientProxy = spClientProxyMgr->GetRtClientProxy();
+    CInoUAClientMgr* pRtUAClientMgr = pRtClientProxy->GetUAClientMgr();
+    bool bOk = pRtUAClientMgr->read();
+    // assert(bOk);
+    
     // UA客户端等待
-    while (getchar() != 'q')
+    fmt::print("\n***************************************************\n");
+    fmt::print(" Press {} to shutdown client\n", 'q');
+    fmt::print("***************************************************\n");
+    while (_getch() != 'q')
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }

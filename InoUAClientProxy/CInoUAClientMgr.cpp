@@ -39,3 +39,12 @@ void CInoUAClientMgr::setConfiguration(CInoUAClientConfig* pConfiguration)
     m_pUAClientMaster->setConfiguration(pConfiguration);
     m_pUAClientSlave->setConfiguration(pConfiguration);
 }
+
+// 描述：读变量
+// 时间：2021-10-21
+// 备注：无
+bool CInoUAClientMgr::read()
+{
+    CInoUAClient* pUAClient = getUAClient();
+    return pUAClient->read().isGood();
+}
