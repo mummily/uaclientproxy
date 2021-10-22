@@ -18,7 +18,7 @@
     <ClInclude Include="CInoUAClientMgr.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CInoUAClientProxy.h">
+    <ClInclude Include="CInoUAClientConnect.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="InoExportDef.h">
@@ -44,7 +44,7 @@
     <ClCompile Include="CInoUAClientMgr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CInoUAClientProxy.cpp">
+    <ClCompile Include="CInoUAClientConnect.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CInoUAClientProxyMgr.cpp">

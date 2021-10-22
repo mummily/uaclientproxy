@@ -6,11 +6,11 @@ enum class emFAServerType;
 class UaUniString;
 class CInoUAClientMgr;
 class CInoUAClientConfig;
-class INO_EXPORT CInoUAClientProxy
+class INO_EXPORT CInoUAClientConnect
 {
 public:
-    CInoUAClientProxy(emFAServerType serverType);
-    virtual ~CInoUAClientProxy();
+    CInoUAClientConnect(emFAServerType serverType);
+    virtual ~CInoUAClientConnect();
 
     friend class CInoUAClientProxyMgr;
 

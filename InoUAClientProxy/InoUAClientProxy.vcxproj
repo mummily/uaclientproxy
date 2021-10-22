@@ -21,7 +21,7 @@
   <ItemGroup>
     <ClInclude Include="..\include\InoCommonDef.h" />
     <ClInclude Include="CInoUAClientMgr.h" />
-    <ClInclude Include="CInoUAClientProxy.h" />
+    <ClInclude Include="CInoUAClientConnect.h" />
     <ClInclude Include="CInoUAClientProxyMgr.h" />
     <ClInclude Include="CInoUAClientConfig.h" />
     <ClInclude Include="InoExportDef.h" />
@@ -34,7 +34,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="CInoUAClientProxy.cpp">
+    <ClCompile Include="CInoUAClientConnect.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>

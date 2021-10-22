@@ -11,7 +11,7 @@
 #include <conio.h>
 
 #include "CInoUAClientMgr.h"
-#include "CInoUAClientProxy.h"
+#include "CInoUAClientConnect.h"
 #include "CInoUAClientProxyMgr.h"
 #include "ScopeExit.h"
 #include "InoCommonDef.h"
@@ -26,17 +26,17 @@ int main()
     shared_ptr<CInoUAClientProxyMgr> spClientProxyMgr = make_shared<CInoUAClientProxyMgr>();
 
     // UA客户端建立与服务器的连接
-    CInoUAClientProxy* pClientProxy = spClientProxyMgr->GetClientProxy(emFAServerType::RealTime);
-    bOk = pClientProxy->connect();
+    CInoUAClientConnect* pClientConnect = spClientProxyMgr->GetClientProxy(emFAServerType::RealTime);
+    bOk = pClientConnect->connect();
     assert(bOk);
 
     // UA客户端断开与服务器的连接
     SCOPE_EXIT(
-        bOk = pClientProxy->disconnect();
+        bOk = pClientConnect->disconnect();
     assert(bOk);
     );
 
-    CInoUAClientMgr* pUAClientMgr = pClientProxy->GetUAClientMgr();
+    CInoUAClientMgr* pUAClientMgr = pClientConnect->GetUAClientMgr();
     bOk = pUAClientMgr->read();
     assert(bOk);
 

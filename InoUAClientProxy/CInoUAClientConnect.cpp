@@ -1,4 +1,4 @@
-#include "CInoUAClientProxy.h"
+#include "CInoUAClientConnect.h"
 #include "CInoUAClientMgr.h"
 #include "statuscode.h"
 #include "CInoUAClient.h"
@@ -7,13 +7,13 @@
 #include "uaunistring.h"
 #include "uadir.h"
 
-CInoUAClientProxy::CInoUAClientProxy(emFAServerType serverType)
+CInoUAClientConnect::CInoUAClientConnect(emFAServerType serverType)
     : m_emFAServerType(serverType)
 {
     m_pUAClientMgr = new CInoUAClientMgr();
 }
 
-CInoUAClientProxy::~CInoUAClientProxy()
+CInoUAClientConnect::~CInoUAClientConnect()
 {
     DelAndNil(m_pUAClientMgr);
     DelAndNil(m_pUAClientConfig);
@@ -21,7 +21,7 @@ CInoUAClientProxy::~CInoUAClientProxy()
 
 // 描述：UA客户端建立与服务器的连接；这里设置为连接时加载配置
 // 备注：无
-bool CInoUAClientProxy::connect()
+bool CInoUAClientConnect::connect()
 {
     if (nullptr == m_pUAClientConfig)
     {
@@ -38,7 +38,7 @@ bool CInoUAClientProxy::connect()
 // 描述：UA客户端断开与服务器的连接
 // 时间：2021-10-21
 // 备注：无
-bool CInoUAClientProxy::disconnect()
+bool CInoUAClientConnect::disconnect()
 {
     CInoUAClient* pUAClient = m_pUAClientMgr->getUAClient();
     return pUAClient->disconnect().isGood() != OpcUa_False;
@@ -46,7 +46,7 @@ bool CInoUAClientProxy::disconnect()
 
 // 描述：是否连接到 OPC UA 服务器
 // 备注：无
-bool CInoUAClientProxy::isconnect()
+bool CInoUAClientConnect::isconnect()
 {
     CInoUAClient* pUAClient = m_pUAClientMgr->getUAClient();
     return pUAClient->isConnected() != OpcUa_False;
@@ -54,7 +54,7 @@ bool CInoUAClientProxy::isconnect()
 
 // 描述：获取客户端配置
 // 备注：无
-UaUniString CInoUAClientProxy::GetConfigPath()
+UaUniString CInoUAClientConnect::GetConfigPath()
 {
     wchar_t szFullPath[MAX_PATH];
     GetModuleFileNameW(NULL, szFullPath, sizeof(szFullPath));

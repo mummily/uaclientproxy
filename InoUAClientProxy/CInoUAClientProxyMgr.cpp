@@ -3,7 +3,7 @@
 #include "uaplatformlayer.h"
 #include "statuscode.h"
 #include "InoCommonDef.h"
-#include "CInoUAClientProxy.h"
+#include "CInoUAClientConnect.h"
 
 CInoUAClientProxyMgr::CInoUAClientProxyMgr()
 {
@@ -23,15 +23,15 @@ CInoUAClientProxyMgr::~CInoUAClientProxyMgr()
 
 // 描述：获取客户端代理
 // 备注：无
-CInoUAClientProxy* CInoUAClientProxyMgr::GetClientProxy(emFAServerType serverType)
+CInoUAClientConnect* CInoUAClientProxyMgr::GetClientProxy(emFAServerType serverType)
 {
     // 获取客户端代理
-    CInoUAClientProxy* pClientProxy = nullptr;
+    CInoUAClientConnect* pClientProxy = nullptr;
     pClientProxy = m_mapClientProxy.at(serverType);
     if (nullptr == pClientProxy)
     {
         // 创建客户端代理
-        pClientProxy = new CInoUAClientProxy(serverType);
+        pClientProxy = new CInoUAClientConnect(serverType);
         m_mapClientProxy[serverType] = pClientProxy;
     }
 
