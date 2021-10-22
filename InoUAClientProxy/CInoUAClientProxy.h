@@ -8,15 +8,15 @@ using namespace std;
 
 class CInoUAClientConnect;
 enum class emFAServerType;
-class INO_EXPORT CInoUAClientProxyMgr
+class INO_EXPORT CInoUAClientProxy
 {
 public:
-    CInoUAClientProxyMgr();
-    virtual ~CInoUAClientProxyMgr();
+    CInoUAClientProxy();
+    virtual ~CInoUAClientProxy();
 
 public:
     // 获取客户端代理
-    CInoUAClientConnect* GetClientProxy(emFAServerType serverType);
+    CInoUAClientConnect* GetClientConnect(emFAServerType serverType);
 
 protected:
 
@@ -27,5 +27,7 @@ private:
     void cleanup();
 
 private:
-    map<emFAServerType, CInoUAClientConnect*> m_mapClientProxy; // 客户端代理
+    map<emFAServerType, CInoUAClientConnect*> m_mapClientConnect; // 客户端代理
 };
+
+// using CInoUAClientConnectMgr = CInoUAClientProxy;

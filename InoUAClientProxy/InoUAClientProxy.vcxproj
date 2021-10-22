@@ -22,7 +22,7 @@
     <ClInclude Include="..\include\InoCommonDef.h" />
     <ClInclude Include="CInoUAClientMgr.h" />
     <ClInclude Include="CInoUAClientConnect.h" />
-    <ClInclude Include="CInoUAClientProxyMgr.h" />
+    <ClInclude Include="CInoUAClientProxy.h" />
     <ClInclude Include="CInoUAClientConfig.h" />
     <ClInclude Include="InoExportDef.h" />
     <ClInclude Include="CInoUAClient.h" />
@@ -39,7 +39,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="CInoUAClientProxyMgr.cpp" />
+    <ClCompile Include="CInoUAClientProxy.cpp" />
     <ClCompile Include="CInoUAClientConfig.cpp" />
     <ClCompile Include="CInoUAClient.cpp" />
     <ClCompile Include="CInoUASubscriptionCallback.cpp" />

@@ -1,19 +1,19 @@
-#include "CInoUAClientProxyMgr.h"
+#include "CInoUAClientProxy.h"
 
 #include "uaplatformlayer.h"
 #include "statuscode.h"
 #include "InoCommonDef.h"
 #include "CInoUAClientConnect.h"
 
-CInoUAClientProxyMgr::CInoUAClientProxyMgr()
+CInoUAClientProxy::CInoUAClientProxy()
 {
     init();
 }
 
-CInoUAClientProxyMgr::~CInoUAClientProxyMgr()
+CInoUAClientProxy::~CInoUAClientProxy()
 {
     // 清除客户端代理调用
-    for (auto pi : m_mapClientProxy)
+    for (auto pi : m_mapClientConnect)
     {
         DelAndNil(pi.second);
     }
@@ -23,16 +23,16 @@ CInoUAClientProxyMgr::~CInoUAClientProxyMgr()
 
 // 描述：获取客户端代理
 // 备注：无
-CInoUAClientConnect* CInoUAClientProxyMgr::GetClientProxy(emFAServerType serverType)
+CInoUAClientConnect* CInoUAClientProxy::GetClientConnect(emFAServerType serverType)
 {
     // 获取客户端代理
     CInoUAClientConnect* pClientProxy = nullptr;
-    pClientProxy = m_mapClientProxy.at(serverType);
+    pClientProxy = m_mapClientConnect.at(serverType);
     if (nullptr == pClientProxy)
     {
         // 创建客户端代理
         pClientProxy = new CInoUAClientConnect(serverType);
-        m_mapClientProxy[serverType] = pClientProxy;
+        m_mapClientConnect[serverType] = pClientProxy;
     }
 
     return pClientProxy;
@@ -40,7 +40,7 @@ CInoUAClientConnect* CInoUAClientProxyMgr::GetClientProxy(emFAServerType serverT
 
 // 描述：初始化 UA Stack 平台层
 // 备注：无
-bool CInoUAClientProxyMgr::init()
+bool CInoUAClientProxy::init()
 {
     int iOk = UaPlatformLayer::init();
     assert(iOk != -1);
@@ -49,7 +49,7 @@ bool CInoUAClientProxyMgr::init()
 
 // 描述：清理 UA Stack 平台层
 // 备注：无
-void CInoUAClientProxyMgr::cleanup()
+void CInoUAClientProxy::cleanup()
 {
     UaPlatformLayer::cleanup();
 }

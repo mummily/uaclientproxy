@@ -12,7 +12,7 @@
 
 #include "CInoUAClientMgr.h"
 #include "CInoUAClientConnect.h"
-#include "CInoUAClientProxyMgr.h"
+#include "CInoUAClientProxy.h"
 #include "ScopeExit.h"
 #include "InoCommonDef.h"
 
@@ -22,11 +22,11 @@ int main()
 {
     bool bOk = false;
 
-    // UA客户端适配器管理器
-    shared_ptr<CInoUAClientProxyMgr> spClientProxyMgr = make_shared<CInoUAClientProxyMgr>();
+    // UA客户端代理
+    shared_ptr<CInoUAClientProxy> spClientProxy = make_shared<CInoUAClientProxy>();
 
-    // UA客户端建立与服务器的连接
-    CInoUAClientConnect* pClientConnect = spClientProxyMgr->GetClientProxy(emFAServerType::RealTime);
+    // UA客户端建立与某一服务器的连接
+    CInoUAClientConnect* pClientConnect = spClientProxy->GetClientConnect(emFAServerType::RealTime);
     bOk = pClientConnect->connect();
     assert(bOk);
 

@@ -12,7 +12,7 @@ public:
     CInoUAClientConnect(emFAServerType serverType);
     virtual ~CInoUAClientConnect();
 
-    friend class CInoUAClientProxyMgr;
+    friend class CInoUAClientProxy;
 
 public:
     // 连接客户端
