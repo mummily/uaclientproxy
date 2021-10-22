@@ -13,21 +13,33 @@
 #include "CInoUAClientMgr.h"
 #include "CInoUAClientProxy.h"
 #include "CInoUAClientProxyMgr.h"
+#include "ScopeExit.h"
+#include "InoCommonDef.h"
 
 using namespace std;
 
 int main()
 {
-    // fmt::print("Hello {}", "World!");
+    bool bOk = false;
+
     // UA客户端适配器管理器
     shared_ptr<CInoUAClientProxyMgr> spClientProxyMgr = make_shared<CInoUAClientProxyMgr>();
 
-    // UA客户端连接
-    CInoUAClientProxy* pRtClientProxy = spClientProxyMgr->GetRtClientProxy();
-    CInoUAClientMgr* pRtUAClientMgr = pRtClientProxy->GetUAClientMgr();
-    bool bOk = pRtUAClientMgr->read();
-    // assert(bOk);
-    
+    // UA客户端建立与服务器的连接
+    CInoUAClientProxy* pClientProxy = spClientProxyMgr->GetClientProxy(emFAServerType::RealTime);
+    bOk = pClientProxy->connect();
+    assert(bOk);
+
+    // UA客户端断开与服务器的连接
+    SCOPE_EXIT(
+        bOk = pClientProxy->disconnect();
+    assert(bOk);
+    );
+
+    CInoUAClientMgr* pUAClientMgr = pClientProxy->GetUAClientMgr();
+    bOk = pUAClientMgr->read();
+    assert(bOk);
+
     // UA客户端等待
     fmt::print("\n***************************************************\n");
     fmt::print(" Press {} to shutdown client\n", 'q');

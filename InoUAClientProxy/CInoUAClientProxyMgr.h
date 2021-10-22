@@ -17,8 +17,6 @@ public:
 public:
     // 获取客户端代理
     CInoUAClientProxy* GetClientProxy(emFAServerType serverType);
-    // 获取实时服务客户端代理
-    CInoUAClientProxy* GetRtClientProxy();
 
 protected:
 
@@ -29,6 +27,5 @@ private:
     void cleanup();
 
 private:
-    CInoUAClientProxy* m_pRtClientProxy = nullptr; // 实时服务客户端代理
-    CInoUAClientProxy* m_pIOClientProxy = nullptr; // IO服务客户端代理
+    map<emFAServerType, CInoUAClientProxy*> m_mapClientProxy; // 客户端代理
 };

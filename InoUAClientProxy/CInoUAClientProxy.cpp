@@ -19,7 +19,7 @@ CInoUAClientProxy::~CInoUAClientProxy()
     DelAndNil(m_pUAClientConfig);
 }
 
-// 描述：连接到 OPC UA 服务器；这里设置为连接时加载配置
+// 描述：UA客户端建立与服务器的连接；这里设置为连接时加载配置
 // 备注：无
 bool CInoUAClientProxy::connect()
 {
@@ -33,6 +33,15 @@ bool CInoUAClientProxy::connect()
     m_pUAClientMgr->setConfiguration(m_pUAClientConfig);
     UaStatus status = m_pUAClientMgr->connect();
     return status.isGood();
+}
+
+// 描述：UA客户端断开与服务器的连接
+// 时间：2021-10-21
+// 备注：无
+bool CInoUAClientProxy::disconnect()
+{
+    CInoUAClient* pUAClient = m_pUAClientMgr->getUAClient();
+    return pUAClient->disconnect().isGood() != OpcUa_False;
 }
 
 // 描述：是否连接到 OPC UA 服务器

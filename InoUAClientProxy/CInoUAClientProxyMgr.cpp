@@ -8,17 +8,15 @@
 CInoUAClientProxyMgr::CInoUAClientProxyMgr()
 {
     init();
-
-    // 创建客户端代理
-    m_pRtClientProxy = new CInoUAClientProxy(emFAServerType::RealTime);
-    m_pIOClientProxy = new CInoUAClientProxy(emFAServerType::IO);
 }
 
 CInoUAClientProxyMgr::~CInoUAClientProxyMgr()
 {
     // 清除客户端代理调用
-    DelAndNil(m_pRtClientProxy);
-    DelAndNil(m_pIOClientProxy);
+    for (auto pi : m_mapClientProxy)
+    {
+        DelAndNil(pi.second);
+    }
 
     cleanup();
 }
@@ -27,23 +25,14 @@ CInoUAClientProxyMgr::~CInoUAClientProxyMgr()
 // 备注：无
 CInoUAClientProxy* CInoUAClientProxyMgr::GetClientProxy(emFAServerType serverType)
 {
+    // 获取客户端代理
     CInoUAClientProxy* pClientProxy = nullptr;
-    switch (serverType)
-    {
-    case emFAServerType::RealTime:
-        pClientProxy = m_pRtClientProxy;
-        break;
-    case emFAServerType::IO:
-        pClientProxy = m_pIOClientProxy;
-        break;
-    }
-
+    pClientProxy = m_mapClientProxy.at(serverType);
     if (nullptr == pClientProxy)
-        return nullptr;
-
-    if (!pClientProxy->isconnect())
     {
-        pClientProxy->connect();
+        // 创建客户端代理
+        pClientProxy = new CInoUAClientProxy(serverType);
+        m_mapClientProxy[serverType] = pClientProxy;
     }
 
     return pClientProxy;
@@ -63,11 +52,4 @@ bool CInoUAClientProxyMgr::init()
 void CInoUAClientProxyMgr::cleanup()
 {
     UaPlatformLayer::cleanup();
-}
-
-// 描述：获取实时服务客户端代理
-// 备注：无
-CInoUAClientProxy* CInoUAClientProxyMgr::GetRtClientProxy()
-{
-    return GetClientProxy(emFAServerType::RealTime);
 }

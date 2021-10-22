@@ -17,6 +17,8 @@ public:
 public:
     // 连接客户端
     bool connect();
+    // 断开与客户端的连接
+    bool disconnect();
     // 是否连接客户端
     bool isconnect();
 
