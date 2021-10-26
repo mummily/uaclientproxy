@@ -11,6 +11,7 @@ using namespace UaClientSdk;
 class CInoUAClientConfig
 {
     UA_DISABLE_COPY(CInoUAClientConfig);
+
 public:
     CInoUAClientConfig();
     virtual ~CInoUAClientConfig();

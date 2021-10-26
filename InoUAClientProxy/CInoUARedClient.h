@@ -2,22 +2,26 @@
 
 #include "InoExportDef.h"
 
-class UaStatus;
+// class UaStatus;
 class CInoUAClient;
 class CInoUAClientConfig;
-class INO_EXPORT CInoUAClientMgr
+class INO_EXPORT CInoUARedClient
 {
 public:
-    CInoUAClientMgr();
-    virtual ~CInoUAClientMgr();
+    CInoUARedClient();
+    virtual ~CInoUARedClient();
 
 public:
     // 连接服务器
-    UaStatus connect();
+    /*UaStatus*/bool connect();
+    // 断开与客户端的连接
+    /*UaStatus*/bool disconnect();
+    // 是否连接服务器
+    bool isconnect();
     // 获取主UA客户端
     CInoUAClient* getUAClient();
     // 设置配置信息
-    void setConfiguration(CInoUAClientConfig* pConfiguration);
+    void setConfiguration(CInoUAClientConfig* pConfigMaster, CInoUAClientConfig* pConfigSlave);
     // 读取
     bool read();
 

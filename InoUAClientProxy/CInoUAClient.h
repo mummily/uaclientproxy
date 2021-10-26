@@ -6,11 +6,11 @@
 
 class CInoUASubscriptionCallback;
 class CInoUAClientConfig;
-class CInoUAClientMgr;
+class CInoUARedClient;
 
 using namespace UaClientSdk;
 
-class INO_EXPORT CInoUAClient : public UaSessionCallback
+class CInoUAClient : public UaSessionCallback
 {
     UA_DISABLE_COPY(CInoUAClient);
 
@@ -18,7 +18,7 @@ public:
     CInoUAClient();
     virtual ~CInoUAClient();
 
-    friend class CInoUAClientMgr;
+    friend class CInoUARedClient;
 
     // 连接状态变更回调函数
     virtual void connectionStatusChanged(OpcUa_UInt32 clientConnectionId, UaClient::ServerStatus serverStatus);
@@ -76,10 +76,10 @@ private:
     int userAcceptCertificate();
 
 private:
-    UaSession* m_pSession = nullptr;                        // 会话
-    CInoUASubscriptionCallback* m_pSubscriptionCallback = nullptr;    // 订阅
-    CInoUAClientConfig* m_pConfiguration = nullptr;         // 客户端配置
-    UaClient::ServerStatus m_serverStatus;                  // 客户端连接服务器状态：连接或重连
-    UaNodeIdArray m_registeredNodes;                        // 注册的节点：默认是所有要写入的节点
+    UaSession* m_pSession = nullptr;                // 会话
+    CInoUASubscriptionCallback* m_pSubscriptionCallback = nullptr;  // 订阅
+    CInoUAClientConfig* m_pConfiguration = nullptr; // 客户端配置
+    UaClient::ServerStatus m_serverStatus;          // 客户端连接服务器状态：连接或重连
+    UaNodeIdArray m_registeredNodes;                // 注册的节点：默认是所有要写入的节点
 };
 

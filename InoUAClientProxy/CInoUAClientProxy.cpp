@@ -3,11 +3,18 @@
 #include "uaplatformlayer.h"
 #include "statuscode.h"
 #include "InoCommonDef.h"
-#include "CInoUAClientConnect.h"
+#include "uadir.h"
+#include "CInoUAClientConfig.h"
+#include "CInoUARedClient.h"
 
 CInoUAClientProxy::CInoUAClientProxy()
 {
     init();
+
+    #pragma TODO("加载所有的配置")
+    CInoUAClientConfig* m_pUAClientConfig = new CInoUAClientConfig();
+    UaStatus status = m_pUAClientConfig->loadConfiguration(getConfigPath().toUtf16());
+    assert(status.isGood());
 }
 
 CInoUAClientProxy::~CInoUAClientProxy()
@@ -23,15 +30,16 @@ CInoUAClientProxy::~CInoUAClientProxy()
 
 // 描述：获取客户端代理
 // 备注：无
-CInoUAClientConnect* CInoUAClientProxy::GetClientConnect(emFAServerType serverType)
+CInoUARedClient* CInoUAClientProxy::getRedClient(emFAServerType serverType)
 {
     // 获取客户端代理
-    CInoUAClientConnect* pClientProxy = nullptr;
+    CInoUARedClient* pClientProxy = nullptr;
     pClientProxy = m_mapClientConnect.at(serverType);
     if (nullptr == pClientProxy)
     {
         // 创建客户端代理
-        pClientProxy = new CInoUAClientConnect(serverType);
+        pClientProxy = new CInoUARedClient();
+        pClientProxy->setConfiguration(m_pUAClientConfig, m_pUAClientConfig);
         m_mapClientConnect[serverType] = pClientProxy;
     }
 
@@ -52,4 +60,20 @@ bool CInoUAClientProxy::init()
 void CInoUAClientProxy::cleanup()
 {
     UaPlatformLayer::cleanup();
+}
+
+// 描述：获取客户端配置
+// 备注：无
+UaUniString CInoUAClientProxy::getConfigPath()
+{
+#pragma TODO("配置的获取方式，需要以实际业务来定")
+    wchar_t szFullPath[MAX_PATH];
+    GetModuleFileNameW(NULL, szFullPath, sizeof(szFullPath));
+
+    // 获取配置文件路径
+    UaString sConfigFile(szFullPath);
+        sConfigFile += "/../clientconfig.ini";
+
+    UaDir dir(sConfigFile.toUtf8());
+    return dir.canonicalPath();
 }

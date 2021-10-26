@@ -6,9 +6,7 @@
 using namespace UaClientSdk;
 
 class CInoUAClientConfig;
-
-class CInoUASubscriptionCallback :
-    public UaSubscriptionCallback
+class CInoUASubscriptionCallback : public UaSubscriptionCallback
 {
     UA_DISABLE_COPY(CInoUASubscriptionCallback);
 public:
