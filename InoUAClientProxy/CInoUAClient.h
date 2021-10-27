@@ -1,16 +1,15 @@
 #pragma once
 
 #include "InoExportDef.h"
-#include "uabase.h"
 #include "uaclientsdk.h"
 
 class CInoUASubscriptionCallback;
 class CInoUAClientConfig;
 class CInoUARedClient;
-
+class CInoUASessionCallback;
 using namespace UaClientSdk;
 
-class CInoUAClient : public UaSessionCallback
+class INO_EXPORT CInoUAClient
 {
     UA_DISABLE_COPY(CInoUAClient);
 
@@ -20,8 +19,6 @@ public:
 
     friend class CInoUARedClient;
 
-    // 连接状态变更回调函数
-    virtual void connectionStatusChanged(OpcUa_UInt32 clientConnectionId, UaClient::ServerStatus serverStatus);
     // 设置客户端配置信息
     void setConfiguration(CInoUAClientConfig* pConfiguration);
     // 客户端是否处于连接状态
@@ -54,6 +51,8 @@ public:
     UaStatus unregisterNodes();
     // 回调对象的方法，方法无参数
     UaStatus callMethods();
+    // 更新所有 nodeId 的命名空间索引并更新内部 namespaceArray
+    UaStatus updateNamespaceIndexes();
 
 private:
     // 从节点nodeToBrowse浏览地址空间
@@ -77,9 +76,9 @@ private:
 
 private:
     UaSession* m_pSession = nullptr;                // 会话
+    CInoUASessionCallback* m_pSessionCallback = nullptr; // 会话回调
     CInoUASubscriptionCallback* m_pSubscriptionCallback = nullptr;  // 订阅
     CInoUAClientConfig* m_pConfiguration = nullptr; // 客户端配置
-    UaClient::ServerStatus m_serverStatus;          // 客户端连接服务器状态：连接或重连
     UaNodeIdArray m_registeredNodes;                // 注册的节点：默认是所有要写入的节点
 };
 

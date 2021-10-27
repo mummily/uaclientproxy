@@ -12,7 +12,7 @@ CInoUAClientProxy::CInoUAClientProxy()
     init();
 
     #pragma TODO("加载所有的配置")
-    CInoUAClientConfig* m_pUAClientConfig = new CInoUAClientConfig();
+    /*CInoUAClientConfig* */m_pUAClientConfig = new CInoUAClientConfig();
     UaStatus status = m_pUAClientConfig->loadConfiguration(getConfigPath().toUtf16());
     assert(status.isGood());
 }
@@ -34,8 +34,8 @@ CInoUARedClient* CInoUAClientProxy::getRedClient(emFAServerType serverType)
 {
     // 获取客户端代理
     CInoUARedClient* pClientProxy = nullptr;
-    pClientProxy = m_mapClientConnect.at(serverType);
-    if (nullptr == pClientProxy)
+    auto itFind = m_mapClientConnect.find(serverType);
+    if (m_mapClientConnect.end() == itFind)
     {
         // 创建客户端代理
         pClientProxy = new CInoUARedClient();
