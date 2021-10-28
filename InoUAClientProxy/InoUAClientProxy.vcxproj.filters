@@ -15,54 +15,54 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CInoUARedClient.h">
+    <ClInclude Include="CInoRedSession.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="InoExportDef.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CInoUAClientProxy.h">
+    <ClInclude Include="CInoSessionGroup.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CInoUAClient.h">
+    <ClInclude Include="CInoSession.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\include\InoCommonDef.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CInoUAClientConfig.h">
+    <ClInclude Include="CInoSessionConfig.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CInoUASubscriptionCallback.h">
+    <ClInclude Include="CInoSubscriptionCallback.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CInoUASessionCallback.h">
+    <ClInclude Include="CInoSessionCallback.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CInoUASubscription.h">
+    <ClInclude Include="CInoSubscription.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CInoUARedClient.cpp">
+    <ClCompile Include="CInoRedSession.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CInoUAClientProxy.cpp">
+    <ClCompile Include="CInoSessionGroup.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CInoUAClient.cpp">
+    <ClCompile Include="CInoSession.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CInoUAClientConfig.cpp">
+    <ClCompile Include="CInoSessionConfig.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CInoUASubscriptionCallback.cpp">
+    <ClCompile Include="CInoSubscriptionCallback.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CInoUASessionCallback.cpp">
+    <ClCompile Include="CInoSessionCallback.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CInoUASubscription.cpp">
+    <ClCompile Include="CInoSubscription.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

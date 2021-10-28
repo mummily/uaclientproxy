@@ -10,33 +10,34 @@
 #include "format.h"
 #include <conio.h>
 
-#include "CInoUARedClient.h"
-#include "CInoUAClientProxy.h"
+#include "CInoSession.h"
+#include "CInoRedSession.h"
+#include "CInoSessionGroup.h"
 #include "ScopeExit.h"
 #include "InoCommonDef.h"
 
 using namespace std;
 
-int main()
+int reallyMain()
 {
-    bool bOk = false;
+    UaStatus status/* = UaStatus::opc*/;
 
     // UA客户端代理
-    shared_ptr<CInoUAClientProxy> spClientProxy = make_shared<CInoUAClientProxy>();
+    shared_ptr<CInoSessionGroup> spSessionGroup = make_shared<CInoSessionGroup>();
 
     // UA客户端建立与某一服务器的连接
-    CInoUARedClient* pRedClient = spClientProxy->getRedClient(emFAServerType::RealTime);
-    bOk = pRedClient->connect();
+    CInoRedSession* pRedClient = spSessionGroup->getRedSession(emFAServerType::RealTime);
+    status = pRedClient->connect();
 
     // UA客户端断开与服务器的连接
     SCOPE_EXIT(
-        bOk = pRedClient->disconnect();
-    assert(bOk);
+        status = pRedClient->disconnect();
+    assert(status.isGood());
     );
 
-    // CInoUAClient* pUAClient = pRedClient->getUAClient();
-    // pUAClient->read();
-    // assert(bOk);
+    CInoSession* pSession = pRedClient->getSession();
+    pSession->read();
+    assert(status.isGood());
 
         // UA客户端等待
     fmt::print("\n***************************************************\n");
@@ -48,4 +49,9 @@ int main()
     }
 
     return 0;
+}
+
+int main()
+{
+    return reallyMain();
 }

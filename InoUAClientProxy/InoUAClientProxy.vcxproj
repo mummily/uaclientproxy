@@ -20,27 +20,27 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\InoCommonDef.h" />
-    <ClInclude Include="CInoUARedClient.h" />
-    <ClInclude Include="CInoUAClientProxy.h" />
-    <ClInclude Include="CInoUAClientConfig.h" />
-    <ClInclude Include="CInoUASessionCallback.h" />
-    <ClInclude Include="CInoUASubscription.h" />
+    <ClInclude Include="CInoRedSession.h" />
+    <ClInclude Include="CInoSessionGroup.h" />
+    <ClInclude Include="CInoSessionConfig.h" />
+    <ClInclude Include="CInoSessionCallback.h" />
+    <ClInclude Include="CInoSubscription.h" />
     <ClInclude Include="InoExportDef.h" />
-    <ClInclude Include="CInoUAClient.h" />
-    <ClInclude Include="CInoUASubscriptionCallback.h" />
+    <ClInclude Include="CInoSession.h" />
+    <ClInclude Include="CInoSubscriptionCallback.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CInoUARedClient.cpp">
+    <ClCompile Include="CInoRedSession.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="CInoUAClientProxy.cpp" />
-    <ClCompile Include="CInoUAClientConfig.cpp" />
-    <ClCompile Include="CInoUAClient.cpp" />
-    <ClCompile Include="CInoUASessionCallback.cpp" />
-    <ClCompile Include="CInoUASubscription.cpp" />
-    <ClCompile Include="CInoUASubscriptionCallback.cpp" />
+    <ClCompile Include="CInoSessionGroup.cpp" />
+    <ClCompile Include="CInoSessionConfig.cpp" />
+    <ClCompile Include="CInoSession.cpp" />
+    <ClCompile Include="CInoSessionCallback.cpp" />
+    <ClCompile Include="CInoSubscription.cpp" />
+    <ClCompile Include="CInoSubscriptionCallback.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -114,7 +114,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>./include;./include/uabasecpp;./include/uastack;./include/uaclientcpp;./include/uapkicpp;../include;../include/fmt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;../include/fmt;../include/ua;../include/ua/uabasecpp;../include/ua/uastack;../include/ua/uaclientcpp;../include/ua/uapkicpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4819;4251;4275;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -122,7 +122,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>uabasecppd.lib;uastackd.lib;uaclientcppd.lib;uapkicppd.lib;ws2_32.lib;fmtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutDir);./lib/$(PlatformTarget)/$(Configuration);$(SolutionDir)lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)lib\ua\$(PlatformTarget)/$(Configuration);$(SolutionDir)lib\fmt\$(PlatformTarget)/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

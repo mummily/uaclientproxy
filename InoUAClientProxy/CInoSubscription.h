@@ -5,24 +5,24 @@
 class UaStatus;
 class UaSession;
 class UaSubscription;
-class CInoUAClientConfig;
-class CInoUASubscriptionCallback;
+class CInoSessionConfig;
+class CInoSubscriptionCallback;
 
 using namespace UaClientSdk;
 
-class CInoUASubscription
+class CInoSubscription
 {
-    UA_DISABLE_COPY(CInoUASubscription);
+    UA_DISABLE_COPY(CInoSubscription);
 public:
-    CInoUASubscription(UaClientSdk::UaSession* pSession, CInoUAClientConfig* pConfiguration);
-    virtual ~CInoUASubscription();
+    CInoSubscription(UaClientSdk::UaSession* pSession, CInoSessionConfig* pConfiguration);
+    virtual ~CInoSubscription();
 
     // 在服务器上创建订阅、监视项
     UaStatus createSubscriptionMonitors(bool bDeleteSubscription = false);
     // 在服务器上删除订阅
     UaStatus deleteSubscription();
     // 设置要监控的 NodeId 列表的配置
-    void setConfiguration(CInoUAClientConfig* pConfiguration);
+    void setConfiguration(CInoSessionConfig* pConfiguration);
 
 private:
     // 在服务器上创建订阅
@@ -33,7 +33,7 @@ private:
 private:
     UaClientSdk::UaSession* m_pSession = nullptr;                // 当前会话
     UaClientSdk::UaSubscription* m_pSubscription = nullptr;      // 当前订阅
-    CInoUASubscriptionCallback* m_pSubscriptionCallback = nullptr; // 订阅回调
-    CInoUAClientConfig* m_pConfiguration = nullptr; // 当前客户端配置
+    CInoSubscriptionCallback* m_pSubscriptionCallback = nullptr; // 订阅回调
+    CInoSessionConfig* m_pConfiguration = nullptr; // 当前客户端配置
 };
 

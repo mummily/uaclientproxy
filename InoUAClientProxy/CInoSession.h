@@ -4,24 +4,24 @@
 #include "uaclientsdk.h"
 
 class UaSession;
-class CInoUASubscription;
-class CInoUAClientConfig;
-class CInoUARedClient;
-class CInoUASessionCallback;
+class CInoSubscription;
+class CInoSessionConfig;
+class CInoRedSession;
+class CInoSessionCallback;
 using namespace UaClientSdk;
 
-class INO_EXPORT CInoUAClient
+class INO_EXPORT CInoSession
 {
-    UA_DISABLE_COPY(CInoUAClient);
+    UA_DISABLE_COPY(CInoSession);
 
 public:
-    CInoUAClient();
-    virtual ~CInoUAClient();
+    CInoSession();
+    virtual ~CInoSession();
 
-    friend class CInoUARedClient;
+    friend class CInoRedSession;
 
     // 设置客户端配置信息
-    void setConfiguration(CInoUAClientConfig* pConfiguration);
+    void setConfiguration(CInoSessionConfig* pConfiguration);
     // 客户端是否处于连接状态
     OpcUa_Boolean isConnected() const;
     // 查找服务器并输出服务器信息
@@ -77,9 +77,9 @@ private:
 
 private:
     UaClientSdk::UaSession* m_pSession = nullptr;                // 会话
-    CInoUASessionCallback* m_pSessionCallback = nullptr; // 会话回调
-    CInoUASubscription* m_pSubscription = nullptr;  // 订阅
-    CInoUAClientConfig* m_pConfiguration = nullptr; // 客户端配置
+    CInoSessionCallback* m_pSessionCallback = nullptr; // 会话回调
+    CInoSubscription* m_pSubscription = nullptr;  // 订阅
+    CInoSessionConfig* m_pConfiguration = nullptr; // 客户端配置
     UaNodeIdArray m_registeredNodes;                // 注册的节点：默认是所有要写入的节点
 };
 

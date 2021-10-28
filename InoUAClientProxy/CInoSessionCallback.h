@@ -5,19 +5,19 @@
 
 using namespace UaClientSdk;
 
-class CInoUAClient;
-class CInoUASessionCallback : public UaSessionCallback
+class CInoSession;
+class CInoSessionCallback : public UaSessionCallback
 {
-    UA_DISABLE_COPY(CInoUASessionCallback);
+    UA_DISABLE_COPY(CInoSessionCallback);
 
 public:
-    CInoUASessionCallback(CInoUAClient* pUAClient);
-    virtual ~CInoUASessionCallback();
+    CInoSessionCallback(CInoSession* pSession);
+    virtual ~CInoSessionCallback();
 
     // 连接状态变更回调函数
     virtual void connectionStatusChanged(OpcUa_UInt32 clientConnectionId, UaClient::ServerStatus serverStatus);
 
 private:
-    CInoUAClient* m_pUAClient = nullptr;
+    CInoSession* m_pSession = nullptr;
     UaClient::ServerStatus m_serverStatus;          // 客户端连接服务器状态：连接或重连
 };

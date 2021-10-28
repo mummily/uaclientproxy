@@ -1,20 +1,20 @@
-#include "CInoUASessionCallback.h"
+#include "CInoSessionCallback.h"
 #include "ScopeExit.h"
-#include "CInoUAClient.h"
+#include "CInoSession.h"
 
-CInoUASessionCallback::CInoUASessionCallback(CInoUAClient* pUAClient)
-    : UaSessionCallback(), m_pUAClient(pUAClient)
+CInoSessionCallback::CInoSessionCallback(CInoSession* pSession)
+    : UaSessionCallback(), m_pSession(pSession)
 {
 }
 
-CInoUASessionCallback::~CInoUASessionCallback()
+CInoSessionCallback::~CInoSessionCallback()
 {
 }
 
 // 描述：连接状态变更回调函数
 // 时间：2021-10-20
 // 备注：无
-void CInoUASessionCallback::connectionStatusChanged(
+void CInoSessionCallback::connectionStatusChanged(
     OpcUa_UInt32             clientConnectionId,
     UaClient::ServerStatus   serverStatus)
 {
@@ -34,7 +34,7 @@ void CInoUASessionCallback::connectionStatusChanged(
         printf("Connection status changed to Connected\n");
         if (m_serverStatus != UaClient::NewSessionCreated)
         {
-            m_pUAClient->updateNamespaceIndexes();
+            m_pSession->updateNamespaceIndexes();
         }
         break;
     case UaClient::ConnectionWarningWatchdogTimeout:
@@ -48,9 +48,9 @@ void CInoUASessionCallback::connectionStatusChanged(
         break;
     case UaClient::NewSessionCreated:
         printf("Connection status changed to NewSessionCreated\n");
-        m_pUAClient->updateNamespaceIndexes();
+        m_pSession->updateNamespaceIndexes();
         // 已注册的节点在新会话中不再有效
-        m_pUAClient->registerNodes();
+        m_pSession->registerNodes();
         break;
     }
 

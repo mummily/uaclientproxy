@@ -1,23 +1,23 @@
-#include "CInoUAClient.h"
+#include "CInoSession.h"
 #include "uasession.h"
-#include "CInoUASubscription.h"
-#include "CInoUAClientConfig.h"
+#include "CInoSubscription.h"
+#include "CInoSessionConfig.h"
 #include "uadiscovery.h"
 #include "uapkicertificate.h"
 #include "uaplatformdefs.h"
 #include "InoCommonDef.h"
 #include "uadir.h"
 #include "ScopeExit.h"
-#include "CInoUASessionCallback.h"
+#include "CInoSessionCallback.h"
 
-CInoUAClient::CInoUAClient()
+CInoSession::CInoSession()
 {
     m_pSession = new UaClientSdk::UaSession();
-    m_pSessionCallback = new CInoUASessionCallback(this);
-    m_pSubscription = new CInoUASubscription(m_pSession, m_pConfiguration);
+    m_pSessionCallback = new CInoSessionCallback(this);
+    m_pSubscription = new CInoSubscription(m_pSession, m_pConfiguration);
 }
 
-CInoUAClient::~CInoUAClient()
+CInoSession::~CInoSession()
 {
     // 删除本地订阅对象
     DelAndNil(m_pSubscription);
@@ -38,7 +38,7 @@ CInoUAClient::~CInoUAClient()
 // 描述：设置客户端配置信息
 // 时间：2021-10-20
 // 备注：无
-void CInoUAClient::setConfiguration(CInoUAClientConfig* pConfiguration)
+void CInoSession::setConfiguration(CInoSessionConfig* pConfiguration)
 {
     assert(nullptr != pConfiguration);
 
@@ -54,7 +54,7 @@ void CInoUAClient::setConfiguration(CInoUAClientConfig* pConfiguration)
 // 描述：查找服务器并输出服务器信息
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::discover()
+UaStatus CInoSession::discover()
 {
     // 获取可用服务器列表
     printf("\nCall FindServers on Url %s\n", m_pConfiguration->getDiscoveryUrl().toUtf8());
@@ -149,7 +149,7 @@ UaStatus CInoUAClient::discover()
 // 描述：客户端是否处于连接状态
 // 时间：2021-10-20
 // 备注：无
-OpcUa_Boolean CInoUAClient::isConnected() const
+OpcUa_Boolean CInoSession::isConnected() const
 {
     return m_pSession->isConnected();
 }
@@ -157,7 +157,7 @@ OpcUa_Boolean CInoUAClient::isConnected() const
 // 描述：非安连接服务器
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::connect()
+UaStatus CInoSession::connect()
 {
     // 安全设置未初始化 - 没有安全连接
     SessionSecurityInfo sessionSecurityInfo;
@@ -167,7 +167,7 @@ UaStatus CInoUAClient::connect()
 // 描述：安全连接服务器
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::connectSecure()
+UaStatus CInoSession::connectSecure()
 {
     UaStatus result;
     SessionSecurityInfo sessionSecurityInfo;
@@ -217,7 +217,7 @@ UaStatus CInoUAClient::connectSecure()
 // 描述：连接服务器，sessionConnectInfo读自配置
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::connectInternal(const UaString& serverUrl, SessionSecurityInfo& sessionSecurityInfo)
+UaStatus CInoSession::connectInternal(const UaString& serverUrl, SessionSecurityInfo& sessionSecurityInfo)
 {
     UaStatus result;
 
@@ -262,9 +262,8 @@ UaStatus CInoUAClient::connectInternal(const UaString& serverUrl, SessionSecurit
 // 描述：节点nodesToWrite中写入valuesToWrite值
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::writeInternal(const UaNodeIdArray& nodesToWrite, const UaVariantArray& valuesToWrite)
+UaStatus CInoSession::writeInternal(const UaNodeIdArray& nodesToWrite, const UaVariantArray& valuesToWrite)
 {
-
     // 检入参数
     if (nodesToWrite.length() < 1
         || valuesToWrite.length() < 1)
@@ -322,7 +321,7 @@ UaStatus CInoUAClient::writeInternal(const UaNodeIdArray& nodesToWrite, const Ua
 // 描述：在服务器上查找安全端点
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::findSecureEndpoint(SessionSecurityInfo& sessionSecurityInfo)
+UaStatus CInoSession::findSecureEndpoint(SessionSecurityInfo& sessionSecurityInfo)
 {
     UaStatus result;
     ServiceSettings serviceSettings;
@@ -401,7 +400,7 @@ UaStatus CInoUAClient::findSecureEndpoint(SessionSecurityInfo& sessionSecurityIn
 // 描述：验证服务器证书
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::checkServerCertificateTrust(SessionSecurityInfo& sessionSecurityInfo)
+UaStatus CInoSession::checkServerCertificateTrust(SessionSecurityInfo& sessionSecurityInfo)
 {
     UaStatus result;
 
@@ -462,7 +461,7 @@ UaStatus CInoUAClient::checkServerCertificateTrust(SessionSecurityInfo& sessionS
 // 描述：断开连接
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::disconnect()
+UaStatus CInoSession::disconnect()
 {
     ServiceSettings serviceSettings;
 
@@ -486,7 +485,7 @@ UaStatus CInoUAClient::disconnect()
 // 描述：从根节点浏览节点
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::browseSimple()
+UaStatus CInoSession::browseSimple()
 {
     // 从根文件夹浏览，没有引用限制返回
     UaNodeId nodeToBrowse = UaNodeId(OpcUaId_RootFolder);
@@ -498,7 +497,7 @@ UaStatus CInoUAClient::browseSimple()
 // 描述：继续浏览
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::browseContinuationPoint()
+UaStatus CInoSession::browseContinuationPoint()
 {
     UaNodeId nodeToBrowse = UaNodeId("Demo", 2);
     UaStatus result = browseInternal(nodeToBrowse, 5);
@@ -508,7 +507,7 @@ UaStatus CInoUAClient::browseContinuationPoint()
 // 描述：根据配置文件，节点进行读值
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::read()
+UaStatus CInoSession::read()
 {
     UaNodeIdArray nodes = m_pConfiguration->getNodesToRead();
 
@@ -559,7 +558,7 @@ UaStatus CInoUAClient::read()
 // 描述：根据配置文件，节点进行写值
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::write()
+UaStatus CInoSession::write()
 {
     UaStatus result;
 
@@ -573,7 +572,7 @@ UaStatus CInoUAClient::write()
 // 描述：给注册的节点写入值
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::writeRegistered()
+UaStatus CInoSession::writeRegistered()
 {
     UaStatus result;
 
@@ -587,7 +586,7 @@ UaStatus CInoUAClient::writeRegistered()
 // 描述：在服务器上创建订阅和监视项
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::subscribe()
+UaStatus CInoSession::subscribe()
 {
     UaStatus result;
     result = m_pSubscription->createSubscriptionMonitors();
@@ -597,7 +596,7 @@ UaStatus CInoUAClient::subscribe()
 // 描述：在服务器上退订
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::unsubscribe()
+UaStatus CInoSession::unsubscribe()
 {
     return m_pSubscription->deleteSubscription();
 }
@@ -605,7 +604,7 @@ UaStatus CInoUAClient::unsubscribe()
 // 描述：注册节点，默认注册所有要写入的节点
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::registerNodes()
+UaStatus CInoSession::registerNodes()
 {
     // 注册所有要写入的节点
     UaNodeIdArray nodesToRegister = m_pConfiguration->getNodesToWrite();
@@ -637,7 +636,7 @@ UaStatus CInoUAClient::registerNodes()
 // 描述：注销节点
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::unregisterNodes()
+UaStatus CInoSession::unregisterNodes()
 {
     ServiceSettings serviceSettings;
 
@@ -664,7 +663,7 @@ UaStatus CInoUAClient::unregisterNodes()
 // 描述：回调对象的方法，方法无参数
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::callMethods()
+UaStatus CInoSession::callMethods()
 {
     UaStatus result;
 
@@ -687,7 +686,7 @@ UaStatus CInoUAClient::callMethods()
 // 描述：TODO
 // 时间：2021-10-27
 // 备注：无
-UaStatus CInoUAClient::updateNamespaceIndexes()
+UaStatus CInoSession::updateNamespaceIndexes()
 {
     return m_pConfiguration->updateNamespaceIndexes(m_pSession->getNamespaceTable());
 }
@@ -695,7 +694,7 @@ UaStatus CInoUAClient::updateNamespaceIndexes()
 // 描述：从节点nodeToBrowse浏览地址空间
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::browseInternal(const UaNodeId& nodeToBrowse, OpcUa_UInt32 maxReferencesToReturn)
+UaStatus CInoSession::browseInternal(const UaNodeId& nodeToBrowse, OpcUa_UInt32 maxReferencesToReturn)
 {
     // 配置browseContext
     BrowseContext browseContext;
@@ -754,7 +753,7 @@ UaStatus CInoUAClient::browseInternal(const UaNodeId& nodeToBrowse, OpcUa_UInt32
 // 描述：回调对象objectNodeId的methodNodeId方法，方法无参数
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUAClient::callMethodInternal(const UaNodeId& objectNodeId, const UaNodeId& methodNodeId)
+UaStatus CInoSession::callMethodInternal(const UaNodeId& objectNodeId, const UaNodeId& methodNodeId)
 {
     UaStatus        result;
     ServiceSettings serviceSettings;
@@ -797,7 +796,7 @@ UaStatus CInoUAClient::callMethodInternal(const UaNodeId& objectNodeId, const Ua
 // 描述：输出浏览结果referenceDescriptions
 // 时间：2021-10-20
 // 备注：无
-void CInoUAClient::printBrowseResults(const UaReferenceDescriptions& referenceDescriptions)
+void CInoSession::printBrowseResults(const UaReferenceDescriptions& referenceDescriptions)
 {
     OpcUa_UInt32 i;
     for (i = 0; i < referenceDescriptions.length(); i++)
@@ -824,7 +823,7 @@ void CInoUAClient::printBrowseResults(const UaReferenceDescriptions& referenceDe
 // 描述：输出证书信息
 // 时间：2021-10-20
 // 备注：无
-void CInoUAClient::printCertificateData(const UaByteString& serverCertificate)
+void CInoSession::printCertificateData(const UaByteString& serverCertificate)
 {
     // 将证书字节字符串分配给 UaPkiCertificate 类
     UaPkiCertificate cert = UaPkiCertificate::fromDER(serverCertificate);
@@ -842,7 +841,7 @@ void CInoUAClient::printCertificateData(const UaByteString& serverCertificate)
 // 描述：判断用户接受证书状态
 // 时间：2021-10-20
 // 备注：无
-int CInoUAClient::userAcceptCertificate()
+int CInoSession::userAcceptCertificate()
 {
     int result = 0;
 

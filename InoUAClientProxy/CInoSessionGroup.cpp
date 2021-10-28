@@ -1,26 +1,26 @@
-#include "CInoUAClientProxy.h"
+#include "CInoSessionGroup.h"
 
 #include "uaplatformlayer.h"
 #include "statuscode.h"
 #include "InoCommonDef.h"
 #include "uadir.h"
-#include "CInoUAClientConfig.h"
-#include "CInoUARedClient.h"
+#include "CInoSessionConfig.h"
+#include "CInoRedSession.h"
 
-CInoUAClientProxy::CInoUAClientProxy()
+CInoSessionGroup::CInoSessionGroup()
 {
     init();
 
     #pragma TODO("加载所有的配置")
-    /*CInoUAClientConfig* */m_pUAClientConfig = new CInoUAClientConfig();
-    UaStatus status = m_pUAClientConfig->loadConfiguration(getConfigPath().toUtf16());
+    /*CInoSessionConfig* */m_pSessionConfig = new CInoSessionConfig();
+    UaStatus status = m_pSessionConfig->loadConfiguration(getConfigPath().toUtf16());
     assert(status.isGood());
 }
 
-CInoUAClientProxy::~CInoUAClientProxy()
+CInoSessionGroup::~CInoSessionGroup()
 {
     // 清除客户端代理调用
-    for (auto pi : m_mapClientConnect)
+    for (auto pi : m_mapRedSession)
     {
         DelAndNil(pi.second);
     }
@@ -30,25 +30,25 @@ CInoUAClientProxy::~CInoUAClientProxy()
 
 // 描述：获取客户端代理
 // 备注：无
-CInoUARedClient* CInoUAClientProxy::getRedClient(emFAServerType serverType)
+CInoRedSession* CInoSessionGroup::getRedSession(emFAServerType serverType)
 {
     // 获取客户端代理
-    CInoUARedClient* pClientProxy = nullptr;
-    auto itFind = m_mapClientConnect.find(serverType);
-    if (m_mapClientConnect.end() == itFind)
+    CInoRedSession* pRedSession = nullptr;
+    auto itFind = m_mapRedSession.find(serverType);
+    if (m_mapRedSession.end() == itFind)
     {
         // 创建客户端代理
-        pClientProxy = new CInoUARedClient();
-        pClientProxy->setConfiguration(m_pUAClientConfig, m_pUAClientConfig);
-        m_mapClientConnect[serverType] = pClientProxy;
+        pRedSession = new CInoRedSession();
+        pRedSession->setConfiguration(m_pSessionConfig, m_pSessionConfig);
+        m_mapRedSession[serverType] = pRedSession;
     }
 
-    return pClientProxy;
+    return pRedSession;
 }
 
 // 描述：初始化 UA Stack 平台层
 // 备注：无
-bool CInoUAClientProxy::init()
+bool CInoSessionGroup::init()
 {
     int iOk = UaPlatformLayer::init();
     assert(iOk != -1);
@@ -57,14 +57,14 @@ bool CInoUAClientProxy::init()
 
 // 描述：清理 UA Stack 平台层
 // 备注：无
-void CInoUAClientProxy::cleanup()
+void CInoSessionGroup::cleanup()
 {
     UaPlatformLayer::cleanup();
 }
 
 // 描述：获取客户端配置
 // 备注：无
-UaUniString CInoUAClientProxy::getConfigPath()
+UaUniString CInoSessionGroup::getConfigPath()
 {
 #pragma TODO("配置的获取方式，需要以实际业务来定")
     wchar_t szFullPath[MAX_PATH];

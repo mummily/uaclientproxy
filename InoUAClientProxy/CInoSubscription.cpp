@@ -1,23 +1,23 @@
-#include "CInoUASubscription.h"
+#include "CInoSubscription.h"
 #include "statuscode.h"
 #include "uanodeid.h"
 #include "uacontentfilter.h"
 #include "uaclientsdk.h"
-#include "CInoUAClientConfig.h"
+#include "CInoSessionConfig.h"
 #include "uasubscription.h"
 #include "uasession.h"
-#include "CInoUASubscriptionCallback.h"
+#include "CInoSubscriptionCallback.h"
 #include "InoCommonDef.h"
 
-CInoUASubscription::CInoUASubscription(UaClientSdk::UaSession* pSession, CInoUAClientConfig* pConfiguration)
+CInoSubscription::CInoSubscription(UaClientSdk::UaSession* pSession, CInoSessionConfig* pConfiguration)
     : m_pSession(pSession),
     m_pSubscription(nullptr),
     m_pConfiguration(pConfiguration)
 {
-    m_pSubscriptionCallback = new CInoUASubscriptionCallback(this);
+    m_pSubscriptionCallback = new CInoSubscriptionCallback(this);
 }
 
-CInoUASubscription::~CInoUASubscription()
+CInoSubscription::~CInoSubscription()
 {
     if (nullptr != m_pSubscription)
     {
@@ -28,7 +28,7 @@ CInoUASubscription::~CInoUASubscription()
 // 描述：在服务器上创建订阅
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUASubscription::createSubscription()
+UaStatus CInoSubscription::createSubscription()
 {
     if (nullptr != m_pSubscription)
     {
@@ -66,7 +66,7 @@ UaStatus CInoUASubscription::createSubscription()
 // 描述：在服务器上删除订阅
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUASubscription::deleteSubscription()
+UaStatus CInoSubscription::deleteSubscription()
 {
     if (m_pSubscription == nullptr)
     {
@@ -100,9 +100,9 @@ UaStatus CInoUASubscription::deleteSubscription()
 // 描述：在订阅中创建受监控的项目
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUASubscription::createMonitoredItems()
+UaStatus CInoSubscription::createMonitoredItems()
 {
-#pragma TODO("CInoUAClientSubscription::createMonitoredItems 再看")
+#pragma TODO("CInoSubscription::createMonitoredItems 再看")
     if (m_pSubscription == nullptr)
     {
         printf("\nError: No Subscription created\n");
@@ -187,7 +187,7 @@ UaStatus CInoUASubscription::createMonitoredItems()
 // 描述：设置客户端代理配置
 // 时间：2021-10-20
 // 备注：无
-void CInoUASubscription::setConfiguration(CInoUAClientConfig* pConfiguration)
+void CInoSubscription::setConfiguration(CInoSessionConfig* pConfiguration)
 {
     m_pConfiguration = pConfiguration;
 }
@@ -195,7 +195,7 @@ void CInoUASubscription::setConfiguration(CInoUAClientConfig* pConfiguration)
 // 描述：在服务器上创建订阅、监视项
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoUASubscription::createSubscriptionMonitors(bool bDeleteSubscription/* = false*/)
+UaStatus CInoSubscription::createSubscriptionMonitors(bool bDeleteSubscription/* = false*/)
 {
     UaStatus result;
 

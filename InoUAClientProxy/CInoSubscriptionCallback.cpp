@@ -1,24 +1,24 @@
-#include "CInoUASubscriptionCallback.h"
+#include "CInoSubscriptionCallback.h"
 #include "uasubscription.h"
 #include "uasession.h"
-#include "CInoUAClientConfig.h"
+#include "CInoSessionConfig.h"
 #include "InoCommonDef.h"
 #include "ScopeExit.h"
-#include "CInoUASubscription.h"
+#include "CInoSubscription.h"
 
-CInoUASubscriptionCallback::CInoUASubscriptionCallback(CInoUASubscription* pSubscription)
+CInoSubscriptionCallback::CInoSubscriptionCallback(CInoSubscription* pSubscription)
     : m_pSubscription(pSubscription)
 {
 }
 
-CInoUASubscriptionCallback::~CInoUASubscriptionCallback()
+CInoSubscriptionCallback::~CInoSubscriptionCallback()
 {
 }
 
 // 描述：订阅的状态发生变化，客户端回调函数
 // 时间：2021-10-20
 // 备注：无
-void CInoUASubscriptionCallback::subscriptionStatusChanged(
+void CInoSubscriptionCallback::subscriptionStatusChanged(
     OpcUa_UInt32 clientSubscriptionHandle,
     const UaStatus& status)
 {
@@ -49,7 +49,7 @@ void CInoUASubscriptionCallback::subscriptionStatusChanged(
 // 描述：监视项数据更改，另：删除监控项、关闭采样或禁用发布后，数据更改也可能到达
 // 时间：2021-10-20
 // 备注：无
-void CInoUASubscriptionCallback::dataChange(
+void CInoSubscriptionCallback::dataChange(
     OpcUa_UInt32 clientSubscriptionHandle,
     const UaDataNotifications& dataNotifications,
     const UaDiagnosticInfos& diagnosticInfos)
@@ -80,7 +80,7 @@ void CInoUASubscriptionCallback::dataChange(
 // 描述：订阅事件通知
 // 时间：2021-10-20
 // 备注：无
-void CInoUASubscriptionCallback::newEvents(
+void CInoSubscriptionCallback::newEvents(
     OpcUa_UInt32 clientSubscriptionHandle,
     UaEventFieldLists& eventFieldList)
 {

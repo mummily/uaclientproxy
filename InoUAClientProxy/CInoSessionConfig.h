@@ -8,13 +8,13 @@
 
 using namespace UaClientSdk;
 
-class CInoUAClientConfig
+class CInoSessionConfig
 {
-    UA_DISABLE_COPY(CInoUAClientConfig);
+    UA_DISABLE_COPY(CInoSessionConfig);
 
 public:
-    CInoUAClientConfig();
-    virtual ~CInoUAClientConfig();
+    CInoSessionConfig();
+    virtual ~CInoSessionConfig();
 
     // 获取连接和会话参数
     UaString getServerUrl() const;
