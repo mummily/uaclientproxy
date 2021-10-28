@@ -39,6 +39,9 @@
     <ClInclude Include="CInoUASessionCallback.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CInoUASubscription.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CInoUARedClient.cpp">
@@ -57,6 +60,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CInoUASessionCallback.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CInoUASubscription.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

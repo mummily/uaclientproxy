@@ -5,12 +5,12 @@
 
 using namespace UaClientSdk;
 
-class CInoUAClientConfig;
+class CInoUASubscription;
 class CInoUASubscriptionCallback : public UaSubscriptionCallback
 {
     UA_DISABLE_COPY(CInoUASubscriptionCallback);
 public:
-    CInoUASubscriptionCallback(UaSession* pSession, CInoUAClientConfig* pConfiguration);
+    CInoUASubscriptionCallback(CInoUASubscription* pSubscription);
     virtual ~CInoUASubscriptionCallback();
 
     // 订阅的状态发生变化，客户端回调函数
@@ -29,21 +29,6 @@ public:
         OpcUa_UInt32 clientSubscriptionHandle,
         UaEventFieldLists& eventFieldList);
 
-    // 在服务器上创建订阅、监视项
-    UaStatus createSubscriptionMonitors(bool bDeleteSubscription = false);
-    // 在服务器上删除订阅
-    UaStatus deleteSubscription();
-    // 设置要监控的 NodeId 列表的配置
-    void setConfiguration(CInoUAClientConfig* pConfiguration);
-
 private:
-    // 在服务器上创建订阅
-    UaStatus createSubscription();
-    // 在订阅中创建受监控的项目
-    UaStatus createMonitoredItems();
-
-private:
-    UaSession* m_pSession = nullptr;                // 当前会话
-    UaSubscription* m_pSubscription = nullptr;      // 当前订阅
-    CInoUAClientConfig* m_pConfiguration = nullptr; // 当前客户端配置
+    CInoUASubscription* m_pSubscription = nullptr;
 };

@@ -24,6 +24,7 @@
     <ClInclude Include="CInoUAClientProxy.h" />
     <ClInclude Include="CInoUAClientConfig.h" />
     <ClInclude Include="CInoUASessionCallback.h" />
+    <ClInclude Include="CInoUASubscription.h" />
     <ClInclude Include="InoExportDef.h" />
     <ClInclude Include="CInoUAClient.h" />
     <ClInclude Include="CInoUASubscriptionCallback.h" />
@@ -38,6 +39,7 @@
     <ClCompile Include="CInoUAClientConfig.cpp" />
     <ClCompile Include="CInoUAClient.cpp" />
     <ClCompile Include="CInoUASessionCallback.cpp" />
+    <ClCompile Include="CInoUASubscription.cpp" />
     <ClCompile Include="CInoUASubscriptionCallback.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

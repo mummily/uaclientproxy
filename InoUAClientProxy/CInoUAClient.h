@@ -3,7 +3,8 @@
 #include "InoExportDef.h"
 #include "uaclientsdk.h"
 
-class CInoUASubscriptionCallback;
+class UaSession;
+class CInoUASubscription;
 class CInoUAClientConfig;
 class CInoUARedClient;
 class CInoUASessionCallback;
@@ -75,9 +76,9 @@ private:
     int userAcceptCertificate();
 
 private:
-    UaSession* m_pSession = nullptr;                // 会话
+    UaClientSdk::UaSession* m_pSession = nullptr;                // 会话
     CInoUASessionCallback* m_pSessionCallback = nullptr; // 会话回调
-    CInoUASubscriptionCallback* m_pSubscriptionCallback = nullptr;  // 订阅
+    CInoUASubscription* m_pSubscription = nullptr;  // 订阅
     CInoUAClientConfig* m_pConfiguration = nullptr; // 客户端配置
     UaNodeIdArray m_registeredNodes;                // 注册的节点：默认是所有要写入的节点
 };

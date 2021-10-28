@@ -36,5 +36,3 @@ private:
     map<emFAServerType, CInoUAClientConfig*> m_mapClientConfig; // øÕªß∂À≈‰÷√
     CInoUAClientConfig* m_pUAClientConfig = nullptr;
 };
-
-// using CInoUAClientConnectMgr = CInoUAClientProxy;
