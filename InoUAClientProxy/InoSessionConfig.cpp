@@ -1,22 +1,22 @@
-﻿#include "CInoSessionConfig.h"
+﻿#include "InoSessionConfig.h"
 #include "uasettings.h"
 #include "uadir.h"
 #include "uapkicertificate.h"
 #include "InoCommonDef.h"
 #include "ScopeExit.h"
 
-CInoSessionConfig::CInoSessionConfig()
+InoSessionConfig::InoSessionConfig()
 {
 }
 
-CInoSessionConfig::~CInoSessionConfig()
+InoSessionConfig::~InoSessionConfig()
 {
 }
 
 // 描述：getServerUrl
 // 时间：2021-10-20
 // 备注：无
-UaString CInoSessionConfig::getServerUrl() const
+UaString InoSessionConfig::getServerUrl() const
 {
     return m_serverUrl;
 }
@@ -24,7 +24,7 @@ UaString CInoSessionConfig::getServerUrl() const
 // 描述：getDiscoveryUrl
 // 时间：2021-10-20
 // 备注：无
-UaString CInoSessionConfig::getDiscoveryUrl() const
+UaString InoSessionConfig::getDiscoveryUrl() const
 {
     return m_discoveryUrl;
 }
@@ -32,7 +32,7 @@ UaString CInoSessionConfig::getDiscoveryUrl() const
 // 描述：getApplicationName
 // 时间：2021-10-20
 // 备注：无
-UaString CInoSessionConfig::getApplicationName() const
+UaString InoSessionConfig::getApplicationName() const
 {
     return m_applicationName;
 }
@@ -40,7 +40,7 @@ UaString CInoSessionConfig::getApplicationName() const
 // 描述：getAutomaticReconnect
 // 时间：2021-10-20
 // 备注：无
-OpcUa_Boolean CInoSessionConfig::getAutomaticReconnect() const
+OpcUa_Boolean InoSessionConfig::getAutomaticReconnect() const
 {
     return m_bAutomaticReconnect;
 }
@@ -48,7 +48,7 @@ OpcUa_Boolean CInoSessionConfig::getAutomaticReconnect() const
 // 描述：getRetryInitialConnect
 // 时间：2021-10-20
 // 备注：无
-OpcUa_Boolean CInoSessionConfig::getRetryInitialConnect() const
+OpcUa_Boolean InoSessionConfig::getRetryInitialConnect() const
 {
     return m_bRetryInitialConnect;
 }
@@ -56,7 +56,7 @@ OpcUa_Boolean CInoSessionConfig::getRetryInitialConnect() const
 // 描述：返回读取节点
 // 时间：2021-10-20
 // 备注：无
-UaNodeIdArray CInoSessionConfig::getNodesToRead() const
+UaNodeIdArray InoSessionConfig::getNodesToRead() const
 {
     return m_nodesToRead;
 }
@@ -64,7 +64,7 @@ UaNodeIdArray CInoSessionConfig::getNodesToRead() const
 // 描述：返回写入节点
 // 时间：2021-10-20
 // 备注：无
-UaNodeIdArray CInoSessionConfig::getNodesToWrite() const
+UaNodeIdArray InoSessionConfig::getNodesToWrite() const
 {
     return m_nodesToWrite;
 }
@@ -72,7 +72,7 @@ UaNodeIdArray CInoSessionConfig::getNodesToWrite() const
 // 描述：返回监视节点
 // 时间：2021-10-20
 // 备注：无
-UaNodeIdArray CInoSessionConfig::getNodesToMonitor() const
+UaNodeIdArray InoSessionConfig::getNodesToMonitor() const
 {
     return m_nodesToMonitor;
 }
@@ -80,7 +80,7 @@ UaNodeIdArray CInoSessionConfig::getNodesToMonitor() const
 // 描述：返回写值
 // 时间：2021-10-20
 // 备注：无
-UaVariantArray CInoSessionConfig::getWriteValues() const
+UaVariantArray InoSessionConfig::getWriteValues() const
 {
     return m_writeValues;
 }
@@ -88,7 +88,7 @@ UaVariantArray CInoSessionConfig::getWriteValues() const
 // 描述：返回事件类型过滤
 // 时间：2021-10-20
 // 备注：无
-UaNodeId CInoSessionConfig::getEventTypeToFilter() const
+UaNodeId InoSessionConfig::getEventTypeToFilter() const
 {
     return m_eventTypeToFilter;
 }
@@ -96,7 +96,7 @@ UaNodeId CInoSessionConfig::getEventTypeToFilter() const
 // 描述：返回回调方法
 // 时间：2021-10-20
 // 备注：无
-UaNodeIdArray CInoSessionConfig::getMethodsToCall() const
+UaNodeIdArray InoSessionConfig::getMethodsToCall() const
 {
     return m_methodsToCall;
 }
@@ -104,7 +104,7 @@ UaNodeIdArray CInoSessionConfig::getMethodsToCall() const
 // 描述：返回回调对象
 // 时间：2021-10-20
 // 备注：无
-UaNodeIdArray CInoSessionConfig::getObjectsToCall() const
+UaNodeIdArray InoSessionConfig::getObjectsToCall() const
 {
     return m_objectToCall;
 }
@@ -112,7 +112,7 @@ UaNodeIdArray CInoSessionConfig::getObjectsToCall() const
 // 描述：加载客户端连接配置
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoSessionConfig::loadConfiguration(const UaString& sConfigurationFile)
+UaStatus InoSessionConfig::loadConfiguration(const UaString& sConfigurationFile)
 {
     if (!UaDir("").exists(sConfigurationFile.toUtf8()))
     {
@@ -276,7 +276,7 @@ UaStatus CInoSessionConfig::loadConfiguration(const UaString& sConfigurationFile
 // 描述：安装安全证书
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoSessionConfig::setupSecurity(SessionSecurityInfo& sessionSecurityInfo)
+UaStatus InoSessionConfig::setupSecurity(SessionSecurityInfo& sessionSecurityInfo)
 {
     UaStatus result;
 
@@ -367,7 +367,7 @@ UaStatus CInoSessionConfig::setupSecurity(SessionSecurityInfo& sessionSecurityIn
 // 描述：更新命令空间索引
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoSessionConfig::updateNamespaceIndexes(const UaStringArray& namespaceArray)
+UaStatus InoSessionConfig::updateNamespaceIndexes(const UaStringArray& namespaceArray)
 {
     // 创建映射表
     UaInt16Array mappingTable;

@@ -8,22 +8,22 @@ using namespace UaClientSdk;
 
 class UaSession;
 class CInoSubscription;
-class CInoSessionConfig;
-class CInoRedSession;
-class CInoSessionCallback;
-class CInoSubscriptionCallback;
-class INO_EXPORT CInoSession : public UaClientSdk::UaSession
+class InoSessionConfig;
+class InoRedSession;
+class InoSessionCallback;
+class InoSubscriptionCallback;
+class INO_EXPORT InoSession : public UaClientSdk::UaSession
 {
-    UA_DISABLE_COPY(CInoSession);
+    UA_DISABLE_COPY(InoSession);
 
 public:
-    CInoSession();
-    virtual ~CInoSession();
+    InoSession();
+    virtual ~InoSession();
 
     friend class CInoRedSession;
 
     // 设置客户端配置信息
-    void setConfiguration(CInoSessionConfig* pConfiguration);
+    void setConfiguration(InoSessionConfig* pConfiguration);
     // 查找服务器并输出服务器信息
     UaStatus discover(const UaString& sDiscoveryUrl);
     // 非安连接服务器
@@ -89,10 +89,10 @@ private:
     UaStatus createMonitoredItems(const UaNodeId& eventTypeToFilter);
 
 private:
-    CInoSessionCallback*            m_pSessionCallback = nullptr;  // 会话回调
+    InoSessionCallback*            m_pSessionCallback = nullptr;  // 会话回调
     UaClientSdk::UaSubscription*    m_pSubscription = nullptr;     // 订阅
-    CInoSubscriptionCallback*       m_pSubscriptionCallback = nullptr; // 订阅回调
-    CInoSessionConfig*              m_pSessionConfig = nullptr;     // 客户端配置
+    InoSubscriptionCallback*       m_pSubscriptionCallback = nullptr; // 订阅回调
+    InoSessionConfig*              m_pSessionConfig = nullptr;     // 客户端配置
     UaNodeIdArray                   m_registeredNodes;              // 注册的节点：默认是所有要写入的节点
 };
 

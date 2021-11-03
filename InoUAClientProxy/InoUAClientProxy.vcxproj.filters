@@ -15,48 +15,48 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CInoRedSession.h">
+    <ClInclude Include="InoRedSession.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="InoExportDef.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CInoSessionGroup.h">
+    <ClInclude Include="InoSessionGroup.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CInoSession.h">
+    <ClInclude Include="InoSession.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\include\InoCommonDef.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CInoSessionConfig.h">
+    <ClInclude Include="InoSessionConfig.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CInoSubscriptionCallback.h">
+    <ClInclude Include="InoSubscriptionCallback.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CInoSessionCallback.h">
+    <ClInclude Include="InoSessionCallback.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CInoRedSession.cpp">
+    <ClCompile Include="InoRedSession.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CInoSessionGroup.cpp">
+    <ClCompile Include="InoSessionGroup.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CInoSession.cpp">
+    <ClCompile Include="InoSession.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CInoSessionConfig.cpp">
+    <ClCompile Include="InoSessionConfig.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CInoSubscriptionCallback.cpp">
+    <ClCompile Include="InoSubscriptionCallback.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CInoSessionCallback.cpp">
+    <ClCompile Include="InoSessionCallback.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

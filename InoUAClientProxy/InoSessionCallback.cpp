@@ -1,20 +1,20 @@
-﻿#include "CInoSessionCallback.h"
+﻿#include "InoSessionCallback.h"
 #include "ScopeExit.h"
-#include "CInoSession.h"
+#include "InoSession.h"
 
-CInoSessionCallback::CInoSessionCallback(CInoSession* pSession)
+InoSessionCallback::InoSessionCallback(InoSession* pSession)
     : UaSessionCallback(), m_pSession(pSession)
 {
 }
 
-CInoSessionCallback::~CInoSessionCallback()
+InoSessionCallback::~InoSessionCallback()
 {
 }
 
 // 描述：连接状态变更回调函数
 // 时间：2021-10-20
 // 备注：无
-void CInoSessionCallback::connectionStatusChanged(
+void InoSessionCallback::connectionStatusChanged(
     OpcUa_UInt32             clientConnectionId,
     UaClient::ServerStatus   serverStatus)
 {

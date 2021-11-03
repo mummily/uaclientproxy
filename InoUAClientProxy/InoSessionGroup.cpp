@@ -1,23 +1,23 @@
-﻿#include "CInoSessionGroup.h"
+﻿#include "InoSessionGroup.h"
 
 #include "uaplatformlayer.h"
 #include "statuscode.h"
 #include "InoCommonDef.h"
 #include "uadir.h"
-#include "CInoSessionConfig.h"
-#include "CInoRedSession.h"
+#include "InoSessionConfig.h"
+#include "InoRedSession.h"
 
-CInoSessionGroup::CInoSessionGroup()
+InoSessionGroup::InoSessionGroup()
 {
     init();
 
     #pragma TODO("加载所有的配置")
-    /*CInoSessionConfig* */m_pSessionConfig = new CInoSessionConfig();
+    /*CInoSessionConfig* */m_pSessionConfig = new InoSessionConfig();
     UaStatus status = m_pSessionConfig->loadConfiguration(getConfigPath().toUtf16());
     assert(status.isGood());
 }
 
-CInoSessionGroup::~CInoSessionGroup()
+InoSessionGroup::~InoSessionGroup()
 {
     // 清除客户端代理调用
     for (auto pi : m_mapRedSession)
@@ -30,15 +30,15 @@ CInoSessionGroup::~CInoSessionGroup()
 
 // 描述：获取客户端代理
 // 备注：无
-CInoRedSession* CInoSessionGroup::getRedSession(emFAServerType serverType)
+InoRedSession* InoSessionGroup::getRedSession(emFAServerType serverType)
 {
     // 获取客户端代理
-    CInoRedSession* pRedSession = nullptr;
+    InoRedSession* pRedSession = nullptr;
     auto itFind = m_mapRedSession.find(serverType);
     if (m_mapRedSession.end() == itFind)
     {
         // 创建客户端代理
-        pRedSession = new CInoRedSession();
+        pRedSession = new InoRedSession();
         pRedSession->setConfiguration(m_pSessionConfig, m_pSessionConfig);
         m_mapRedSession[serverType] = pRedSession;
     }
@@ -48,7 +48,7 @@ CInoRedSession* CInoSessionGroup::getRedSession(emFAServerType serverType)
 
 // 描述：初始化 UA Stack 平台层
 // 备注：无
-bool CInoSessionGroup::init()
+bool InoSessionGroup::init()
 {
     int iOk = UaPlatformLayer::init();
     assert(iOk != -1);
@@ -57,14 +57,14 @@ bool CInoSessionGroup::init()
 
 // 描述：清理 UA Stack 平台层
 // 备注：无
-void CInoSessionGroup::cleanup()
+void InoSessionGroup::cleanup()
 {
     UaPlatformLayer::cleanup();
 }
 
 // 描述：获取客户端配置
 // 备注：无
-UaUniString CInoSessionGroup::getConfigPath()
+UaUniString InoSessionGroup::getConfigPath()
 {
 #pragma TODO("配置的获取方式，需要以实际业务来定")
     wchar_t szFullPath[MAX_PATH];

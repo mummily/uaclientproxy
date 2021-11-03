@@ -20,25 +20,25 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\InoCommonDef.h" />
-    <ClInclude Include="CInoRedSession.h" />
-    <ClInclude Include="CInoSessionGroup.h" />
-    <ClInclude Include="CInoSessionConfig.h" />
-    <ClInclude Include="CInoSessionCallback.h" />
+    <ClInclude Include="InoRedSession.h" />
+    <ClInclude Include="InoSessionGroup.h" />
+    <ClInclude Include="InoSessionConfig.h" />
+    <ClInclude Include="InoSessionCallback.h" />
     <ClInclude Include="InoExportDef.h" />
-    <ClInclude Include="CInoSession.h" />
-    <ClInclude Include="CInoSubscriptionCallback.h" />
+    <ClInclude Include="InoSession.h" />
+    <ClInclude Include="InoSubscriptionCallback.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CInoRedSession.cpp">
+    <ClCompile Include="InoRedSession.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="CInoSessionGroup.cpp" />
-    <ClCompile Include="CInoSessionConfig.cpp" />
-    <ClCompile Include="CInoSession.cpp" />
-    <ClCompile Include="CInoSessionCallback.cpp" />
-    <ClCompile Include="CInoSubscriptionCallback.cpp" />
+    <ClCompile Include="InoSessionGroup.cpp" />
+    <ClCompile Include="InoSessionConfig.cpp" />
+    <ClCompile Include="InoSession.cpp" />
+    <ClCompile Include="InoSessionCallback.cpp" />
+    <ClCompile Include="InoSubscriptionCallback.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

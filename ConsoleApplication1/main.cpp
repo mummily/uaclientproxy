@@ -10,9 +10,9 @@
 #include "format.h"
 #include <conio.h>
 
-#include "CInoSession.h"
-#include "CInoRedSession.h"
-#include "CInoSessionGroup.h"
+#include "InoSession.h"
+#include "InoRedSession.h"
+#include "InoSessionGroup.h"
 #include "ScopeExit.h"
 #include "InoCommonDef.h"
 
@@ -23,10 +23,10 @@ int reallyMain()
     UaStatus status = !OpcUa_Good;
 
     // UA客户端代理
-    shared_ptr<CInoSessionGroup> spSessionGroup = make_shared<CInoSessionGroup>();
+    shared_ptr<InoSessionGroup> spSessionGroup = make_shared<InoSessionGroup>();
 
     // UA客户端建立与某一服务器的连接
-    CInoRedSession* pRedClient = spSessionGroup->getRedSession(emFAServerType::RealTime);
+    InoRedSession* pRedClient = spSessionGroup->getRedSession(emFAServerType::RealTime);
     status = pRedClient->connect();
 
     // UA客户端断开与服务器的连接
@@ -35,7 +35,7 @@ int reallyMain()
     assert(status.isGood());
     );
 
-    CInoSession* pSession = pRedClient->getSession();
+    InoSession* pSession = pRedClient->getSession();
     // pSession->read();
     assert(status.isGood());
 

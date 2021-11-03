@@ -1,15 +1,15 @@
-﻿#include "CInoRedSession.h"
-#include "CInoSession.h"
+﻿#include "InoRedSession.h"
+#include "InoSession.h"
 #include "InoCommonDef.h"
 #include "uaarraytemplates.h"
 
-CInoRedSession::CInoRedSession()
+InoRedSession::InoRedSession()
 {
-    m_pSessionMaster = new CInoSession();
-    m_pSessionSlave = new CInoSession();
+    m_pSessionMaster = new InoSession();
+    m_pSessionSlave = new InoSession();
 }
 
-CInoRedSession::~CInoRedSession()
+InoRedSession::~InoRedSession()
 {
     DelAndNil(m_pSessionMaster);
     DelAndNil(m_pSessionSlave);
@@ -17,7 +17,7 @@ CInoRedSession::~CInoRedSession()
 
 // 描述：连接服务端
 // 备注：无
-UaStatus CInoRedSession::connect()
+UaStatus InoRedSession::connect()
 {
     UaStatus status;
     status = m_pSessionMaster->connect();
@@ -30,7 +30,7 @@ UaStatus CInoRedSession::connect()
 // 描述：UA客户端断开与服务器的连接
 // 时间：2021-10-21
 // 备注：无
-UaStatus CInoRedSession::disconnect()
+UaStatus InoRedSession::disconnect()
 {
     UaStatus status;
     if (m_pSessionMaster->isConnected())
@@ -43,14 +43,14 @@ UaStatus CInoRedSession::disconnect()
 
 // 描述：设置主UA客户端
 // 备注：无
-CInoSession* CInoRedSession::getSession()
+InoSession* InoRedSession::getSession()
 {
     return m_pSessionMaster;
 }
 
 // 描述：设置客户端连接配置
 // 备注：无
-void CInoRedSession::setConfiguration(CInoSessionConfig* pConfigMaster, CInoSessionConfig* pConfigSlave)
+void InoRedSession::setConfiguration(InoSessionConfig* pConfigMaster, InoSessionConfig* pConfigSlave)
 {
     m_pSessionMaster->setConfiguration(pConfigMaster);
     m_pSessionSlave->setConfiguration(pConfigSlave);
@@ -59,8 +59,8 @@ void CInoRedSession::setConfiguration(CInoSessionConfig* pConfigMaster, CInoSess
 // 描述：读变量
 // 时间：2021-10-21
 // 备注：无
-bool CInoRedSession::read(const UaNodeIdArray& nodes)
+bool InoRedSession::read(const UaNodeIdArray& nodes)
 {
-    CInoSession* pSession = getSession();
+    InoSession* pSession = getSession();
     return pSession->read(nodes).isGood();
 }
