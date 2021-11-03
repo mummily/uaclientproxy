@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "uabase.h"
 #include "uaclientsdk.h"
@@ -13,18 +13,18 @@ public:
     CInoSubscriptionCallback(CInoSession* pInoSession);
     virtual ~CInoSubscriptionCallback();
 
-    // ¶©ÔÄµÄ×´Ì¬·¢Éú±ä»¯£¬¿Í»§¶Ë»Øµ÷º¯Êı
+    // è®¢é˜…çš„çŠ¶æ€å‘ç”Ÿå˜åŒ–ï¼Œå®¢æˆ·ç«¯å›è°ƒå‡½æ•°
     virtual void subscriptionStatusChanged(
         OpcUa_UInt32 clientSubscriptionHandle,
         const UaStatus& status);
 
-    // ¼àÊÓÏîÊı¾İ¸ü¸Ä£¬Áí£ºÉ¾³ı¼à¿ØÏî¡¢¹Ø±Õ²ÉÑù»ò½ûÓÃ·¢²¼ºó£¬Êı¾İ¸ü¸ÄÒ²¿ÉÄÜµ½´ï
+    // ç›‘è§†é¡¹æ•°æ®æ›´æ”¹ï¼Œå¦ï¼šåˆ é™¤ç›‘æ§é¡¹ã€å…³é—­é‡‡æ ·æˆ–ç¦ç”¨å‘å¸ƒåï¼Œæ•°æ®æ›´æ”¹ä¹Ÿå¯èƒ½åˆ°è¾¾
     virtual void dataChange(
         OpcUa_UInt32 clientSubscriptionHandle,
         const UaDataNotifications& dataNotifications,
         const UaDiagnosticInfos& diagnosticInfos);
 
-    // ¶©ÔÄÊÂ¼şÍ¨Öª
+    // è®¢é˜…äº‹ä»¶é€šçŸ¥
     virtual void newEvents(
         OpcUa_UInt32 clientSubscriptionHandle,
         UaEventFieldLists& eventFieldList);

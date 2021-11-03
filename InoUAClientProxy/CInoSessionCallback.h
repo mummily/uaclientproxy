@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "uabase.h"
 #include "uaclientsdk.h"
@@ -14,10 +14,10 @@ public:
     CInoSessionCallback(CInoSession* pSession);
     virtual ~CInoSessionCallback();
 
-    // Á¬½Ó×´Ì¬±ä¸ü»Øµ÷º¯Êı
+    // è¿æ¥çŠ¶æ€å˜æ›´å›è°ƒå‡½æ•°
     virtual void connectionStatusChanged(OpcUa_UInt32 clientConnectionId, UaClient::ServerStatus serverStatus);
 
 private:
     CInoSession* m_pSession = nullptr;
-    UaClient::ServerStatus m_serverStatus;          // ¿Í»§¶ËÁ¬½Ó·şÎñÆ÷×´Ì¬£ºÁ¬½Ó»òÖØÁ¬
+    UaClient::ServerStatus m_serverStatus;          // å®¢æˆ·ç«¯è¿æ¥æœåŠ¡å™¨çŠ¶æ€ï¼šè¿æ¥æˆ–é‡è¿
 };

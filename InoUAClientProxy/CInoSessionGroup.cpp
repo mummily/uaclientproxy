@@ -1,4 +1,4 @@
-#include "CInoSessionGroup.h"
+ï»¿#include "CInoSessionGroup.h"
 
 #include "uaplatformlayer.h"
 #include "statuscode.h"
@@ -11,7 +11,7 @@ CInoSessionGroup::CInoSessionGroup()
 {
     init();
 
-    #pragma TODO("¼ÓÔØËùÓĞµÄÅäÖÃ")
+    #pragma TODO("åŠ è½½æ‰€æœ‰çš„é…ç½®")
     /*CInoSessionConfig* */m_pSessionConfig = new CInoSessionConfig();
     UaStatus status = m_pSessionConfig->loadConfiguration(getConfigPath().toUtf16());
     assert(status.isGood());
@@ -19,7 +19,7 @@ CInoSessionGroup::CInoSessionGroup()
 
 CInoSessionGroup::~CInoSessionGroup()
 {
-    // Çå³ı¿Í»§¶Ë´úÀíµ÷ÓÃ
+    // æ¸…é™¤å®¢æˆ·ç«¯ä»£ç†è°ƒç”¨
     for (auto pi : m_mapRedSession)
     {
         DelAndNil(pi.second);
@@ -28,16 +28,16 @@ CInoSessionGroup::~CInoSessionGroup()
     cleanup();
 }
 
-// ÃèÊö£º»ñÈ¡¿Í»§¶Ë´úÀí
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šè·å–å®¢æˆ·ç«¯ä»£ç†
+// å¤‡æ³¨ï¼šæ— 
 CInoRedSession* CInoSessionGroup::getRedSession(emFAServerType serverType)
 {
-    // »ñÈ¡¿Í»§¶Ë´úÀí
+    // è·å–å®¢æˆ·ç«¯ä»£ç†
     CInoRedSession* pRedSession = nullptr;
     auto itFind = m_mapRedSession.find(serverType);
     if (m_mapRedSession.end() == itFind)
     {
-        // ´´½¨¿Í»§¶Ë´úÀí
+        // åˆ›å»ºå®¢æˆ·ç«¯ä»£ç†
         pRedSession = new CInoRedSession();
         pRedSession->setConfiguration(m_pSessionConfig, m_pSessionConfig);
         m_mapRedSession[serverType] = pRedSession;
@@ -46,8 +46,8 @@ CInoRedSession* CInoSessionGroup::getRedSession(emFAServerType serverType)
     return pRedSession;
 }
 
-// ÃèÊö£º³õÊ¼»¯ UA Stack Æ½Ì¨²ã
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šåˆå§‹åŒ– UA Stack å¹³å°å±‚
+// å¤‡æ³¨ï¼šæ— 
 bool CInoSessionGroup::init()
 {
     int iOk = UaPlatformLayer::init();
@@ -55,22 +55,22 @@ bool CInoSessionGroup::init()
     return true;
 }
 
-// ÃèÊö£ºÇåÀí UA Stack Æ½Ì¨²ã
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šæ¸…ç† UA Stack å¹³å°å±‚
+// å¤‡æ³¨ï¼šæ— 
 void CInoSessionGroup::cleanup()
 {
     UaPlatformLayer::cleanup();
 }
 
-// ÃèÊö£º»ñÈ¡¿Í»§¶ËÅäÖÃ
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šè·å–å®¢æˆ·ç«¯é…ç½®
+// å¤‡æ³¨ï¼šæ— 
 UaUniString CInoSessionGroup::getConfigPath()
 {
-#pragma TODO("ÅäÖÃµÄ»ñÈ¡·½Ê½£¬ĞèÒªÒÔÊµ¼ÊÒµÎñÀ´¶¨")
+#pragma TODO("é…ç½®çš„è·å–æ–¹å¼ï¼Œéœ€è¦ä»¥å®é™…ä¸šåŠ¡æ¥å®š")
     wchar_t szFullPath[MAX_PATH];
     GetModuleFileNameW(NULL, szFullPath, sizeof(szFullPath));
 
-    // »ñÈ¡ÅäÖÃÎÄ¼şÂ·¾¶
+    // è·å–é…ç½®æ–‡ä»¶è·¯å¾„
     UaString sConfigFile(szFullPath);
         sConfigFile += "/../clientconfig.ini";
 

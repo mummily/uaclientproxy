@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "InoExportDef.h"
 #include "uaclientsdk.h"
@@ -22,38 +22,38 @@ public:
 
     friend class CInoRedSession;
 
-    // ÉèÖÃ¿Í»§¶ËÅäÖÃĞÅÏ¢
+    // è®¾ç½®å®¢æˆ·ç«¯é…ç½®ä¿¡æ¯
     void setConfiguration(CInoSessionConfig* pConfiguration);
-    // ²éÕÒ·şÎñÆ÷²¢Êä³ö·şÎñÆ÷ĞÅÏ¢
+    // æŸ¥æ‰¾æœåŠ¡å™¨å¹¶è¾“å‡ºæœåŠ¡å™¨ä¿¡æ¯
     UaStatus discover(const UaString& sDiscoveryUrl);
-    // ·Ç°²Á¬½Ó·şÎñÆ÷
+    // éå®‰è¿æ¥æœåŠ¡å™¨
     UaStatus connect();
-    // °²È«Á¬½Ó·şÎñÆ÷
+    // å®‰å…¨è¿æ¥æœåŠ¡å™¨
     UaStatus connectSecure();
-    // ¶Ï¿ªÁ¬½Ó
+    // æ–­å¼€è¿æ¥
     UaStatus disconnect();
-    // ´Ó¸ù½Úµãä¯ÀÀ½Úµã
+    // ä»æ ¹èŠ‚ç‚¹æµè§ˆèŠ‚ç‚¹
     UaStatus browseSimple();
-    // ¼ÌĞøä¯ÀÀ
+    // ç»§ç»­æµè§ˆ
     UaStatus browseContinuationPoint();
-    // ¸ù¾İÅäÖÃÎÄ¼ş£¬½Úµã½øĞĞ¶ÁÖµ
+    // æ ¹æ®é…ç½®æ–‡ä»¶ï¼ŒèŠ‚ç‚¹è¿›è¡Œè¯»å€¼
     UaStatus read(const UaNodeIdArray& nodes);
-    // ¸ù¾İÅäÖÃÎÄ¼ş£¬½Úµã½øĞĞĞ´Öµ
+    // æ ¹æ®é…ç½®æ–‡ä»¶ï¼ŒèŠ‚ç‚¹è¿›è¡Œå†™å€¼
     UaStatus write(const UaNodeIdArray& nodes, const UaVariantArray& values);
-    // ¸ø×¢²áµÄ½ÚµãĞ´ÈëÖµ
+    // ç»™æ³¨å†Œçš„èŠ‚ç‚¹å†™å…¥å€¼
     UaStatus writeRegistered(const UaVariantArray& values);
-    // ÔÚ·şÎñÆ÷ÉÏ´´½¨¶©ÔÄºÍ¼àÊÓÏî
+    // åœ¨æœåŠ¡å™¨ä¸Šåˆ›å»ºè®¢é˜…å’Œç›‘è§†é¡¹
     UaStatus subscribe();
     UaStatus createSubscriptionMonitors(bool bDeleteSubscription = false);
-    // ÔÚ·şÎñÆ÷ÉÏÍË¶©
+    // åœ¨æœåŠ¡å™¨ä¸Šé€€è®¢
     UaStatus unsubscribe();
-    // ×¢²á½Úµã£¬Ä¬ÈÏ×¢²áËùÓĞÒªĞ´ÈëµÄ½Úµã
+    // æ³¨å†ŒèŠ‚ç‚¹ï¼Œé»˜è®¤æ³¨å†Œæ‰€æœ‰è¦å†™å…¥çš„èŠ‚ç‚¹
     UaStatus reRegisterNodes();
     UaStatus registerNodes(const UaNodeIdArray& nodesToRegister);
-    // ×¢Ïú½Úµã
+    // æ³¨é”€èŠ‚ç‚¹
     UaStatus unregisterNodes();
 
-    // »Øµ÷¶ÔÏóµÄ·½·¨
+    // å›è°ƒå¯¹è±¡çš„æ–¹æ³•
     using UaStatusArray = UaObjectArray<UaStatus>;
     UaStatus callMethodList(
         const UaNodeIdArray& objectNodeIds,
@@ -61,38 +61,38 @@ public:
         UaStatusArray& results);
     UaStatus callMethod(const UaNodeId& objectNodeId, const UaNodeId& methodNodeId);
 
-    // ¸üĞÂËùÓĞ nodeId µÄÃüÃû¿Õ¼äË÷Òı²¢¸üĞÂÄÚ²¿ namespaceArray
+    // æ›´æ–°æ‰€æœ‰ nodeId çš„å‘½åç©ºé—´ç´¢å¼•å¹¶æ›´æ–°å†…éƒ¨ namespaceArray
     UaStatus updateNamespaceIndexes();
 
 private:
-    // ´Ó½ÚµãnodeToBrowseä¯ÀÀµØÖ·¿Õ¼ä
+    // ä»èŠ‚ç‚¹nodeToBrowseæµè§ˆåœ°å€ç©ºé—´
     UaStatus browseInternal(const UaNodeId& nodeToBrowse, OpcUa_UInt32 maxReferencesToReturn);
-    // Á¬½Ó·şÎñÆ÷£¬sessionConnectInfo¶Á×ÔÅäÖÃ£¬Ê¹ÓÃsessionSecurityInfoÁ¬½Ó·şÎñÆ÷serverUrl
+    // è¿æ¥æœåŠ¡å™¨ï¼ŒsessionConnectInfoè¯»è‡ªé…ç½®ï¼Œä½¿ç”¨sessionSecurityInfoè¿æ¥æœåŠ¡å™¨serverUrl
     UaStatus connectInternal(const UaString& serverUrl, SessionSecurityInfo& sessionSecurityInfo);
-    // Íù½ÚµãnodesToWriteÖĞĞ´ÈëvaluesToWriteÖµ
+    // å¾€èŠ‚ç‚¹nodesToWriteä¸­å†™å…¥valuesToWriteå€¼
     UaStatus writeInternal(const UaNodeIdArray& nodesToWrite, const UaVariantArray& valuesToWrite);
-    // ÔÚ·şÎñÆ÷ÉÏ²éÕÒ°²È«¶Ëµã
+    // åœ¨æœåŠ¡å™¨ä¸ŠæŸ¥æ‰¾å®‰å…¨ç«¯ç‚¹
     UaStatus findSecureEndpoint(SessionSecurityInfo& sessionSecurityInfo);
-    // ÑéÖ¤·şÎñÆ÷Ö¤Êé
+    // éªŒè¯æœåŠ¡å™¨è¯ä¹¦
     UaStatus checkServerCertificateTrust(SessionSecurityInfo& sessionSecurityInfo);
-    // Êä³öä¯ÀÀ½á¹ûreferenceDescriptions
+    // è¾“å‡ºæµè§ˆç»“æœreferenceDescriptions
     void printBrowseResults(const UaReferenceDescriptions& referenceDescriptions);
-    // Êä³öÖ¤ÊéĞÅÏ¢
+    // è¾“å‡ºè¯ä¹¦ä¿¡æ¯
     void printCertificateData(const UaByteString& serverCertificate);
-    // ÅĞ¶ÏÓÃ»§½ÓÊÜÖ¤Êé×´Ì¬
+    // åˆ¤æ–­ç”¨æˆ·æ¥å—è¯ä¹¦çŠ¶æ€
     int userAcceptCertificate();
-    // ÔÚ·şÎñÆ÷ÉÏÉ¾³ı¶©ÔÄ
+    // åœ¨æœåŠ¡å™¨ä¸Šåˆ é™¤è®¢é˜…
     UaStatus deleteSubscription();
-    // ÔÚ·şÎñÆ÷ÉÏ´´½¨¶©ÔÄ
+    // åœ¨æœåŠ¡å™¨ä¸Šåˆ›å»ºè®¢é˜…
     UaStatus createSubscription();
-    // ÔÚ¶©ÔÄÖĞ´´½¨ÊÜ¼à¿ØµÄÏîÄ¿
+    // åœ¨è®¢é˜…ä¸­åˆ›å»ºå—ç›‘æ§çš„é¡¹ç›®
     UaStatus createMonitoredItems(const UaNodeId& eventTypeToFilter);
 
 private:
-    CInoSessionCallback*            m_pSessionCallback = nullptr;  // »á»°»Øµ÷
-    UaClientSdk::UaSubscription*    m_pSubscription = nullptr;     // ¶©ÔÄ
-    CInoSubscriptionCallback*       m_pSubscriptionCallback = nullptr; // ¶©ÔÄ»Øµ÷
-    CInoSessionConfig*              m_pSessionConfig = nullptr;     // ¿Í»§¶ËÅäÖÃ
-    UaNodeIdArray                   m_registeredNodes;              // ×¢²áµÄ½Úµã£ºÄ¬ÈÏÊÇËùÓĞÒªĞ´ÈëµÄ½Úµã
+    CInoSessionCallback*            m_pSessionCallback = nullptr;  // ä¼šè¯å›è°ƒ
+    UaClientSdk::UaSubscription*    m_pSubscription = nullptr;     // è®¢é˜…
+    CInoSubscriptionCallback*       m_pSubscriptionCallback = nullptr; // è®¢é˜…å›è°ƒ
+    CInoSessionConfig*              m_pSessionConfig = nullptr;     // å®¢æˆ·ç«¯é…ç½®
+    UaNodeIdArray                   m_registeredNodes;              // æ³¨å†Œçš„èŠ‚ç‚¹ï¼šé»˜è®¤æ˜¯æ‰€æœ‰è¦å†™å…¥çš„èŠ‚ç‚¹
 };
 

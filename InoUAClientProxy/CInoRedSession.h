@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "InoExportDef.h"
 
@@ -13,21 +13,21 @@ public:
     virtual ~CInoRedSession();
 
 public:
-    // Á¬½Ó·şÎñÆ÷
+    // è¿æ¥æœåŠ¡å™¨
     UaStatus connect();
-    // ¶Ï¿ªÓë¿Í»§¶ËµÄÁ¬½Ó
+    // æ–­å¼€ä¸å®¢æˆ·ç«¯çš„è¿æ¥
     UaStatus disconnect();
-    // »ñÈ¡Ö÷UA¿Í»§¶Ë
+    // è·å–ä¸»UAå®¢æˆ·ç«¯
     CInoSession* getSession();
-    // ÉèÖÃÅäÖÃĞÅÏ¢
+    // è®¾ç½®é…ç½®ä¿¡æ¯
     void setConfiguration(CInoSessionConfig* pConfigMaster, CInoSessionConfig* pConfigSlave);
-    // ¶ÁÈ¡
+    // è¯»å–
     bool read(const UaNodeIdArray& nodes);
 
 protected:
 
 private:
-    CInoSession* m_pSessionMaster = nullptr;// Ö÷UA¿Í»§¶Ë
-    CInoSession* m_pSessionSlave = nullptr; // ±¸UA¿Í»§¶Ë
+    CInoSession* m_pSessionMaster = nullptr;// ä¸»UAå®¢æˆ·ç«¯
+    CInoSession* m_pSessionSlave = nullptr; // å¤‡UAå®¢æˆ·ç«¯
 };
 

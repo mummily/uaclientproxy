@@ -1,4 +1,4 @@
-#include "CInoSessionConfig.h"
+ï»¿#include "CInoSessionConfig.h"
 #include "uasettings.h"
 #include "uadir.h"
 #include "uapkicertificate.h"
@@ -13,110 +13,110 @@ CInoSessionConfig::~CInoSessionConfig()
 {
 }
 
-// ÃèÊö£ºgetServerUrl
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šgetServerUrl
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 UaString CInoSessionConfig::getServerUrl() const
 {
     return m_serverUrl;
 }
 
-// ÃèÊö£ºgetDiscoveryUrl
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šgetDiscoveryUrl
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 UaString CInoSessionConfig::getDiscoveryUrl() const
 {
     return m_discoveryUrl;
 }
 
-// ÃèÊö£ºgetApplicationName
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šgetApplicationName
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 UaString CInoSessionConfig::getApplicationName() const
 {
     return m_applicationName;
 }
 
-// ÃèÊö£ºgetAutomaticReconnect
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šgetAutomaticReconnect
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 OpcUa_Boolean CInoSessionConfig::getAutomaticReconnect() const
 {
     return m_bAutomaticReconnect;
 }
 
-// ÃèÊö£ºgetRetryInitialConnect
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šgetRetryInitialConnect
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 OpcUa_Boolean CInoSessionConfig::getRetryInitialConnect() const
 {
     return m_bRetryInitialConnect;
 }
 
-// ÃèÊö£º·µ»Ø¶ÁÈ¡½Úµã
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šè¿”å›è¯»å–èŠ‚ç‚¹
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 UaNodeIdArray CInoSessionConfig::getNodesToRead() const
 {
     return m_nodesToRead;
 }
 
-// ÃèÊö£º·µ»ØĞ´Èë½Úµã
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šè¿”å›å†™å…¥èŠ‚ç‚¹
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 UaNodeIdArray CInoSessionConfig::getNodesToWrite() const
 {
     return m_nodesToWrite;
 }
 
-// ÃèÊö£º·µ»Ø¼àÊÓ½Úµã
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šè¿”å›ç›‘è§†èŠ‚ç‚¹
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 UaNodeIdArray CInoSessionConfig::getNodesToMonitor() const
 {
     return m_nodesToMonitor;
 }
 
-// ÃèÊö£º·µ»ØĞ´Öµ
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šè¿”å›å†™å€¼
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 UaVariantArray CInoSessionConfig::getWriteValues() const
 {
     return m_writeValues;
 }
 
-// ÃèÊö£º·µ»ØÊÂ¼şÀàĞÍ¹ıÂË
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šè¿”å›äº‹ä»¶ç±»å‹è¿‡æ»¤
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 UaNodeId CInoSessionConfig::getEventTypeToFilter() const
 {
     return m_eventTypeToFilter;
 }
 
-// ÃèÊö£º·µ»Ø»Øµ÷·½·¨
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šè¿”å›å›è°ƒæ–¹æ³•
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 UaNodeIdArray CInoSessionConfig::getMethodsToCall() const
 {
     return m_methodsToCall;
 }
 
-// ÃèÊö£º·µ»Ø»Øµ÷¶ÔÏó
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šè¿”å›å›è°ƒå¯¹è±¡
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 UaNodeIdArray CInoSessionConfig::getObjectsToCall() const
 {
     return m_objectToCall;
 }
 
-// ÃèÊö£º¼ÓÔØ¿Í»§¶ËÁ¬½ÓÅäÖÃ
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šåŠ è½½å®¢æˆ·ç«¯è¿æ¥é…ç½®
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 UaStatus CInoSessionConfig::loadConfiguration(const UaString& sConfigurationFile)
 {
     if (!UaDir("").exists(sConfigurationFile.toUtf8()))
     {
-        printf("Î´·¢ÏÖÅäÖÃÎÄ¼ş£º%s", sConfigurationFile.toUtf8());
+        printf("æœªå‘ç°é…ç½®æ–‡ä»¶ï¼š%s", sConfigurationFile.toUtf8());
         return OpcUa_BadInvalidArgument;
     }
 
@@ -126,7 +126,7 @@ UaStatus CInoSessionConfig::loadConfiguration(const UaString& sConfigurationFile
     pSettings->beginGroup("InoClientConfig");
     SCOPE_EXIT(pSettings->endGroup(););
 
-    // »ñÈ¡Öµ
+    // è·å–å€¼
     auto getValueAsString = [&](const UaUniString& sKey, const UaVariant& defaultValue = UaVariant())
         ->UaString
     {
@@ -160,7 +160,7 @@ UaStatus CInoSessionConfig::loadConfiguration(const UaString& sConfigurationFile
         assert(OpcUa_IsGood(status));
         return byteVal;
     };
-    // ¶Á½Úµã×é
+    // è¯»èŠ‚ç‚¹ç»„
     auto readNodeGroup = [&](UaNodeIdArray& nodeArray, const UaUniString& sGroup, const UaString& sNode)
     {
         nodeArray.clear();
@@ -177,7 +177,7 @@ UaStatus CInoSessionConfig::loadConfiguration(const UaString& sConfigurationFile
             UaNodeId::fromXmlString(value).copyTo(&nodeArray[i]);
         }
     };
-    // ¶Á×Ö·û´®×é
+    // è¯»å­—ç¬¦ä¸²ç»„
     auto readStringGroup = [&](UaStringArray& nodeArray, const UaUniString& sGroup, const UaString& sNode)
     {
         nodeArray.clear();
@@ -195,7 +195,7 @@ UaStatus CInoSessionConfig::loadConfiguration(const UaString& sConfigurationFile
         }
     };
 
-    // Ö¤ÊéºÍĞÅÈÎÁĞ±íÎ»ÖÃ
+    // è¯ä¹¦å’Œä¿¡ä»»åˆ—è¡¨ä½ç½®
     m_certificateTrustListLocation = getValueAsString("CertificateTrustListLocation");
     m_certificateRevocationListLocation = getValueAsString("CertificateRevocationListLocation");
     m_issuersCertificatesLocation = getValueAsString("IssuersCertificatesLocation");
@@ -203,27 +203,27 @@ UaStatus CInoSessionConfig::loadConfiguration(const UaString& sConfigurationFile
     m_clientCertificate = getValueAsString("ClientCertificate");
     m_clientPrivateKey = getValueAsString("ClientPrivateKey");
 
-    // Ó¦ÓÃÃû³Æ
+    // åº”ç”¨åç§°
     m_applicationName = getValueAsString("ApplicationName", UaString());
 
-    // ·şÎñÆ÷ URL
+    // æœåŠ¡å™¨ URL
     m_discoveryUrl = getValueAsString("DiscoveryURL", UaString("opc.tcp://localhost:48010"));
     m_serverUrl = getValueAsString("ServerUrl", UaString("opc.tcp://localhost:48010"));
 
-    // ÖØÁ¬ÉèÖÃ
+    // é‡è¿è®¾ç½®
     m_bAutomaticReconnect = getValueAsBool("AutomaticReconnect", UaVariant((OpcUa_Boolean)OpcUa_True));
     m_bRetryInitialConnect = getValueAsBool("RetryInitialConnect", UaVariant((OpcUa_Boolean)OpcUa_False));
 
-    // ¶ÁÈ¡ EventTypeToFilter --> ÊÂ¼ş¹ıÂË£ºm_eventTypeToFilter
+    // è¯»å– EventTypeToFilter --> äº‹ä»¶è¿‡æ»¤ï¼šm_eventTypeToFilter
     m_eventTypeToFilter = UaNodeId::fromXmlString(getValueAsString("EventTypeToFilter", UaString("")));
 
-    // ¶ÁÈ¡ NSArray ÃüÃû¿Õ¼äÊı×é --> m_namespaceArray
+    // è¯»å– NSArray å‘½åç©ºé—´æ•°ç»„ --> m_namespaceArray
     readStringGroup(m_namespaceArray, "NSArray", "NameSpaceUri0");
 
-    // ¶ÁÈ¡ NodesToRead --> ¶ÁÈ¡µÄ±äÁ¿£ºm_nodesToRead
+    // è¯»å– NodesToRead --> è¯»å–çš„å˜é‡ï¼šm_nodesToRead
     readNodeGroup(m_nodesToRead, "NodesToRead", "Variable0");
 
-    // ¶ÁÈ¡ NodesToWrite --> Ğ´ÈëµÄ±äÁ¿£ºm_nodesToWrite Ğ´ÈëµÄ±äÁ¿µÄÖµ£ºm_writeValues
+    // è¯»å– NodesToWrite --> å†™å…¥çš„å˜é‡ï¼šm_nodesToWrite å†™å…¥çš„å˜é‡çš„å€¼ï¼šm_writeValues
     {
         readNodeGroup(m_nodesToWrite, "NodesToWrite", "Variable0");
 
@@ -248,7 +248,7 @@ UaStatus CInoSessionConfig::loadConfiguration(const UaString& sConfigurationFile
         {
             UaString sTempKey = UaString("Value0%1").arg((int)i);
             UaVariant value = pSettings->value(sTempKey.toUtf16());
-            // ½«Öµ×ª»»ÎªÕıÈ·µÄÀàĞÍ
+            // å°†å€¼è½¬æ¢ä¸ºæ­£ç¡®çš„ç±»å‹
             OpcUa_BuiltInType type = (OpcUa_BuiltInType)(char)writeDataTypes[(int)i];
             if (OpcUa_IsGood(value.changeType(type, OpcUa_False)))
             {
@@ -261,26 +261,26 @@ UaStatus CInoSessionConfig::loadConfiguration(const UaString& sConfigurationFile
         }
     }
 
-    // ¶ÁÈ¡ NodesToMonitor --> ¼àÊÓµÄ±äÁ¿£ºm_nodesToMonitor
+    // è¯»å– NodesToMonitor --> ç›‘è§†çš„å˜é‡ï¼šm_nodesToMonitor
     readNodeGroup(m_nodesToMonitor, "NodesToMonitor", "Variable0");
 
-    // ¶ÁÈ¡ MethodsToCall --> ·½·¨£ºm_methodsToCall
+    // è¯»å– MethodsToCall --> æ–¹æ³•ï¼šm_methodsToCall
     readNodeGroup(m_methodsToCall, "MethodsToCall", "Method0");
-    // ¶ÁÈ¡ MethodsToCall --> ¶ÔÏó£ºm_objectToCall
+    // è¯»å– MethodsToCall --> å¯¹è±¡ï¼šm_objectToCall
     readNodeGroup(m_objectToCall, "MethodsToCall", "Object0");
 
     UaStatus result;
     return result;
 }
 
-// ÃèÊö£º°²×°°²È«Ö¤Êé
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šå®‰è£…å®‰å…¨è¯ä¹¦
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 UaStatus CInoSessionConfig::setupSecurity(SessionSecurityInfo& sessionSecurityInfo)
 {
     UaStatus result;
 
-    // ´´½¨Ä¿Â¼
+    // åˆ›å»ºç›®å½•
     UaDir dirHelper("");
     UaUniString usClientCertificate(dirHelper.filePath(UaDir::fromNativeSeparators(m_clientCertificate.toUtf16())));
     dirHelper.mkpath(usClientCertificate);
@@ -291,13 +291,13 @@ UaStatus CInoSessionConfig::setupSecurity(SessionSecurityInfo& sessionSecurityIn
     UaUniString usCertificateRevocationListLocation(dirHelper.filePath(UaDir::fromNativeSeparators(m_certificateRevocationListLocation.toUtf16())));
     dirHelper.mkpath(usCertificateRevocationListLocation);
 
-    // ³¢ÊÔ¼ÓÔØ¿Í»§¶ËÖ¤Êé
+    // å°è¯•åŠ è½½å®¢æˆ·ç«¯è¯ä¹¦
     UaPkiCertificate clientCertificate = UaPkiCertificate::fromDERFile(m_clientCertificate);
 
-    // Ö¤Êé²»´æÔÚ - ÎÒÃÇ´´½¨Ò»¸öĞÂµÄ
+    // è¯ä¹¦ä¸å­˜åœ¨ - æˆ‘ä»¬åˆ›å»ºä¸€ä¸ªæ–°çš„
     if (clientCertificate.isNull())
     {
-        // ´´½¨Ö¤Êé
+        // åˆ›å»ºè¯ä¹¦
         UaPkiRsaKeyPair keyPair(1024);
         UaPkiIdentity   identity;
 
@@ -322,17 +322,17 @@ UaStatus CInoSessionConfig::setupSecurity(SessionSecurityInfo& sessionSecurityIn
         sNodeName.copyTo(&info.DNSNames[0]);
         info.validTime = 3600 * 24 * 365 * 5; // 5 years in seconds
 
-        // ´´½¨×ÔÇ©ÃûÖ¤Êé
+        // åˆ›å»ºè‡ªç­¾åè¯ä¹¦
         UaPkiCertificate cert(info, identity, keyPair);
 
-        // ½«¹«Ô¿±£´æµ½ÎÄ¼ş
+        // å°†å…¬é’¥ä¿å­˜åˆ°æ–‡ä»¶
         cert.toDERFile(m_clientCertificate.toUtf8());
 
-        // ½«Ë½Ô¿±£´æµ½ÎÄ¼ş
+        // å°†ç§é’¥ä¿å­˜åˆ°æ–‡ä»¶
         keyPair.toPEMFile(m_clientPrivateKey.toUtf8(), 0);
     }
 
-    // ³õÊ¼»¯ PKI Ìá¹©³ÌĞòÒÔÊ¹ÓÃ OpenSSL
+    // åˆå§‹åŒ– PKI æä¾›ç¨‹åºä»¥ä½¿ç”¨ OpenSSL
     result = sessionSecurityInfo.initializePkiProviderOpenSSL(
         m_certificateRevocationListLocation,
         m_certificateTrustListLocation,
@@ -347,7 +347,7 @@ UaStatus CInoSessionConfig::setupSecurity(SessionSecurityInfo& sessionSecurityIn
         return result;
     }
 
-    // ¼ÓÔØ¿Í»§¶ËÖ¤ÊéºÍË½Ô¿
+    // åŠ è½½å®¢æˆ·ç«¯è¯ä¹¦å’Œç§é’¥
     result = sessionSecurityInfo.loadClientCertificateOpenSSL(
         m_clientCertificate,
         m_clientPrivateKey);
@@ -364,20 +364,20 @@ UaStatus CInoSessionConfig::setupSecurity(SessionSecurityInfo& sessionSecurityIn
     return result;
 }
 
-// ÃèÊö£º¸üĞÂÃüÁî¿Õ¼äË÷Òı
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šæ›´æ–°å‘½ä»¤ç©ºé—´ç´¢å¼•
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 UaStatus CInoSessionConfig::updateNamespaceIndexes(const UaStringArray& namespaceArray)
 {
-    // ´´½¨Ó³Éä±í
+    // åˆ›å»ºæ˜ å°„è¡¨
     UaInt16Array mappingTable;
     mappingTable.resize(m_namespaceArray.length());
 
-    // Ìî³äÓ³Éä±í£¬ÕÒµ½ĞÂnsÏÂµÄindexÖµ
+    // å¡«å……æ˜ å°„è¡¨ï¼Œæ‰¾åˆ°æ–°nsä¸‹çš„indexå€¼
     for (OpcUa_UInt32 i = 0; i < m_namespaceArray.length(); i++)
     {
         mappingTable[i] = (OpcUa_UInt16)i;
-        // ²éÕÒÃüÃû¿Õ¼äuri
+        // æŸ¥æ‰¾å‘½åç©ºé—´uri
         for (OpcUa_UInt32 j = 0; j < namespaceArray.length(); j++)
         {
             UaString string1(m_namespaceArray[i]);
@@ -390,26 +390,26 @@ UaStatus CInoSessionConfig::updateNamespaceIndexes(const UaStringArray& namespac
         }
     }
 
-    // Ìæ»» NodesToRead ÖĞµÄÃüÃû¿Õ¼äË÷Òı
+    // æ›¿æ¢ NodesToRead ä¸­çš„å‘½åç©ºé—´ç´¢å¼•
     for (OpcUa_UInt32 i = 0; i < m_nodesToRead.length(); i++)
     {
         m_nodesToRead[i].NamespaceIndex = mappingTable[m_nodesToRead[i].NamespaceIndex];
     }
-    // Ìæ»» NodeToWrite ÖĞµÄÃüÃû¿Õ¼äË÷Òı
+    // æ›¿æ¢ NodeToWrite ä¸­çš„å‘½åç©ºé—´ç´¢å¼•
     for (OpcUa_UInt32 i = 0; i < m_nodesToWrite.length(); i++)
     {
         m_nodesToWrite[i].NamespaceIndex = mappingTable[m_nodesToWrite[i].NamespaceIndex];
     }
-    // Ìæ»» NodesToMonitor ÖĞµÄÃüÃû¿Õ¼äË÷Òı
+    // æ›¿æ¢ NodesToMonitor ä¸­çš„å‘½åç©ºé—´ç´¢å¼•
     for (OpcUa_UInt32 i = 0; i < m_nodesToMonitor.length(); i++)
     {
         m_nodesToMonitor[i].NamespaceIndex = mappingTable[m_nodesToMonitor[i].NamespaceIndex];
     }
 
-    // Ìæ»» Òª¹ıÂËµÄÊÂ¼şÀàĞÍ ÖĞµÄÃüÃû¿Õ¼äË÷Òı
+    // æ›¿æ¢ è¦è¿‡æ»¤çš„äº‹ä»¶ç±»å‹ ä¸­çš„å‘½åç©ºé—´ç´¢å¼•
     m_eventTypeToFilter.setNamespaceIndex(mappingTable[m_eventTypeToFilter.namespaceIndex()]);
 
-    // Ìæ»» ·½·¨ºÍ¶ÔÏó ÖĞµÄÃüÃû¿Õ¼äË÷Òı
+    // æ›¿æ¢ æ–¹æ³•å’Œå¯¹è±¡ ä¸­çš„å‘½åç©ºé—´ç´¢å¼•
     for (OpcUa_UInt32 i = 0; i < m_methodsToCall.length(); i++)
     {
         m_methodsToCall[i].NamespaceIndex = mappingTable[m_methodsToCall[i].NamespaceIndex];
@@ -419,7 +419,7 @@ UaStatus CInoSessionConfig::updateNamespaceIndexes(const UaStringArray& namespac
         m_objectToCall[i].NamespaceIndex = mappingTable[m_objectToCall[i].NamespaceIndex];
     }
 
-    // ¸üĞÂÃüÃû¿Õ¼ä
+    // æ›´æ–°å‘½åç©ºé—´
     m_namespaceArray = namespaceArray;
 
     return OpcUa_Good;

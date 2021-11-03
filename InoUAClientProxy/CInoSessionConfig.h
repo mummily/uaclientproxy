@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "uabase.h"
 #include "uaclientsdk.h"
@@ -16,7 +16,7 @@ public:
     CInoSessionConfig();
     virtual ~CInoSessionConfig();
 
-    // »ñÈ¡Á¬½ÓºÍ»á»°²ÎÊı
+    // è·å–è¿æ¥å’Œä¼šè¯å‚æ•°
     UaString getServerUrl() const;
     UaString getDiscoveryUrl() const;
     UaString getApplicationName() const;
@@ -26,7 +26,7 @@ public:
     UaNodeId getEventTypeToFilter() const;
 
 private:
-    // »ñÈ¡ NodeId ºÍÖµµÄÁĞ±í
+    // è·å– NodeId å’Œå€¼çš„åˆ—è¡¨
     UaNodeIdArray getNodesToRead() const;
     UaNodeIdArray getNodesToWrite() const;
     UaNodeIdArray getNodesToMonitor() const;
@@ -36,39 +36,39 @@ private:
 
 public:
 
-    // ¼ÓÔØ¿Í»§¶ËÁ¬½ÓÅäÖÃ
+    // åŠ è½½å®¢æˆ·ç«¯è¿æ¥é…ç½®
     UaStatus loadConfiguration(const UaString& sConfigurationFile);
 
-    // ´´½¨ÎÄ¼ş¼Ğ½á¹¹À´´¦ÀíÖ¤Êé²¢¼ÓÔØ»ò´´½¨¿Í»§¶ËÖ¤Êé¡£
+    // åˆ›å»ºæ–‡ä»¶å¤¹ç»“æ„æ¥å¤„ç†è¯ä¹¦å¹¶åŠ è½½æˆ–åˆ›å»ºå®¢æˆ·ç«¯è¯ä¹¦ã€‚
     UaStatus setupSecurity(SessionSecurityInfo& sessionSecurityInfo);
 
-    // ¸üĞÂËùÓĞ nodeId µÄÃüÃû¿Õ¼äË÷Òı²¢¸üĞÂÄÚ²¿ namespaceArray
+    // æ›´æ–°æ‰€æœ‰ nodeId çš„å‘½åç©ºé—´ç´¢å¼•å¹¶æ›´æ–°å†…éƒ¨ namespaceArray
     UaStatus updateNamespaceIndexes(const UaStringArray& namespaceArray);
 
 private:
-    // Á¬½ÓºÍ»á»°ÅäÖÃ
-    UaString        m_applicationName;      // Ó¦ÓÃÃû³Æ
-    UaString        m_serverUrl;            // ·şÎñUrl
-    UaString        m_discoveryUrl;         // ²éÕÒUrl
-    OpcUa_Boolean   m_bAutomaticReconnect;  // ÊÇ·ñ×Ô¶¯ÖØÁ¬
-    OpcUa_Boolean   m_bRetryInitialConnect; // ÊÇ·ñ³¢ÊÔ³õÊ¼»¯Á¬½Ó
+    // è¿æ¥å’Œä¼šè¯é…ç½®
+    UaString        m_applicationName;      // åº”ç”¨åç§°
+    UaString        m_serverUrl;            // æœåŠ¡Url
+    UaString        m_discoveryUrl;         // æŸ¥æ‰¾Url
+    OpcUa_Boolean   m_bAutomaticReconnect;  // æ˜¯å¦è‡ªåŠ¨é‡è¿
+    OpcUa_Boolean   m_bRetryInitialConnect; // æ˜¯å¦å°è¯•åˆå§‹åŒ–è¿æ¥
 
-    // NamespaceArray ºÍ NodeIds
-    UaStringArray   m_namespaceArray;       // ÃüÃû¿Õ¼ä
-    UaVariantArray  m_writeValues;          // Ğ´ÈëµÄ±äÁ¿µÄÖµ
-    UaNodeId        m_eventTypeToFilter;    // ¹ıÂËµÄÊÂ¼şÀàĞÍ
+    // NamespaceArray å’Œ NodeIds
+    UaStringArray   m_namespaceArray;       // å‘½åç©ºé—´
+    UaVariantArray  m_writeValues;          // å†™å…¥çš„å˜é‡çš„å€¼
+    UaNodeId        m_eventTypeToFilter;    // è¿‡æ»¤çš„äº‹ä»¶ç±»å‹
 
-    UaNodeIdArray   m_nodesToRead;          // ¶ÁÈ¡µÄ±äÁ¿
-    UaNodeIdArray   m_nodesToWrite;         // Ğ´ÈëµÄ±äÁ¿
-    UaNodeIdArray   m_nodesToMonitor;       // ¼àÊÓµÄ±äÁ¿
-    UaNodeIdArray   m_methodsToCall;        // ·½·¨
-    UaNodeIdArray   m_objectToCall;         // ¶ÔÏó
+    UaNodeIdArray   m_nodesToRead;          // è¯»å–çš„å˜é‡
+    UaNodeIdArray   m_nodesToWrite;         // å†™å…¥çš„å˜é‡
+    UaNodeIdArray   m_nodesToMonitor;       // ç›‘è§†çš„å˜é‡
+    UaNodeIdArray   m_methodsToCall;        // æ–¹æ³•
+    UaNodeIdArray   m_objectToCall;         // å¯¹è±¡
 
-    // Ö¤Êé
-    UaString        m_certificateTrustListLocation;     // ĞÅÈÎµÄÖ¤Êé
-    UaString        m_certificateRevocationListLocation;// ½ûÖ¹µÄÖ¤Êé
-    UaString        m_issuersCertificatesLocation;      // ·¢ĞĞÈËÖ¤Êé
-    UaString        m_issuersRevocationListLocation;    // ·¢ĞĞÈË½ûÖ¹Ö¤Êé
-    UaString        m_clientCertificate;                // ¿Í»§Ö¤Êé
-    UaString        m_clientPrivateKey;                 // ¿Í»§Ë½Ô¿
+    // è¯ä¹¦
+    UaString        m_certificateTrustListLocation;     // ä¿¡ä»»çš„è¯ä¹¦
+    UaString        m_certificateRevocationListLocation;// ç¦æ­¢çš„è¯ä¹¦
+    UaString        m_issuersCertificatesLocation;      // å‘è¡Œäººè¯ä¹¦
+    UaString        m_issuersRevocationListLocation;    // å‘è¡Œäººç¦æ­¢è¯ä¹¦
+    UaString        m_clientCertificate;                // å®¢æˆ·è¯ä¹¦
+    UaString        m_clientPrivateKey;                 // å®¢æˆ·ç§é’¥
 };

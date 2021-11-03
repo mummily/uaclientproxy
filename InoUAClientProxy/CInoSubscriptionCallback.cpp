@@ -1,4 +1,4 @@
-#include "CInoSubscriptionCallback.h"
+ï»¿#include "CInoSubscriptionCallback.h"
 #include "uasubscription.h"
 #include "uasession.h"
 #include "CInoSessionConfig.h"
@@ -15,9 +15,9 @@ CInoSubscriptionCallback::~CInoSubscriptionCallback()
 {
 }
 
-// ÃèÊö£º¶©ÔÄµÄ×´Ì¬·¢Éú±ä»¯£¬¿Í»§¶Ë»Øµ÷º¯Êı
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šè®¢é˜…çš„çŠ¶æ€å‘ç”Ÿå˜åŒ–ï¼Œå®¢æˆ·ç«¯å›è°ƒå‡½æ•°
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 void CInoSubscriptionCallback::subscriptionStatusChanged(
     OpcUa_UInt32 clientSubscriptionHandle,
     const UaStatus& status)
@@ -28,7 +28,7 @@ void CInoSubscriptionCallback::subscriptionStatusChanged(
     {
         printf("Subscription not longer valid - failed with status %s\n", status.toString().toUtf8());
 
-        // ÔÚ·şÎñÆ÷ÉÏ»Ö¸´¶©ÔÄ
+        // åœ¨æœåŠ¡å™¨ä¸Šæ¢å¤è®¢é˜…
         UaStatus result = m_pSession->createSubscriptionMonitors(true);
         printf("-------------------------------------------------------------\n");
         SCOPE_EXIT(
@@ -46,9 +46,9 @@ void CInoSubscriptionCallback::subscriptionStatusChanged(
     }
 }
 
-// ÃèÊö£º¼àÊÓÏîÊı¾İ¸ü¸Ä£¬Áí£ºÉ¾³ı¼à¿ØÏî¡¢¹Ø±Õ²ÉÑù»ò½ûÓÃ·¢²¼ºó£¬Êı¾İ¸ü¸ÄÒ²¿ÉÄÜµ½´ï
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šç›‘è§†é¡¹æ•°æ®æ›´æ”¹ï¼Œå¦ï¼šåˆ é™¤ç›‘æ§é¡¹ã€å…³é—­é‡‡æ ·æˆ–ç¦ç”¨å‘å¸ƒåï¼Œæ•°æ®æ›´æ”¹ä¹Ÿå¯èƒ½åˆ°è¾¾
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 void CInoSubscriptionCallback::dataChange(
     OpcUa_UInt32 clientSubscriptionHandle,
     const UaDataNotifications& dataNotifications,
@@ -77,9 +77,9 @@ void CInoSubscriptionCallback::dataChange(
     }
 }
 
-// ÃèÊö£º¶©ÔÄÊÂ¼şÍ¨Öª
-// Ê±¼ä£º2021-10-20
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šè®¢é˜…äº‹ä»¶é€šçŸ¥
+// æ—¶é—´ï¼š2021-10-20
+// å¤‡æ³¨ï¼šæ— 
 void CInoSubscriptionCallback::newEvents(
     OpcUa_UInt32 clientSubscriptionHandle,
     UaEventFieldLists& eventFieldList)

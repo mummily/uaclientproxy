@@ -1,4 +1,4 @@
-#include "CInoRedSession.h"
+ï»¿#include "CInoRedSession.h"
 #include "CInoSession.h"
 #include "InoCommonDef.h"
 #include "uaarraytemplates.h"
@@ -15,8 +15,8 @@ CInoRedSession::~CInoRedSession()
     DelAndNil(m_pSessionSlave);
 }
 
-// ÃèÊö£ºÁ¬½Ó·şÎñ¶Ë
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šè¿æ¥æœåŠ¡ç«¯
+// å¤‡æ³¨ï¼šæ— 
 UaStatus CInoRedSession::connect()
 {
     UaStatus status;
@@ -27,9 +27,9 @@ UaStatus CInoRedSession::connect()
     
 }
 
-// ÃèÊö£ºUA¿Í»§¶Ë¶Ï¿ªÓë·şÎñÆ÷µÄÁ¬½Ó
-// Ê±¼ä£º2021-10-21
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šUAå®¢æˆ·ç«¯æ–­å¼€ä¸æœåŠ¡å™¨çš„è¿æ¥
+// æ—¶é—´ï¼š2021-10-21
+// å¤‡æ³¨ï¼šæ— 
 UaStatus CInoRedSession::disconnect()
 {
     UaStatus status;
@@ -41,24 +41,24 @@ UaStatus CInoRedSession::disconnect()
     return status;
 }
 
-// ÃèÊö£ºÉèÖÃÖ÷UA¿Í»§¶Ë
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šè®¾ç½®ä¸»UAå®¢æˆ·ç«¯
+// å¤‡æ³¨ï¼šæ— 
 CInoSession* CInoRedSession::getSession()
 {
     return m_pSessionMaster;
 }
 
-// ÃèÊö£ºÉèÖÃ¿Í»§¶ËÁ¬½ÓÅäÖÃ
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šè®¾ç½®å®¢æˆ·ç«¯è¿æ¥é…ç½®
+// å¤‡æ³¨ï¼šæ— 
 void CInoRedSession::setConfiguration(CInoSessionConfig* pConfigMaster, CInoSessionConfig* pConfigSlave)
 {
     m_pSessionMaster->setConfiguration(pConfigMaster);
     m_pSessionSlave->setConfiguration(pConfigSlave);
 }
 
-// ÃèÊö£º¶Á±äÁ¿
-// Ê±¼ä£º2021-10-21
-// ±¸×¢£ºÎŞ
+// æè¿°ï¼šè¯»å˜é‡
+// æ—¶é—´ï¼š2021-10-21
+// å¤‡æ³¨ï¼šæ— 
 bool CInoRedSession::read(const UaNodeIdArray& nodes)
 {
     CInoSession* pSession = getSession();

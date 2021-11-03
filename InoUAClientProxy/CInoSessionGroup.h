@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "InoExportDef.h"
 #include <map>
@@ -18,21 +18,21 @@ public:
     virtual ~CInoSessionGroup();
 
 public:
-    // »ñÈ¡¿Í»§¶Ë´úÀí
+    // è·å–å®¢æˆ·ç«¯ä»£ç†
     CInoRedSession* getRedSession(emFAServerType serverType);
 
 protected:
 
 private:
-    // ³õÊ¼»¯UA»·¾³
+    // åˆå§‹åŒ–UAç¯å¢ƒ
     bool init();
-    // Çå³ıUA»·¾³
+    // æ¸…é™¤UAç¯å¢ƒ
     void cleanup();
-    // »ñÈ¡¿Í»§¶ËÅäÖÃ
+    // è·å–å®¢æˆ·ç«¯é…ç½®
     UaUniString getConfigPath();
 
 private:
-    map<emFAServerType, CInoRedSession*> m_mapRedSession; // ¿Í»§¶Ë´úÀí
-    map<emFAServerType, CInoSessionConfig*> m_mapRedSessionConfig; // ¿Í»§¶ËÅäÖÃ
+    map<emFAServerType, CInoRedSession*> m_mapRedSession; // å®¢æˆ·ç«¯ä»£ç†
+    map<emFAServerType, CInoSessionConfig*> m_mapRedSessionConfig; // å®¢æˆ·ç«¯é…ç½®
     CInoSessionConfig* m_pSessionConfig = nullptr;
 };
