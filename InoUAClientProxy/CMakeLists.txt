@@ -76,12 +76,12 @@ add_library(${PROJECT} SHARED
 
 # “¿¿µø‚√Ë ˆ
 target_link_libraries(${PROJECT}
-    uabasecpp
-    uastack
-    uaclientcpp
-    uapkicpp
-    ws2_32.lib
-    fmt
+    PRIVATE uabasecpp
+    PRIVATE uastack
+    PRIVATE uaclientcpp
+    PRIVATE uapkicpp
+    PRIVATE ws2_32.lib
+    PRIVATE fmt
 )
 
 # source_group("src" FILES ${lib_SOURCES})
