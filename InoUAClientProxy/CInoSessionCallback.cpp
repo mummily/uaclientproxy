@@ -11,9 +11,9 @@ CInoSessionCallback::~CInoSessionCallback()
 {
 }
 
-// æè¿°ï¼šè¿žæŽ¥çŠ¶æ€å˜æ›´å›žè°ƒå‡½æ•°
-// æ—¶é—´ï¼š2021-10-20
-// å¤‡æ³¨ï¼šæ— 
+// ÃèÊö£ºÁ¬½Ó×´Ì¬±ä¸ü»Øµ÷º¯Êý
+// Ê±¼ä£º2021-10-20
+// ±¸×¢£ºÎÞ
 void CInoSessionCallback::connectionStatusChanged(
     OpcUa_UInt32             clientConnectionId,
     UaClient::ServerStatus   serverStatus)
@@ -49,8 +49,8 @@ void CInoSessionCallback::connectionStatusChanged(
     case UaClient::NewSessionCreated:
         printf("Connection status changed to NewSessionCreated\n");
         m_pSession->updateNamespaceIndexes();
-        // å·²æ³¨å†Œçš„èŠ‚ç‚¹åœ¨æ–°ä¼šè¯ä¸­ä¸å†æœ‰æ•ˆ
-        m_pSession->registerNodes();
+        // ÒÑ×¢²áµÄ½ÚµãÔÚÐÂ»á»°ÖÐ²»ÔÙÓÐÐ§
+        m_pSession->reRegisterNodes();
         break;
     }
 

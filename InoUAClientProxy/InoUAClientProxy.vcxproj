@@ -24,7 +24,6 @@
     <ClInclude Include="CInoSessionGroup.h" />
     <ClInclude Include="CInoSessionConfig.h" />
     <ClInclude Include="CInoSessionCallback.h" />
-    <ClInclude Include="CInoSubscription.h" />
     <ClInclude Include="InoExportDef.h" />
     <ClInclude Include="CInoSession.h" />
     <ClInclude Include="CInoSubscriptionCallback.h" />
@@ -39,7 +38,6 @@
     <ClCompile Include="CInoSessionConfig.cpp" />
     <ClCompile Include="CInoSession.cpp" />
     <ClCompile Include="CInoSessionCallback.cpp" />
-    <ClCompile Include="CInoSubscription.cpp" />
     <ClCompile Include="CInoSubscriptionCallback.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

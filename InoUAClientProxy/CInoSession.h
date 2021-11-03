@@ -2,15 +2,17 @@
 
 #include "InoExportDef.h"
 #include "uaclientsdk.h"
+#include "uasession.h"
+
+using namespace UaClientSdk;
 
 class UaSession;
 class CInoSubscription;
 class CInoSessionConfig;
 class CInoRedSession;
 class CInoSessionCallback;
-using namespace UaClientSdk;
-
-class INO_EXPORT CInoSession
+class CInoSubscriptionCallback;
+class INO_EXPORT CInoSession : public UaClientSdk::UaSession
 {
     UA_DISABLE_COPY(CInoSession);
 
@@ -22,10 +24,8 @@ public:
 
     // 设置客户端配置信息
     void setConfiguration(CInoSessionConfig* pConfiguration);
-    // 客户端是否处于连接状态
-    OpcUa_Boolean isConnected() const;
     // 查找服务器并输出服务器信息
-    UaStatus discover();
+    UaStatus discover(const UaString& sDiscoveryUrl);
     // 非安连接服务器
     UaStatus connect();
     // 安全连接服务器
@@ -37,21 +37,30 @@ public:
     // 继续浏览
     UaStatus browseContinuationPoint();
     // 根据配置文件，节点进行读值
-    UaStatus read();
+    UaStatus read(const UaNodeIdArray& nodes);
     // 根据配置文件，节点进行写值
-    UaStatus write();
+    UaStatus write(const UaNodeIdArray& nodes, const UaVariantArray& values);
     // 给注册的节点写入值
-    UaStatus writeRegistered();
+    UaStatus writeRegistered(const UaVariantArray& values);
     // 在服务器上创建订阅和监视项
     UaStatus subscribe();
+    UaStatus createSubscriptionMonitors(bool bDeleteSubscription = false);
     // 在服务器上退订
     UaStatus unsubscribe();
     // 注册节点，默认注册所有要写入的节点
-    UaStatus registerNodes();
+    UaStatus reRegisterNodes();
+    UaStatus registerNodes(const UaNodeIdArray& nodesToRegister);
     // 注销节点
     UaStatus unregisterNodes();
-    // 回调对象的方法，方法无参数
-    UaStatus callMethods();
+
+    // 回调对象的方法
+    using UaStatusArray = UaObjectArray<UaStatus>;
+    UaStatus callMethodList(
+        const UaNodeIdArray& objectNodeIds,
+        const UaNodeIdArray& methodNodeIds,
+        UaStatusArray& results);
+    UaStatus callMethod(const UaNodeId& objectNodeId, const UaNodeId& methodNodeId);
+
     // 更新所有 nodeId 的命名空间索引并更新内部 namespaceArray
     UaStatus updateNamespaceIndexes();
 
@@ -66,20 +75,24 @@ private:
     UaStatus findSecureEndpoint(SessionSecurityInfo& sessionSecurityInfo);
     // 验证服务器证书
     UaStatus checkServerCertificateTrust(SessionSecurityInfo& sessionSecurityInfo);
-    // 回调对象objectNodeId的methodNodeId方法，方法无参数
-    UaStatus callMethodInternal(const UaNodeId& objectNodeId, const UaNodeId& methodNodeId);
     // 输出浏览结果referenceDescriptions
     void printBrowseResults(const UaReferenceDescriptions& referenceDescriptions);
     // 输出证书信息
     void printCertificateData(const UaByteString& serverCertificate);
     // 判断用户接受证书状态
     int userAcceptCertificate();
+    // 在服务器上删除订阅
+    UaStatus deleteSubscription();
+    // 在服务器上创建订阅
+    UaStatus createSubscription();
+    // 在订阅中创建受监控的项目
+    UaStatus createMonitoredItems(const UaNodeId& eventTypeToFilter);
 
 private:
-    UaClientSdk::UaSession* m_pSession = nullptr;                // 会话
-    CInoSessionCallback* m_pSessionCallback = nullptr; // 会话回调
-    CInoSubscription* m_pSubscription = nullptr;  // 订阅
-    CInoSessionConfig* m_pConfiguration = nullptr; // 客户端配置
-    UaNodeIdArray m_registeredNodes;                // 注册的节点：默认是所有要写入的节点
+    CInoSessionCallback*            m_pSessionCallback = nullptr;  // 会话回调
+    UaClientSdk::UaSubscription*    m_pSubscription = nullptr;     // 订阅
+    CInoSubscriptionCallback*       m_pSubscriptionCallback = nullptr; // 订阅回调
+    CInoSessionConfig*              m_pSessionConfig = nullptr;     // 客户端配置
+    UaNodeIdArray                   m_registeredNodes;              // 注册的节点：默认是所有要写入的节点
 };
 

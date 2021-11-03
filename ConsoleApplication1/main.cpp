@@ -20,7 +20,7 @@ using namespace std;
 
 int reallyMain()
 {
-    UaStatus status/* = UaStatus::opc*/;
+    UaStatus status = !OpcUa_Good;
 
     // UA客户端代理
     shared_ptr<CInoSessionGroup> spSessionGroup = make_shared<CInoSessionGroup>();
@@ -36,7 +36,7 @@ int reallyMain()
     );
 
     CInoSession* pSession = pRedClient->getSession();
-    pSession->read();
+    // pSession->read();
     assert(status.isGood());
 
         // UA客户端等待

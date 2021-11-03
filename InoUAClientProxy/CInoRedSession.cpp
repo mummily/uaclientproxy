@@ -1,6 +1,7 @@
 #include "CInoRedSession.h"
 #include "CInoSession.h"
 #include "InoCommonDef.h"
+#include "uaarraytemplates.h"
 
 CInoRedSession::CInoRedSession()
 {
@@ -58,8 +59,8 @@ void CInoRedSession::setConfiguration(CInoSessionConfig* pConfigMaster, CInoSess
 // 描述：读变量
 // 时间：2021-10-21
 // 备注：无
-bool CInoRedSession::read()
+bool CInoRedSession::read(const UaNodeIdArray& nodes)
 {
     CInoSession* pSession = getSession();
-    return pSession->read().isGood();
+    return pSession->read(nodes).isGood();
 }

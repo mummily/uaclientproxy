@@ -5,12 +5,12 @@
 
 using namespace UaClientSdk;
 
-class CInoSubscription;
+class CInoSession;
 class CInoSubscriptionCallback : public UaSubscriptionCallback
 {
     UA_DISABLE_COPY(CInoSubscriptionCallback);
 public:
-    CInoSubscriptionCallback(CInoSubscription* pSubscription);
+    CInoSubscriptionCallback(CInoSession* pInoSession);
     virtual ~CInoSubscriptionCallback();
 
     // 订阅的状态发生变化，客户端回调函数
@@ -30,5 +30,5 @@ public:
         UaEventFieldLists& eventFieldList);
 
 private:
-    CInoSubscription* m_pSubscription = nullptr;
+    CInoSession* m_pSession = nullptr;
 };

@@ -4,10 +4,10 @@
 #include "CInoSessionConfig.h"
 #include "InoCommonDef.h"
 #include "ScopeExit.h"
-#include "CInoSubscription.h"
+#include "CInoSession.h"
 
-CInoSubscriptionCallback::CInoSubscriptionCallback(CInoSubscription* pSubscription)
-    : m_pSubscription(pSubscription)
+CInoSubscriptionCallback::CInoSubscriptionCallback(CInoSession* pInoSession)
+    : m_pSession(pInoSession)
 {
 }
 
@@ -29,7 +29,7 @@ void CInoSubscriptionCallback::subscriptionStatusChanged(
         printf("Subscription not longer valid - failed with status %s\n", status.toString().toUtf8());
 
         // 在服务器上恢复订阅
-        UaStatus result = m_pSubscription->createSubscriptionMonitors(true);
+        UaStatus result = m_pSession->createSubscriptionMonitors(true);
         printf("-------------------------------------------------------------\n");
         SCOPE_EXIT(
             printf("-------------------------------------------------------------\n");

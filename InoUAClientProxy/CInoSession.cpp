@@ -1,6 +1,5 @@
 #include "CInoSession.h"
 #include "uasession.h"
-#include "CInoSubscription.h"
 #include "CInoSessionConfig.h"
 #include "uadiscovery.h"
 #include "uapkicertificate.h"
@@ -9,29 +8,28 @@
 #include "uadir.h"
 #include "ScopeExit.h"
 #include "CInoSessionCallback.h"
+#include "CInoSubscriptionCallback.h"
 
 CInoSession::CInoSession()
+    : UaClientSdk::UaSession()
 {
-    m_pSession = new UaClientSdk::UaSession();
     m_pSessionCallback = new CInoSessionCallback(this);
-    m_pSubscription = new CInoSubscription(m_pSession, m_pConfiguration);
+    m_pSubscriptionCallback = new CInoSubscriptionCallback(this);
 }
 
 CInoSession::~CInoSession()
 {
     // 删除本地订阅对象
-    DelAndNil(m_pSubscription);
+    if (nullptr != m_pSubscription)
+    {
+        deleteSubscription();
+    }
 
     // 断开连接，删除会话
-    if (m_pSession)
+    if (isConnected() != OpcUa_False)
     {
-        if (m_pSession->isConnected() != OpcUa_False)
-        {
-            ServiceSettings serviceSettings;
-            m_pSession->disconnect(serviceSettings, OpcUa_True);
-        }
-
-        DelAndNil(m_pSession);
+        ServiceSettings serviceSettings;
+        __super::disconnect(serviceSettings, OpcUa_True);
     }
 }
 
@@ -42,22 +40,23 @@ void CInoSession::setConfiguration(CInoSessionConfig* pConfiguration)
 {
     assert(nullptr != pConfiguration);
 
-    if (m_pConfiguration == pConfiguration)
+    if (m_pSessionConfig == pConfiguration)
         return;
 
-    m_pSubscription->setConfiguration(pConfiguration);
+    // m_pSubscription->setConfiguration(pConfiguration);
 
-    DelAndNil(m_pConfiguration);
-    m_pConfiguration = pConfiguration;
+    DelAndNil(m_pSessionConfig);
+    m_pSessionConfig = pConfiguration;
 }
 
 // 描述：查找服务器并输出服务器信息
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoSession::discover()
+// m_pConfiguration->getDiscoveryUrl()
+UaStatus CInoSession::discover(const UaString& sDiscoveryUrl)
 {
     // 获取可用服务器列表
-    printf("\nCall FindServers on Url %s\n", m_pConfiguration->getDiscoveryUrl().toUtf8());
+    printf("\nCall FindServers on Url %s\n", sDiscoveryUrl.toUtf8());
 
     UaDiscovery discovery;
     ServiceSettings serviceSettings;
@@ -65,7 +64,7 @@ UaStatus CInoSession::discover()
     UaApplicationDescriptions applicationDescriptions;
     UaStatus result = discovery.findServers(
         serviceSettings,
-        m_pConfiguration->getDiscoveryUrl(),
+        sDiscoveryUrl,
         clientSecurityInfo,
         applicationDescriptions);
 
@@ -146,14 +145,6 @@ UaStatus CInoSession::discover()
     return result;
 }
 
-// 描述：客户端是否处于连接状态
-// 时间：2021-10-20
-// 备注：无
-OpcUa_Boolean CInoSession::isConnected() const
-{
-    return m_pSession->isConnected();
-}
-
 // 描述：非安连接服务器
 // 时间：2021-10-20
 // 备注：无
@@ -161,7 +152,7 @@ UaStatus CInoSession::connect()
 {
     // 安全设置未初始化 - 没有安全连接
     SessionSecurityInfo sessionSecurityInfo;
-    return connectInternal(m_pConfiguration->getServerUrl(), sessionSecurityInfo);
+    return connectInternal(m_pSessionConfig->getServerUrl(), sessionSecurityInfo);
 }
 
 // 描述：安全连接服务器
@@ -177,7 +168,7 @@ UaStatus CInoSession::connectSecure()
     //************************************************
     // 加载或创建客户端证书安全连接需要客户端和服务器端的证书
     // setupSecurity 加载客户端证书并初始化证书存储
-    result = m_pConfiguration->setupSecurity(sessionSecurityInfo);
+    result = m_pSessionConfig->setupSecurity(sessionSecurityInfo);
 
     //************************************************
     // 步骤 2 - 在服务器上查找安全端点
@@ -201,7 +192,7 @@ UaStatus CInoSession::connectSecure()
 
     if (result.isGood())
     {
-        result = connectInternal(m_pConfiguration->getServerUrl(), sessionSecurityInfo);
+        result = connectInternal(m_pSessionConfig->getServerUrl(), sessionSecurityInfo);
 
         if (result.isBad())
         {
@@ -231,17 +222,17 @@ UaStatus CInoSession::connectInternal(const UaString& serverUrl, SessionSecurity
     }
 
     // 使用配置中的数据填充会话连接信息
-    sessionConnectInfo.sApplicationName = m_pConfiguration->getApplicationName();
+    sessionConnectInfo.sApplicationName = m_pSessionConfig->getApplicationName();
     // 使用主机名生成唯一的应用程序 URI
     sessionConnectInfo.sApplicationUri = UaString("urn:%1:%2:%3").arg(sNodeName).arg(COMPANY_NAME).arg(PRODUCT_NAME);
     sessionConnectInfo.sProductUri = UaString("urn:%1:%2").arg(COMPANY_NAME).arg(PRODUCT_NAME);
     sessionConnectInfo.sSessionName = sessionConnectInfo.sApplicationUri;
-    sessionConnectInfo.bAutomaticReconnect = m_pConfiguration->getAutomaticReconnect();
-    sessionConnectInfo.bRetryInitialConnect = m_pConfiguration->getRetryInitialConnect();
+    sessionConnectInfo.bAutomaticReconnect = m_pSessionConfig->getAutomaticReconnect();
+    sessionConnectInfo.bRetryInitialConnect = m_pSessionConfig->getRetryInitialConnect();
 
     // 连接到服务器
     printf("\nConnecting to %s\n", serverUrl.toUtf8());
-    result = m_pSession->connect(
+    result = __super::connect(
         serverUrl,
         sessionConnectInfo,
         sessionSecurityInfo,
@@ -288,7 +279,7 @@ UaStatus CInoSession::writeInternal(const UaNodeIdArray& nodesToWrite, const UaV
     ServiceSettings     serviceSettings;
     UaStatusCodeArray   results;
     UaDiagnosticInfos   diagnosticInfos;
-    result = m_pSession->write(
+    result = __super::write(
         serviceSettings,
         writeValues,
         results,
@@ -331,10 +322,10 @@ UaStatus CInoSession::findSecureEndpoint(SessionSecurityInfo& sessionSecurityInf
     OpcUa_UInt32 bestSecurityIndex = 0;
     UaString sTemp;
 
-    printf("\nTry to find secure Endpoint on: %s\n", m_pConfiguration->getServerUrl().toUtf8());
+    printf("\nTry to find secure Endpoint on: %s\n", m_pSessionConfig->getServerUrl().toUtf8());
     result = discovery.getEndpoints(
         serviceSettings,
-        m_pConfiguration->getServerUrl(),
+        m_pSessionConfig->getServerUrl(),
         clientSecurityInfo,
         endpointDescriptions);
 
@@ -466,7 +457,7 @@ UaStatus CInoSession::disconnect()
     ServiceSettings serviceSettings;
 
     printf("\nDisconnecting ...\n");
-    UaStatus result = m_pSession->disconnect(
+    UaStatus result = __super::disconnect(
         serviceSettings,
         OpcUa_True);
 
@@ -507,9 +498,9 @@ UaStatus CInoSession::browseContinuationPoint()
 // 描述：根据配置文件，节点进行读值
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoSession::read()
+UaStatus CInoSession::read(const UaNodeIdArray& nodes)
 {
-    UaNodeIdArray nodes = m_pConfiguration->getNodesToRead();
+    // UaNodeIdArray nodes = m_pConfiguration->getNodesToRead();
 
     UaReadValueIds nodesToRead;
     nodesToRead.create(nodes.length());
@@ -524,7 +515,7 @@ UaStatus CInoSession::read()
     ServiceSettings serviceSettings;
     UaDataValues values;
     UaDiagnosticInfos diagnosticInfos;
-    UaStatus result = m_pSession->read(
+    UaStatus result = __super::read(
         serviceSettings,
         0,
         OpcUa_TimestampsToReturn_Both,
@@ -558,13 +549,13 @@ UaStatus CInoSession::read()
 // 描述：根据配置文件，节点进行写值
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoSession::write()
+UaStatus CInoSession::write(const UaNodeIdArray& nodes, const UaVariantArray& values)
 {
     UaStatus result;
 
     result = writeInternal(
-        m_pConfiguration->getNodesToWrite(),
-        m_pConfiguration->getWriteValues());
+        nodes,
+        values);
 
     return result;
 }
@@ -572,13 +563,13 @@ UaStatus CInoSession::write()
 // 描述：给注册的节点写入值
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoSession::writeRegistered()
+UaStatus CInoSession::writeRegistered(const UaVariantArray& values)
 {
     UaStatus result;
 
     result = writeInternal(
         m_registeredNodes,
-        m_pConfiguration->getWriteValues());
+        values);
 
     return result;
 }
@@ -589,7 +580,41 @@ UaStatus CInoSession::writeRegistered()
 UaStatus CInoSession::subscribe()
 {
     UaStatus result;
-    result = m_pSubscription->createSubscriptionMonitors();
+    result = createSubscriptionMonitors();
+    return result;
+}
+
+// 描述：在服务器上删除订阅
+// 时间：2021-10-20
+// 备注：无
+UaStatus CInoSession::deleteSubscription()
+{
+    if (m_pSubscription == nullptr)
+    {
+        printf("\nError: No Subscription created\n");
+        return OpcUa_BadInvalidState;
+    }
+
+    UaStatus result;
+    ServiceSettings serviceSettings;
+
+    // 让 SDK 清理现有订阅的资源
+    printf("\nDeleting subscription ...\n");
+    result = __super::deleteSubscription(
+        serviceSettings,
+        &m_pSubscription);
+
+    if (result.isGood())
+    {
+        printf("DeleteSubscription succeeded\n");
+    }
+    else
+    {
+        printf("DeleteSubscription failed with status %s\n", result.toString().toUtf8());
+    }
+
+    m_pSubscription = nullptr;
+
     return result;
 }
 
@@ -598,20 +623,28 @@ UaStatus CInoSession::subscribe()
 // 备注：无
 UaStatus CInoSession::unsubscribe()
 {
-    return m_pSubscription->deleteSubscription();
+    return deleteSubscription();
+}
+
+// 描述：重新注册节点
+// 时间：2021-10-29
+// 备注：无
+UaStatus CInoSession::reRegisterNodes()
+{
+    return registerNodes(m_registeredNodes);
 }
 
 // 描述：注册节点，默认注册所有要写入的节点
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoSession::registerNodes()
+UaStatus CInoSession::registerNodes(const UaNodeIdArray& nodesToRegister)
 {
     // 注册所有要写入的节点
-    UaNodeIdArray nodesToRegister = m_pConfiguration->getNodesToWrite();
+    // UaNodeIdArray nodesToRegister = m_pConfiguration->getNodesToWrite();
 
     printf("\nRegisterNodes...\n");
     ServiceSettings serviceSettings;
-    UaStatus result = m_pSession->registerNodes(
+    UaStatus result = __super::registerNodes(
         serviceSettings,
         nodesToRegister,
         m_registeredNodes);
@@ -627,7 +660,11 @@ UaStatus CInoSession::registerNodes()
     printf("RegisterNodes succeeded\n");
     for (OpcUa_UInt32 i = 0; i < nodesToRegister.length(); i++)
     {
-        printf("Original NodeId[%d]: %s\tRegistered NodeId[%d]: %s\n", i, UaNodeId(nodesToRegister[i]).toXmlString().toUtf8(), i, UaNodeId(m_registeredNodes[i]).toXmlString().toUtf8());
+        printf("Original NodeId[%d]: %s\tRegistered NodeId[%d]: %s\n",
+            i,
+            UaNodeId(nodesToRegister[i]).toXmlString().toUtf8(),
+            i,
+            UaNodeId(m_registeredNodes[i]).toXmlString().toUtf8());
     }
 
     return result;
@@ -642,7 +679,7 @@ UaStatus CInoSession::unregisterNodes()
 
     // 注销我们之前注册的所有节点
     printf("\nUnregisterNodes...\n");
-    UaStatus result = m_pSession->unregisterNodes(
+    UaStatus result = __super::unregisterNodes(
         serviceSettings,
         m_registeredNodes);
 
@@ -663,21 +700,21 @@ UaStatus CInoSession::unregisterNodes()
 // 描述：回调对象的方法，方法无参数
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoSession::callMethods()
+UaStatus CInoSession::callMethodList(const UaNodeIdArray& objectNodeIds,
+    const UaNodeIdArray& methodNodeIds,
+    UaStatusArray& results)
 {
-    UaStatus result;
+    results.create(methodNodeIds.length());
 
-    // 从配置中调用所有方法
-    UaNodeIdArray objectNodeIds = m_pConfiguration->getObjectsToCall();
-    UaNodeIdArray methodNodeIds = m_pConfiguration->getMethodsToCall();
+    UaStatus result = OpcUa_Bad;
 
     for (OpcUa_UInt32 i = 0; i < methodNodeIds.length(); i++)
     {
-        UaStatus stat = callMethodInternal(objectNodeIds[i], methodNodeIds[i]);
-        if (stat.isNotGood())
-        {
+        UaStatus stat = callMethod(objectNodeIds[i], methodNodeIds[i]);
+        results[i] = stat;
+
+        if (result.isNotGood())
             result = stat;
-        }
     }
 
     return result;
@@ -688,7 +725,7 @@ UaStatus CInoSession::callMethods()
 // 备注：无
 UaStatus CInoSession::updateNamespaceIndexes()
 {
-    return m_pConfiguration->updateNamespaceIndexes(m_pSession->getNamespaceTable());
+    return m_pSessionConfig->updateNamespaceIndexes(getNamespaceTable());
 }
 
 // 描述：从节点nodeToBrowse浏览地址空间
@@ -707,7 +744,7 @@ UaStatus CInoSession::browseInternal(const UaNodeId& nodeToBrowse, OpcUa_UInt32 
     ServiceSettings serviceSettings;
     UaByteString continuationPoint;
     UaReferenceDescriptions referenceDescriptions;
-    UaStatus result = m_pSession->browse(
+    UaStatus result = __super::browse(
         serviceSettings,
         nodeToBrowse,
         browseContext,
@@ -729,7 +766,7 @@ UaStatus CInoSession::browseInternal(const UaNodeId& nodeToBrowse, OpcUa_UInt32 
     {
         printf("\nContinuationPoint is set. BrowseNext...\n");
         // 浏览下一个
-        result = m_pSession->browseNext(
+        result = __super::browseNext(
             serviceSettings,
             OpcUa_False,
             continuationPoint,
@@ -753,20 +790,20 @@ UaStatus CInoSession::browseInternal(const UaNodeId& nodeToBrowse, OpcUa_UInt32 
 // 描述：回调对象objectNodeId的methodNodeId方法，方法无参数
 // 时间：2021-10-20
 // 备注：无
-UaStatus CInoSession::callMethodInternal(const UaNodeId& objectNodeId, const UaNodeId& methodNodeId)
+UaStatus CInoSession::callMethod(const UaNodeId& objectNodeId, const UaNodeId& methodNodeId)
 {
-    UaStatus        result;
-    ServiceSettings serviceSettings;
-    CallIn          callRequest;
-    CallOut         callResult;
-
-    // 对象和方法的 NodeIds
-    // 我们在这里没有设置调用参数
+    // 请求
+    CallIn callRequest;
     callRequest.methodId = methodNodeId;
     callRequest.objectId = objectNodeId;
+    // 结果
+    CallOut callResult;
+    // 未设置调用参数
 
+    // 服务设置
+    ServiceSettings serviceSettings;
     printf("\nCalling method %s on object %s\n", methodNodeId.toString().toUtf8(), objectNodeId.toString().toUtf8());
-    result = m_pSession->call(
+    UaStatus result = __super::call(
         serviceSettings,
         callRequest,
         callResult);
@@ -864,6 +901,157 @@ int CInoSession::userAcceptCertificate()
     while (ch != '\n')
     {
         ch = getchar();
+    }
+
+    return result;
+}
+
+
+// 描述：在服务器上创建订阅、监视项
+// 时间：2021-10-20
+// 备注：无
+UaStatus CInoSession::createSubscriptionMonitors(bool bDeleteSubscription/* = false*/)
+{
+    UaStatus result;
+
+    // 删除现有订阅
+    if (bDeleteSubscription && nullptr != m_pSubscription)
+    {
+        deleteSubscription();
+    }
+
+    // 创建新订阅
+    result = createSubscription();
+
+    // 创建监控项
+    if (result.isGood())
+    {
+        result = createMonitoredItems(m_pSessionConfig->getEventTypeToFilter());
+    }
+
+    return result;
+}
+
+// 描述：在服务器上创建订阅
+// 时间：2021-10-20
+// 备注：无
+UaStatus CInoSession::createSubscription()
+{
+    if (nullptr != m_pSubscription)
+    {
+        printf("\nError: Subscription already created\n");
+        return OpcUa_BadInvalidState;
+    }
+
+    ServiceSettings serviceSettings;
+
+    SubscriptionSettings subscriptionSettings;
+    subscriptionSettings.publishingInterval = 100;
+
+    printf("\nCreating subscription ...\n");
+    UaStatus result = __super::createSubscription(
+        serviceSettings,
+        m_pSubscriptionCallback,
+        1,
+        subscriptionSettings,
+        OpcUa_True,
+        &m_pSubscription);
+
+    if (result.isGood())
+    {
+        printf("CreateSubscription succeeded\n");
+    }
+    else
+    {
+        m_pSubscription = nullptr;
+        printf("CreateSubscription failed with status %s\n", result.toString().toUtf8());
+    }
+
+    return result;
+}
+
+// 描述：在订阅中创建受监控的项目
+// 时间：2021-10-20
+// 备注：无
+UaStatus CInoSession::createMonitoredItems(const UaNodeId& eventTypeToFilter)
+{
+#pragma TODO("CInoSubscription::createMonitoredItems 再看")
+    if (m_pSubscription == nullptr)
+    {
+        printf("\nError: No Subscription created\n");
+        return OpcUa_BadInvalidState;
+    }
+
+    UaMonitoredItemCreateRequests itemsToCreate;
+
+    // 配置一个事件监控项——这里我们使用服务器对象
+    itemsToCreate.create(1);
+    itemsToCreate[0].ItemToMonitor.AttributeId = OpcUa_Attributes_EventNotifier;
+    itemsToCreate[0].ItemToMonitor.NodeId.Identifier.Numeric = OpcUaId_Server;
+    itemsToCreate[0].RequestedParameters.ClientHandle = 0;
+    itemsToCreate[0].RequestedParameters.SamplingInterval = 0;
+    itemsToCreate[0].RequestedParameters.QueueSize = 0;
+    itemsToCreate[0].RequestedParameters.DiscardOldest = OpcUa_True;
+    itemsToCreate[0].MonitoringMode = OpcUa_MonitoringMode_Reporting;
+
+    // 定义与每个事件一起发送的事件字段
+    UaEventFilter eventFilter;
+    UaSimpleAttributeOperand selectElement;
+    selectElement.setBrowsePathElement(0, UaQualifiedName("Message", 0), 1);
+    eventFilter.setSelectClauseElement(0, selectElement, 3);
+    selectElement.setBrowsePathElement(0, UaQualifiedName("SourceName", 0), 1);
+    eventFilter.setSelectClauseElement(1, selectElement, 3);
+    selectElement.setBrowsePathElement(0, UaQualifiedName("Severity", 0), 1);
+    eventFilter.setSelectClauseElement(2, selectElement, 3);
+
+    // 接收 ControllerEventType 类型的事件
+    UaContentFilterElement* pContentFilterElement = new UaContentFilterElement;
+
+    // OfType操作符
+    pContentFilterElement->setFilterOperator(OpcUa_FilterOperator_OfType);
+
+    // 1 (Literal)操作符
+    UaFilterOperand* pOperand = new UaLiteralOperand;
+    ((UaLiteralOperand*)pOperand)->setLiteralValue(eventTypeToFilter);
+    pContentFilterElement->setFilterOperand(0, pOperand, 1);
+
+    UaContentFilter* pContentFilter = new UaContentFilter;
+    pContentFilter->setContentFilterElement(0, pContentFilterElement, 1);
+    eventFilter.setWhereClause(pContentFilter);
+
+    // 为监控项目设置过滤器
+    eventFilter.detachFilter(itemsToCreate[0].RequestedParameters.Filter);
+
+    ServiceSettings serviceSettings;
+    UaMonitoredItemCreateResults createResults;
+    printf("\nAdding monitored items to subscription ...\n");
+    UaStatus result = m_pSubscription->createMonitoredItems(
+        serviceSettings,
+        OpcUa_TimestampsToReturn_Both,
+        itemsToCreate,
+        createResults);
+
+    // 调用失败
+    if (result.isNotGood())
+    {
+        printf("CreateMonitoredItems failed with status %s\n", result.toString().toUtf8());
+        return result;
+    }
+
+    // 调用成功，检查结果
+    for (OpcUa_UInt32 i = 0; i < createResults.length(); i++)
+    {
+        if (OpcUa_IsGood(createResults[i].StatusCode))
+        {
+            printf("CreateMonitoredItems succeeded for item: %s\n",
+                UaNodeId(itemsToCreate[i].ItemToMonitor.NodeId).toXmlString().toUtf8());
+        }
+        else
+        {
+            printf("CreateMonitoredItems failed for item: %s - Status %s\n",
+                UaNodeId(itemsToCreate[i].ItemToMonitor.NodeId).toXmlString().toUtf8(),
+                UaStatus(createResults[i].StatusCode).toString().toUtf8());
+        }
     }
 
     return result;

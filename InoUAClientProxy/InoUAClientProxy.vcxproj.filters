@@ -39,9 +39,6 @@
     <ClInclude Include="CInoSessionCallback.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CInoSubscription.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CInoRedSession.cpp">
@@ -60,9 +57,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CInoSessionCallback.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CInoSubscription.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

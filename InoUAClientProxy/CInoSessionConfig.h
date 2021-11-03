@@ -23,15 +23,18 @@ public:
     UaString getProductUri() const;
     OpcUa_Boolean getAutomaticReconnect() const;
     OpcUa_Boolean getRetryInitialConnect() const;
+    UaNodeId getEventTypeToFilter() const;
 
+private:
     // 获取 NodeId 和值的列表
     UaNodeIdArray getNodesToRead() const;
     UaNodeIdArray getNodesToWrite() const;
     UaNodeIdArray getNodesToMonitor() const;
     UaVariantArray getWriteValues() const;
-    UaNodeId getEventTypeToFilter() const;
     UaNodeIdArray getMethodsToCall() const;
     UaNodeIdArray getObjectsToCall() const;
+
+public:
 
     // 加载客户端连接配置
     UaStatus loadConfiguration(const UaString& sConfigurationFile);

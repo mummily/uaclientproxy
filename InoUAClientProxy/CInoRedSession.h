@@ -3,6 +3,7 @@
 #include "InoExportDef.h"
 
 class UaStatus;
+class UaNodeIdArray;
 class CInoSession;
 class CInoSessionConfig;
 class INO_EXPORT CInoRedSession
@@ -21,7 +22,7 @@ public:
     // 设置配置信息
     void setConfiguration(CInoSessionConfig* pConfigMaster, CInoSessionConfig* pConfigSlave);
     // 读取
-    bool read();
+    bool read(const UaNodeIdArray& nodes);
 
 protected:
 
