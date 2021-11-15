@@ -27,7 +27,7 @@ public:
     // 查找服务器并输出服务器信息
     UaStatus discover(const UaString& sDiscoveryUrl);
     // 非安连接服务器
-    UaStatus connect();
+    UaStatus connect(const UaString& serverUrl);
     // 安全连接服务器
     UaStatus connectSecure();
     // 断开连接
@@ -37,7 +37,7 @@ public:
     // 继续浏览
     UaStatus browseContinuationPoint();
     // 根据配置文件，节点进行读值
-    UaStatus read(const UaNodeIdArray& nodes);
+    UaStatus read(const UaNodeIdArray& nodes, UaDataValues& values);
     // 根据配置文件，节点进行写值
     UaStatus write(const UaNodeIdArray& nodes, const UaVariantArray& values);
     // 给注册的节点写入值

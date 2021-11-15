@@ -18,8 +18,13 @@
 
 using namespace std;
 
+class Test
+{};
+
 int reallyMain()
 {
+    UaPointerArray<Test> ta;
+
     UaStatus status = !OpcUa_Good;
 
     // UA客户端代理
@@ -27,7 +32,7 @@ int reallyMain()
 
     // UA客户端建立与某一服务器的连接
     InoRedSession* pRedClient = spSessionGroup->getRedSession(emFAServerType::RealTime);
-    status = pRedClient->connect();
+    // status = pRedClient->connect();
 
     // UA客户端断开与服务器的连接
     SCOPE_EXIT(

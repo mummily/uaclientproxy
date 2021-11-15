@@ -1,23 +1,21 @@
-#[[ ËµÃ÷£º
-    1. ¹²Ïí¿âÎÄ¼ş InoUAClientProxy
-    2. µ¼³ö²¿·ÖÀà¹©ÆäËü³ÌĞòµ÷ÓÃ
+ï»¿#[[ è¯´æ˜ï¼š
+    1. å…±äº«åº“æ–‡ä»¶ InoUAClientProxy
+    2. å¯¼å‡ºéƒ¨åˆ†ç±»ä¾›å…¶å®ƒç¨‹åºè°ƒç”¨
 ]]
 
-# ÉèÖÃ¹¤³ÌÃû
+# è®¾ç½®å·¥ç¨‹å
 set(PROJECT InoUAClientProxy)
 
-# Í·ÎÄ¼şÃèÊö
+# å¤´æ–‡ä»¶æè¿°
 file(GLOB_RECURSE HEADER *.h)
 
-# Ô´ÎÄ¼şÃèÊö
+# æºæ–‡ä»¶æè¿°
 file(GLOB_RECURSE SOURCE *.cpp)
 
-# ±àÒëÔ¤¶¨ÒåÃèÊö
-add_compile_definitions(
-    INOUACLIENTPROXY_EXPORTS
-)
+# ç¼–è¯‘é¢„å®šä¹‰æè¿°
+add_compile_definitions(INOUACLIENTPROXY_EXPORTS)
 
-# Ìí¼ÓÍ·ÎÄ¼ş°üº¬Ä¿Â¼
+# æ·»åŠ å¤´æ–‡ä»¶åŒ…å«ç›®å½•
 include_directories(${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/include/fmt
     ${PROJECT_SOURCE_DIR}/include/ua
@@ -27,7 +25,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/include/ua/uapkicpp
 )
 
-# Èı·½¿âÃèÊö£ºuabasecpp
+# ä¸‰æ–¹åº“æè¿°ï¼šuabasecpp
 add_library(uabasecpp SHARED IMPORTED)
 set_target_properties(uabasecpp PROPERTIES 
     IMPORTED_IMPLIB_DEBUG "${PROJECT_SOURCE_DIR}/lib/ua/x86/debug/uabasecppd.lib"
@@ -35,7 +33,7 @@ set_target_properties(uabasecpp PROPERTIES
     IMPORTED_LOCATION_DEBUG "${PROJECT_SOURCE_DIR}/Debug/uabasecppd.dll"
     IMPORTED_LOCATION_RELEASE ""
 )
-# Èı·½¿âÃèÊö£ºuastack
+# ä¸‰æ–¹åº“æè¿°ï¼šuastack
 add_library(uastack SHARED IMPORTED)
 set_target_properties(uastack PROPERTIES 
     IMPORTED_IMPLIB_DEBUG "${PROJECT_SOURCE_DIR}/lib/ua/x86/debug/uastackd.lib"
@@ -43,7 +41,7 @@ set_target_properties(uastack PROPERTIES
     IMPORTED_LOCATION_DEBUG "${PROJECT_SOURCE_DIR}/Debug/uastackd.dll"
     IMPORTED_LOCATION_RELEASE ""
 )
-# Èı·½¿âÃèÊö£ºuaclientcpp
+# ä¸‰æ–¹åº“æè¿°ï¼šuaclientcpp
 add_library(uaclientcpp SHARED IMPORTED)
 set_target_properties(uaclientcpp PROPERTIES 
     IMPORTED_IMPLIB_DEBUG "${PROJECT_SOURCE_DIR}/lib/ua/x86/debug/uaclientcppd.lib"
@@ -51,7 +49,7 @@ set_target_properties(uaclientcpp PROPERTIES
     IMPORTED_LOCATION_DEBUG "${PROJECT_SOURCE_DIR}/Debug/uaclientcppd.dll"
     IMPORTED_LOCATION_RELEASE ""
 )
-# Èı·½¿âÃèÊö£ºuapkicpp
+# ä¸‰æ–¹åº“æè¿°ï¼šuapkicpp
 add_library(uapkicpp SHARED IMPORTED)
 set_target_properties(uapkicpp PROPERTIES 
     IMPORTED_IMPLIB_DEBUG "${PROJECT_SOURCE_DIR}/lib/ua/x86/debug/uapkicppd.lib"
@@ -59,7 +57,7 @@ set_target_properties(uapkicpp PROPERTIES
     IMPORTED_LOCATION_DEBUG "${PROJECT_SOURCE_DIR}/Debug/uapkicppd.dll"
     IMPORTED_LOCATION_RELEASE ""
 )
-# Èı·½¿âÃèÊö£ºfmt
+# ä¸‰æ–¹åº“æè¿°ï¼šfmt
 add_library(fmt SHARED IMPORTED)
 set_target_properties(fmt PROPERTIES 
     IMPORTED_IMPLIB_DEBUG "${PROJECT_SOURCE_DIR}/lib/fmt/x86/debug/fmtd.lib"
@@ -68,20 +66,20 @@ set_target_properties(fmt PROPERTIES
     IMPORTED_LOCATION_RELEASE ""
 )
 
-# Éú³É¹²Ïí¿âÎÄ¼ş
+# ç”Ÿæˆå…±äº«åº“æ–‡ä»¶
 add_library(${PROJECT} SHARED 
     ${SOURCE} 
     ${HEADER}
 )
 
-# ÒÀÀµ¿âÃèÊö
+add_library(opcua INTERFACE)
+set_property(TARGET opcua PROPERTY
+  INTERFACE_LINK_LIBRARIES "uabasecpp" "uaclientcpp" "uapkicpp" "uastack" "fmt")
+
+# ä¾èµ–åº“æè¿°
 target_link_libraries(${PROJECT}
-    PRIVATE uabasecpp
-    PRIVATE uastack
-    PRIVATE uaclientcpp
-    PRIVATE uapkicpp
-    PRIVATE ws2_32.lib
-    PRIVATE fmt
+    PRIVATE opcua
+    ws2_32
 )
 
 # source_group("src" FILES ${lib_SOURCES})

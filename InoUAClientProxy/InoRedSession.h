@@ -3,6 +3,7 @@
 #include "InoExportDef.h"
 
 class UaStatus;
+class UaString;
 class UaNodeIdArray;
 class InoSession;
 class InoSessionConfig;
@@ -14,7 +15,7 @@ public:
 
 public:
     // 连接服务器
-    UaStatus connect();
+    UaStatus connect(const UaString& serverUrl1, const UaString& serverUrl2);
     // 断开与客户端的连接
     UaStatus disconnect();
     // 获取主UA客户端

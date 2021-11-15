@@ -17,10 +17,10 @@ InoRedSession::~InoRedSession()
 
 // 描述：连接服务端
 // 备注：无
-UaStatus InoRedSession::connect()
+UaStatus InoRedSession::connect(const UaString& serverUrl1, const UaString& serverUrl2)
 {
     UaStatus status;
-    status = m_pSessionMaster->connect();
+    status = m_pSessionMaster->connect(serverUrl1);
     // m_pUAClientSlave->connect();
 
     return status;
@@ -62,5 +62,6 @@ void InoRedSession::setConfiguration(InoSessionConfig* pConfigMaster, InoSession
 bool InoRedSession::read(const UaNodeIdArray& nodes)
 {
     InoSession* pSession = getSession();
-    return pSession->read(nodes).isGood();
+    UaDataValues values;
+    return pSession->read(nodes, values).isGood();
 }

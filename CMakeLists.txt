@@ -1,29 +1,29 @@
-#[[ ËµÃ÷£º
-    1. Ó¦ÓÃ³ÌĞòConsoleApplication1£¬¿âÎÄ¼şInoUAClientProxy
-    2. ConsoleApplication1ÖĞµ÷ÓÃInoUAClientProxyÖĞµÄµ¼³öÀà
+ï»¿#[[ è¯´æ˜ï¼š
+    1. åº”ç”¨ç¨‹åºConsoleApplication1ï¼Œåº“æ–‡ä»¶InoUAClientProxy
+    2. ConsoleApplication1ä¸­è°ƒç”¨InoUAClientProxyä¸­çš„å¯¼å‡ºç±»
 ]]
 
 cmake_minimum_required(VERSION 3.10)
 
-# ÉèÖÃ¹¤³ÌÃû
+# è®¾ç½®å·¥ç¨‹å
 project(ConsoleApplication1)
 
-# Í·ÎÄ¼şÃèÊö
+# å¤´æ–‡ä»¶æè¿°
 set(HEADERS
 )
 
-# Ô´ÎÄ¼şÃèÊö
+# æºæ–‡ä»¶æè¿°
 set(SOURCES
     ${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/main.cpp
 )
 
-# Éú³ÉÓ¦ÓÃÎÄ¼ş
+# ç”Ÿæˆåº”ç”¨æ–‡ä»¶
 add_executable(${PROJECT_NAME} 
     ${HEADERS}
     ${SOURCES}
 )
 
-# Ìí¼ÓÍ·ÎÄ¼ş°üº¬Ä¿Â¼
+# æ·»åŠ å¤´æ–‡ä»¶åŒ…å«ç›®å½•
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/include/fmt
@@ -35,27 +35,22 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/InoUAClientProxy
 )
 
-#[[ TODO ÒÀÀµ¿âÂ·¾¶
-    1. Çø·ÖDebug|Release
-    2. Çø·ÖWin32|x64
+#[[ TODO ä¾èµ–åº“è·¯å¾„
+    1. åŒºåˆ†Debug|Release
+    2. åŒºåˆ†Win32|x64
 ]]
 
-# ÒÀÀµ¿âÂ·¾¶
+# ä¾èµ–åº“è·¯å¾„
 target_link_directories(${PROJECT_NAME}
     PRIVATE ${PROJECT_SOURCE_DIR}/lib/ua/x86/debug
     PRIVATE ${PROJECT_SOURCE_DIR}/lib/fmt/x86/debug
 )
 
-# ÒÀÀµ¿âÃèÊö
+# ä¾èµ–åº“æè¿°
 target_link_libraries(${PROJECT_NAME} 
-    PRIVATE debug uabasecppd.lib optimized uabasecpp.lib
-    PRIVATE debug uastackd.lib optimized uastack.lib
-    PRIVATE debug uaclientcppd.lib optimized uaclientcpp.lib
-    PRIVATE debug uapkicppd.lib optimized uapkicpp.lib
-    PRIVATE debug fmtd.lib optimized fmt.lib
-    PRIVATE ws2_32.lib
-    PRIVATE InoUAClientProxy
+    PRIVATE opcua
+    InoUAClientProxy
 )
 
-# Ìí¼Ó×ÓÄ¿Â¼
+# æ·»åŠ å­ç›®å½•
 add_subdirectory(InoUAClientProxy)

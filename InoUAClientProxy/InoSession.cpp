@@ -19,6 +19,8 @@ InoSession::InoSession()
 
 InoSession::~InoSession()
 {
+#pragma TODO("直接调用InoSession::disconnect，试下是否会删除订阅")
+
     // 删除本地订阅对象
     if (nullptr != m_pSubscription)
     {
@@ -148,11 +150,11 @@ UaStatus InoSession::discover(const UaString& sDiscoveryUrl)
 // 描述：非安连接服务器
 // 时间：2021-10-20
 // 备注：无
-UaStatus InoSession::connect()
+UaStatus InoSession::connect(const UaString& serverUrl)
 {
     // 安全设置未初始化 - 没有安全连接
     SessionSecurityInfo sessionSecurityInfo;
-    return connectInternal(m_pSessionConfig->getServerUrl(), sessionSecurityInfo);
+    return connectInternal(serverUrl, sessionSecurityInfo);
 }
 
 // 描述：安全连接服务器
@@ -498,10 +500,8 @@ UaStatus InoSession::browseContinuationPoint()
 // 描述：根据配置文件，节点进行读值
 // 时间：2021-10-20
 // 备注：无
-UaStatus InoSession::read(const UaNodeIdArray& nodes)
+UaStatus InoSession::read(const UaNodeIdArray& nodes, UaDataValues& values)
 {
-    // UaNodeIdArray nodes = m_pConfiguration->getNodesToRead();
-
     UaReadValueIds nodesToRead;
     nodesToRead.create(nodes.length());
 
@@ -513,7 +513,6 @@ UaStatus InoSession::read(const UaNodeIdArray& nodes)
 
     printf("\nReading ...\n");
     ServiceSettings serviceSettings;
-    UaDataValues values;
     UaDiagnosticInfos diagnosticInfos;
     UaStatus result = __super::read(
         serviceSettings,
@@ -792,6 +791,8 @@ UaStatus InoSession::browseInternal(const UaNodeId& nodeToBrowse, OpcUa_UInt32 m
 // 备注：无
 UaStatus InoSession::callMethod(const UaNodeId& objectNodeId, const UaNodeId& methodNodeId)
 {
+    printf("\nCalling method %s on object %s\n", methodNodeId.toString().toUtf8(), objectNodeId.toString().toUtf8());
+    
     // 请求
     CallIn callRequest;
     callRequest.methodId = methodNodeId;
@@ -802,7 +803,6 @@ UaStatus InoSession::callMethod(const UaNodeId& objectNodeId, const UaNodeId& me
 
     // 服务设置
     ServiceSettings serviceSettings;
-    printf("\nCalling method %s on object %s\n", methodNodeId.toString().toUtf8(), objectNodeId.toString().toUtf8());
     UaStatus result = __super::call(
         serviceSettings,
         callRequest,
